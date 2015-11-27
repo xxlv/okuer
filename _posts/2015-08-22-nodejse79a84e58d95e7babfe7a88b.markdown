@@ -1,0 +1,221 @@
+---
+author: admin
+comments: true
+date: 2015-08-22 01:36:55+00:00
+layout: post
+slug: nodejs%e7%9a%84%e5%8d%95%e7%ba%bf%e7%a8%8b
+title: NodeJs的单线程
+wordpress_id: 242
+categories:
+- NodeJS
+---
+
+前几天忽然突然心血来潮学了NodeJs，想看看Node究竟是什么?翻了一大堆文档资料，大抵是说，Node可以将javascript在服务器端运行，效率非常高,异步编程等等。
+
+
+
+
+
+
+
+
+
+
+**
+**
+
+
+
+
+带着这些疑问，首先下载了node（[https://nodejs.org/](https://nodejs.org/)）
+
+
+
+
+然后，照猫画虎，来第一个helloword.
+
+
+
+
+
+
+    
+    var http = require('http');
+    http.createServer(function (req, res) {
+    res.writeHead(200, {'Content-Type': 'text/plain'});
+    res.end('Hello World\n');}).listen(1337, '127.0.0.1');
+    console.log('Server running at http://127.0.0.1:1337/');
+
+
+
+
+
+
+
+
+
+
+
+
+（上面的代码摘自官网 ）
+
+
+
+
+一个web server不到10行代码搞定（想当初为了用java写一个能解析PHP的web server,连续忙了1个多月也是蛮拼的）。http模块是node内置的一个模块，
+
+
+
+
+
+
+
+
+
+
+
+
+
+**NodeJS是单线程的么？**
+
+
+
+
+**
+**
+
+
+
+
+将代码稍作修改如下：
+
+
+
+
+
+
+
+
+
+    
+    var http = require('http');
+    var i=0;
+    
+    http.createServer(function (req, res) {
+      console.log(++i+" request accept !')
+      res.writeHead(200, {'Content-Type': 'text/plain'});
+    
+      res.end('Hello World\n');
+      while(1){console.log(i)};
+    
+    }).listen(1337, '127.0.0.1');
+    
+    console.log('Server running at http://127.0.0.1:1337/');
+
+
+
+
+
+
+
+
+
+
+
+
+**
+**
+
+
+
+
+此时在浏览器打开两个tab,可以看到，第二个打开的页面上并没有如我们期望的那样显示出来Hello word,反而在控制台中输入大量的1，这就是说明运行到这里阻塞了。为什么呢？原因就是NodeJS是单线程的。所有的请求都得挨个处理完毕。
+
+
+
+
+**
+**
+
+
+
+
+**那么单线程是如何做到高并发的呢？**
+
+
+
+
+
+
+
+在传统的JS中，单线程是顺序执行的，一次耗时的脚本执行可能导致浏览器失去响应而“假死”，在nodejs中，采用事件驱动机制来解决这一问题，说简单点，就是，正在运行的v8有”两套“运行机制，一套负责发送消息，一套负责触发并默默在后台运行。我们正在运行的程序只是简单的发消息：
+
+
+
+
+
+
+    
+    fs.readFile('/etc/passwd', function (err, data) {
+    if (err) throw err;
+    console.log(data);});
+
+
+
+
+
+
+
+
+
+
+
+
+上面的代码中，使用文件系统异步读取文件，传统的做法是，readFile是一个函数执行完毕之后，将返回一个操作者的文件句柄或者其他什么，我们可以在下面接着使用文件句柄来操作文件，在Node中，上面的代码在执行中，
+
+
+
+
+将读取文件（readFile）发送给事件的监听器，告诉它现在开始一个任务，好了之后通过callback通知我，然后它就不在关心到底成功了没有，可以接着进行下面的逻辑。
+
+
+
+
+
+
+
+
+
+
+
+
+
+这就是在一起请求中，I/O密集型的操作可以获得很大的性能提升的原因。因为I/O密集型的程序，一般都阻塞在一次I/O中，导致下面的I/O逻辑没办法执行，在node中，所谓的执行只是"发送消息"而已，真正的执行在“后台”。
+
+
+
+
+
+
+
+2015/9/6日补充：
+
+
+
+
+NodeJS是单线程是指NodeJS的执行是单线程，但支持NodeJS的事件循环背后维护者一个线程池。这部分参见著名的《深入浅出NodeJS》
+
+
+
+
+更多学习参见
+
+
+
+
+[http://www.ruanyifeng.com/blog/2014/10/event-loop.html](http://www.ruanyifeng.com/blog/2014/10/event-loop.html)
+
+
+
+
+https://nodejs.org/

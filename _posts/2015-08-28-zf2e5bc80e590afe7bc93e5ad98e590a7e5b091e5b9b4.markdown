@@ -1,0 +1,146 @@
+---
+author: admin
+comments: true
+date: 2015-08-28 07:56:15+00:00
+layout: post
+slug: zf2%e5%bc%80%e5%90%af%e7%bc%93%e5%ad%98%e5%90%a7%e5%b0%91%e5%b9%b4
+title: ZF2:开启缓存吧
+wordpress_id: 291
+categories:
+- Zend Framework 2
+---
+
+ZF2提供了丰富的缓存储存适配器，像是DB啊，Redis啊，Mecached啊，文件系统啊。缓存避免了重复的计算，尤其是在密集计算的时候，缓存结果将节省CPU的开销，同时客户端更快的获取资源。在ZF2中，该怎么使用缓存呢？
+
+
+
+
+首先打开module.config.php 增加如下行
+
+    
+    'service_manager' => array(
+            'factories' => array(
+                    'cache' => function () {
+                            return \Zend\Cache\StorageFactory::factory(array(
+                                    'adapter' => array(
+                                            'name' => 'filesystem',
+                                            'options' => array(
+                                                 'ttl'=>1000,
+                                                 'cache_dir' => 'data/cache',
+                                            ),
+                                    ),
+                                    'plugins' => array(
+                                            'exception_handler' => array(
+                                                    'throw_exceptions' => false
+                                            ),
+                                            'Serializer',
+                                    ),
+                            ));
+                    },
+            ),                     
+    ),
+
+
+
+
+
+
+
+上面将cache注册进service_manager中（你可以选择在module.php中使用getSerciveConfig来注册，两者效果相同），使用工厂模式来创建一个缓存对象。适配器选择文件系统，存储路径在data/cache下，并使用serializer来序列化缓存数据。
+
+
+
+
+完成了这部分，剩下的就是使用缓存了。
+
+
+
+
+在Action中，使用
+
+    
+    $cache = $this->getServiceLocator()->get('cache');
+    $cache_key='cachekey';
+    
+    if( ($data = $cache->getItem($cache_key)) == FALSE) {
+         $data=array('my data');     
+         $cache->setItem($cache_key,$data);
+    }
+
+
+Ok 就这么简单，接下来访问该Action的时候，将能感受到缓存带来的加速体验了。
+
+** [这里有一个坑，在设置cache的key的时候，如果存在多个管理员的数据不一致问题，这样要缓存的话，就需要对每个admin唯一key。我在使用的时候出现神奇的，管理员登录后居然能操作根本想不到的数据，我使用管理员id拼接key解决了这一问题]**
+
+上面的代码中，我们直接对Action中增加缓存，还有一种做法是对数据库的结果进行缓存，我们使用Model层来操作数据库，在获取结果集的时候可以缓存，所以下面的尝试也同样可以咯。
+
+
+参见[https://samsonasik.wordpress.com/2012/09/27/zend-framework-2-using-zendcache-and-hydratingresultset-to-save-database-resultset/](https://samsonasik.wordpress.com/2012/09/27/zend-framework-2-using-zendcache-and-hydratingresultset-to-save-database-resultset/)
+
+
+
+
+
+
+
+不论哪一种方式，我们想要达到的目的都是一样的，ZF2提供了许多适配器来支持缓存，可以根据业务需要选择是用文件缓存呢？还是数据库缓存呢？还是Memcached呢？
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+看完了例子，那么，ZF2提供了那些适配器呢(Storage Adapter)？
+
+
+
+
+查看源码或者文档，不难看出ZF2支持下面几种适配器：
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    'apc'            => 'Zend\Cache\Storage\Adapter\Apc',
+    'blackhole'      => 'Zend\Cache\Storage\Adapter\BlackHole',
+    'dba'            => 'Zend\Cache\Storage\Adapter\Dba',
+    'filesystem'     => 'Zend\Cache\Storage\Adapter\Filesystem',
+    'memcache'       => 'Zend\Cache\Storage\Adapter\Memcache',
+    'memcached'      => 'Zend\Cache\Storage\Adapter\Memcached',
+    'memory'         => 'Zend\Cache\Storage\Adapter\Memory',
+    'mongodb'        => 'Zend\Cache\Storage\Adapter\MongoDb',
+    'redis'          => 'Zend\Cache\Storage\Adapter\Redis',
+    'session'        => 'Zend\Cache\Storage\Adapter\Session',
+    'xcache'         => 'Zend\Cache\Storage\Adapter\XCache',
+    'wincache'       => 'Zend\Cache\Storage\Adapter\WinCache',
+    'zendserverdisk' => 'Zend\Cache\Storage\Adapter\ZendServerDisk',
+    'zendservershm'  => 'Zend\Cache\Storage\Adapter\ZendServerShm',
+
+
+
+
+在上面的例子中，使用了filesystem作为我们的适配器，这意味着在尝试创建缓存的时候，ZF2将缓存的结果输出到文件中。在data/cache中，会有缓存文件(.dat文件)。
+适配器虽然种类比较多，但具体使用都大同小异。需要的options可以在http://framework.zend.com/manual/current/en/modules/zend.cache.storage.adapter.html里面发现。
+
+
+
+
+

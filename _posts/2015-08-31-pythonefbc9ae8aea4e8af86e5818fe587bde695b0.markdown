@@ -1,0 +1,84 @@
+---
+author: admin
+comments: true
+date: 2015-08-31 14:42:46+00:00
+layout: post
+slug: python%ef%bc%9a%e8%ae%a4%e8%af%86%e5%81%8f%e5%87%bd%e6%95%b0
+title: Python：认识偏函数
+wordpress_id: 315
+categories:
+- Python
+---
+
+在编写程序的时候，有经验的开发者经常将公共的部分分离出来，这在现代软件思想中直接导致了OOP思想。偏函数其实是一种对函数的简单包装，使得调用者忽略公共的那部分参数，美化函数的实现。直接示例代码如下：
+
+    
+    #!/usr/bin/python
+    # -*- coding:utf-8 -*-
+    
+    from functools import partial
+    
+    def foo(baseparam,n=1):
+       print(baseparam,n)
+    
+    bar=partial(foo,"A")
+    foo("A",1) //output A 1
+    foo("A",2) //output A 2
+    foo("A",3) //output A 3
+    foo("A",4) //output A 4
+    bar(5) //output A 5
+
+
+
+
+
+
+注意到，使用偏函数可以创建对函数进行简单的包装之后，简化了调用（使用bar(5)产生与foo(“A”,5)相同的效果），在python中，functools的partial类可以很方便的实现这个简单但是在某些情况下很实用的功能。
+
+
+
+偏函数在使用的过程中有点细节需要注意，看下面的代码
+
+    
+    #!/usr/bin/python
+    # -*- coding:utf-8 -*-
+    
+    from functools import partial
+    
+    def foo(baseparam="A",n=1):
+        print(baseparam,n)
+    
+    bar=partial(foo,n=21)
+    
+    bar2=partial(foo,baseparam="B")
+    
+    foo("A",1)
+    foo("A",2)
+    foo("A",3)
+    foo("A",4)
+    foo()
+    foo(1)
+    foo(n=22)
+    
+    bar()
+    bar(5)
+    
+    bar(n=22)
+    
+    bar2(n=1)
+    bar2(baseparam="C",n=3)
+    
+    # bar2(3) #TypeError: foo() got multiple values for argument 'baseparam'
+    
+    # bar(5,3) TypeError: foo() got multiple values for argument 'n'
+
+
+
+
+上面的不同在于给函数的定义设置看key的默认值 。只有最后两条调用时不合法的，bar2中，3会传递给第一个参数。导致baseparam有多个可选值。而bar(5,3)中，3会传递给n导致同样糟糕的情况。
+
+参阅：
+
+[http://blog.csdn.net/handsomekang/article/details/9712125](http://blog.csdn.net/handsomekang/article/details/9712125)
+
+[https://docs.python.org/3/library/functools.html#functools.partial](https://docs.python.org/3/library/functools.html#functools.partial)

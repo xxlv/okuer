@@ -1,0 +1,188 @@
+---
+author: admin
+comments: true
+date: 2015-05-06 13:04:50+00:00
+layout: post
+slug: '%e4%bd%bf%e7%94%a8flex%e8%bf%9b%e8%a1%8c%e8%af%8d%e6%b3%95%e5%88%86%e6%9e%90'
+title: 使用Flex进行词法分析
+wordpress_id: 92
+categories:
+- 编译原理
+---
+
+什么是Flex？
+
+ 
+
+Flex（fast lexical analyser generator)可以看作lex的一升级版。Flex能够识别输入中的词法模式。
+
+ 
+
+具体介绍不再赘述，参见：[http://dinosaur.compilertools.net/flex/flex_1.html](http://dinosaur.compilertools.net/flex/flex_1.html)
+
+ 
+
+话不多说，先在ubuntu(14.04)下安装flex(确保apt-get update到最新):
+
+ 
+
+sudo apt-get install flex
+
+ 
+
+ 
+
+执行完成上面的命令将把flex安装到计算机，下面来快速开始一个flex编程，步骤如下
+
+ 
+
+1，编写flex文件，命名为test.l,编写待解析文件，命名为test.my 
+
+ 
+
+2 ,生成c文件 gcc lex.yy.c –o analysis –ll
+
+ 
+
+3 ，执行 ./analysis < test.my 
+
+ 
+
+（file test.l）flex代码由三部分组成：Definitions,Roles,C code：
+
+ 
+
+**Definitions**
+
+ 
+    
+        %{
+            int wordCount = 0;
+            %}
+            chars [A-za-z\_\'\.\"]
+            numbers ([0-9])+
+            delim [" "\n\t]
+            whitespace {delim}+
+            words {chars}+
+            %%        want to add some 
+
+
+
+
+
+
+
+****
+
+
+
+
+
+****
+
+
+
+
+
+**Rules**
+
+
+
+
+    
+         {words} { wordCount++; /*
+            increase the word count by one*/ }
+            {whitespace} { /* do
+            nothing*/ }
+            {numbers} { /* one may
+            want to add some processing here*/ }
+            %%
+
+
+
+
+
+**C code**
+
+
+
+
+    
+      void main()
+            {
+            yylex(); /* start the
+            analysis*/
+            printf(" No of words:
+            %d\n", wordCount);
+            }
+            int yywrap()
+            {
+            return 1;
+            }
+
+
+
+
+
+
+
+
+
+definitions包含了C变量和Flex标记的申明，roles包含了模式匹配规则，在本例中，如果匹配到一个words，将对wordCount计数器自增1.
+
+
+
+
+
+Flex每次从目标文件（text.my）中读取一个字符，然后尝试在模式匹配中寻找匹配，如果找不到，则继续读取。在c code部分定义的函数申明中包含了yylex();这个函数是必须的，并且由Flex生成，同时在该代码块中还有yywrap()函数，该函数返回1代表解析结束。
+
+
+
+
+
+
+
+
+
+[![clipboard[4]](http://okuers-wordpress.stor.sinaapp.com/uploads/2015/05/clipboard4_thumb1.png)](http://okuers-wordpress.stor.sinaapp.com/uploads/2015/05/clipboard41.png)
+
+
+
+
+
+
+
+
+
+Flex对空格极其敏感，常见的错误：
+
+
+
+
+
+[![clipboard[6]](http://okuers-wordpress.stor.sinaapp.com/uploads/2015/05/clipboard6_thumb1.png)](http://okuers-wordpress.stor.sinaapp.com/uploads/2015/05/clipboard61.png)
+
+    
+
+
+
+
+
+
+[![clipboard[8]](http://okuers-wordpress.stor.sinaapp.com/uploads/2015/05/clipboard8_thumb1.png)](http://okuers-wordpress.stor.sinaapp.com/uploads/2015/05/clipboard81.png)
+
+
+
+
+
+词法分析Flex(Lex)配合语法分析Yacc(Bison)这两个黄金搭档配合使用功能很强大哦，PHP的解释器就有它们的功劳。
+
+
+
+
+
+
+
+
+
+参考地址：[http://www.ibm.com/developerworks/cn/linux/sdk/lex/#8](http://www.ibm.com/developerworks/cn/linux/sdk/lex/#8)

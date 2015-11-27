@@ -1,0 +1,31 @@
+---
+author: admin
+comments: true
+date: 2015-08-20 00:47:07+00:00
+layout: post
+slug: nodejs%e5%9b%9e%e8%b0%83%e4%b8%ad%e6%97%a0%e6%b3%95return%e5%80%bc%e7%9a%84%e9%97%ae%e9%a2%98
+title: NodeJs回调中无法return值的问题
+wordpress_id: 230
+categories:
+- NodeJS
+---
+
+在Nodejs中，我定义![](file:///C:/Users/tobi/AppData/Local/YNote/data/1252804799@qq.com/4fa7bc42d7e445bb8b2b5f1324a3d091/clipboard.png)了如下的代码![](file:///C:/Users/tobi/AppData/Local/YNote/data/1252804799@qq.com/4fa7bc42d7e445bb8b2b5f1324a3d091/clipboard.png)![](file:///C:/Users/tobi/AppData/Local/YNote/data/1252804799@qq.com/4fa7bc42d7e445bb8b2b5f1324a3d091/clipboard.png)
+
+![](http://okuers-wordpress.stor.sinaapp.com/uploads/2015/08/clipboard.png)
+
+query函数负责返回一个mysql查询的结果json。我使用conn来发送一个sql到数据库服务器，查询的结果被传送到了一个回调函数中。我想要的就是JSON.stringify(rows[0]).可是我要在外层怎么能拿到呢？
+
+**错误在哪里？**
+
+这是一个很容易犯的错误，因为长期同步编程，习惯将返回值作为下一段程序的输入。但异步编程不是这样的，你不清楚任何什么时候执行完毕，可能是在你执行完毕下面的程序之后，上一个任务才能执行完毕，准确的说，回调不会立即调用的，也没有直接的办法返回。
+
+**下面是stackoverflow上给出的答案：**
+
+![](http://okuers-wordpress.stor.sinaapp.com/uploads/2015/08/clipboard1.png)
+
+
+
+**参考 :**
+
+[http://stackoverflow.com/questions/6847697/how-to-return-value-from-an-asynchronous-callback-function](http://stackoverflow.com/questions/6847697/how-to-return-value-from-an-asynchronous-callback-function)
