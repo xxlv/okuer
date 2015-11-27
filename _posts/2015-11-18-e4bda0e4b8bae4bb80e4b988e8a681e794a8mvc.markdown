@@ -10,12 +10,9 @@ categories:
 - PHP
 ---
 
-现在MVC(HMVC)流行到MVVM的发展,越来越多的框架横空出世.编程逐渐普及,任何人只需要花费一周的时间就可以轻易的熟悉一种框架,假设你有学习c的经历,你熟悉一种新的语言的过程不会超过一周.即使是java或者c++,你仍旧很快能掌握其中的语法规则.这些门槛的降低源于现代互联网的开放,所有的学习资源都可以在线发现,然而我并不是要告诉你如何去迅速掌握一门编程语言.
-
-
+现在MVC(HMVC)流行的**MVVM**的发展,越来越多的框架横空出世.编程逐渐普及,任何人只需要花费一周的时间就可以轻易的熟悉一种框架,假设你有学习c的经历,你熟悉一种新的语言的过程不会超过一周.即使是java或者c++,你仍旧很快能掌握其中的语法规则.这些门槛的降低源于现代互联网的开放,所有的学习资源都可以在线发现,然而我并不是要告诉你如何去迅速掌握一门编程语言.
 
 在我的工作经历中,我接触很多框架,这些开源的产品大都是采用非常棒的设计思想,像是一件艺术品.你总能在读它们的实现中发现令人吃惊的片段:哦,原来可以这么解耦?原来适配器模式可以这么玩?
-
 
 
 但在实际的工作中,在我读前辈们写的代码的过程中,我却非常失望的发现,我们都在写面条式的代码.
@@ -41,17 +38,11 @@ categories:
 
 
 **这样做有问题麽?**
-
-场景 1
-
-现在我们的程序需要增加一个功能,在判断用户是中国国籍的时候,切换系统语言为中文.
-
-场景 2
-
+- 场景 1
+ 现在我们的程序需要增加一个功能,在判断用户是中国国籍的时候,切换系统语言为中文.
+- 场景 2
 所有的经过A的信息发送都经过敏感数据过滤
-
-场景3
-
+- 场景3
 部分用户的邮件通知短期内禁用
 
 
@@ -64,7 +55,7 @@ categories:
 
 你也可能进入了场景3 ,在这里,你做出的解决方案是,在发送邮件的时候,过滤出那部分用户来.
 
-这样做有什么不好?
+**这样做有什么不好?**
 
 仔细思考一下你干了什么? 你用了大量的if横切了代码.导致原来msg的功能被复杂化,并增加了未知的风险,使得你无法准确的判断和做出调试.我们知道发送消息就是发送消息,这个功能可能在其他业务里面也有,但是现在你的发送消息逻辑增加了许多业务本身的逻辑,导致它没办法被复用.也许你并没有打算分享出去,但甚至,就连你自己也没办法在下一个project中使用它.于是你复制,粘贴,修改,终于把msg的模块在新的项目中使用了.然后你接着面临了相同的困境.
 
@@ -99,55 +90,22 @@ categories:
 
 
 一个简单的功能,我要初始化一个注册页面,你需要在控制器中做出做合理的假设(以下只是其中可能的一个):
-
-1 接收post
-
+1 接收post
 2 验证数据合法性(可能是过滤链,本form检查,常规检查,特殊性检查,)
-
 3 完成注册功能
 
 那么你的action很清楚了,第一initData,第二,getData,第三 Service.register
-
 这样,你的功能就完成了,你甚至可以将getData内置到initData中.你的控制器可能只有简单的几行.
-
-
-
-
-
-
-
+{% highlight php %}
 	
-  1. ` class User{`
-
-	
-  2. `    public function reg(){`
-
-	
-  3. `        `
-
-	
-  4. `        $data=User->Reg->Helper->initDataWithReq($this.req);//从初始化的数据中获取注册需要的数据,包括自动格式转化`
-
-	
-  5. ``
-
-	
-  6. `        $res=RegService->regWith($data);//开始使用这些数据注册`
-
-	
-  7. ``
-
-	
-  8. `        RegService->regDone($res);  //处理完成之后的后续工作`
-
-	
-  9. `                    `
-
-	
-  10. `    }`
-
-	
-  11. `}`
+	class User{
+		 public function reg(){
+		  $data=User->Reg->Helper->initDataWithReq($this.req);//从初始化的数据中获取注册需要的数据,包括自动格式转化
+  $res=RegService->regWith($data);//开始使用这些数据注册
+   RegService->regDone($res);  //处理完成之后的后续工作
+   }
+  }
+{% endhighlight %}
 
 
 
@@ -168,19 +126,19 @@ categories:
   1. `class User {`
 
 	
-  2. `    public function reg(){`
+  2. `    public function reg(){`
 
 	
-  3. `       RegService->initRegEvn();//初始化注册环境`
+  3. `       RegService->initRegEvn();//初始化注册环境`
 
 	
-  4. `       RegService->doRegWork();//开始注册`
+  4. `       RegService->doRegWork();//开始注册`
 
 	
-  5. `       RegService->finishRegWrok();//注册收尾      `
+  5. `       RegService->finishRegWrok();//注册收尾      `
 
 	
-  6. `    }`
+  6. `    }`
 
 	
   7. ``
@@ -199,16 +157,16 @@ categories:
   1. `class User {`
 
 	
-  2. `    public function reg(){`
+  2. `    public function reg(){`
 
 	
-  3. `        RegService->addTasks(['initReg','doReg','finishReg']);`
+  3. `        RegService->addTasks(['initReg','doReg','finishReg']);`
 
 	
-  4. `        return RegService->doTaskUseReq($req);`
+  4. `        return RegService->doTaskUseReq($req);`
 
 	
-  5. `    }`
+  5. `    }`
 
 	
   6. ``
@@ -257,24 +215,24 @@ categories:
   1. `public class Helper{`
 
 	
-  2. `    public function initDataWithReq($data){
+  2. `    public function initDataWithReq($data){
 `
 
 	
-  3. `        $filter=FilterHepler->addFilters(['reg','keywords','comon']);`
+  3. `        $filter=FilterHepler->addFilters(['reg','keywords','comon']);`
 
 	
-  4. `        $clean_data=$filter->hy($data);//净化数据
+  4. `        $clean_data=$filter->hy($data);//净化数据
 `
 
 	
-  5. `        return $clean_data;  `
+  5. `        return $clean_data;  `
 
 	
-  6. `      `
+  6. `      `
 
 	
-  7. `    }`
+  7. `    }`
 
 	
   8. ``
@@ -296,13 +254,13 @@ categories:
 `
 
 	
-  3. `        public function regWith($data){`
+  3. `        public function regWith($data){`
 
 	
-  4. `           return DbProxy->getEntity('user')->save($data); `
+  4. `           return DbProxy->getEntity('user')->save($data); `
 
 	
-  5. `        }`
+  5. `        }`
 
 	
   6. ``
