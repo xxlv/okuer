@@ -1,0 +1,35 @@
+---
+author: admin
+comments: true
+date: 2015-12-21 08:05:39+00:00
+layout: post
+title: sqlmap
+categories:
+- 计算机
+---
+##### 简介
+sqlmap 是一款开源的sql注入工具。
+
+##### 安装
+    git clone https://github.com/sqlmapproject/sqlmap.git sqlmap-dev
+
+##### 注入测试
+
+使用sqlmap非常容易，只需要在sqlmap.py所在的目录执行.
+```
+    python sqlmap.py  -u "URL" --batch
+
+```
+即可非常方便的执行sql injection啦。使用-h参数可以获取全部的帮助信息。
+如果要携带cookie，则使用
+
+```
+python sqlmap.py -u "URL" --cookie ="COOKIE_STR"
+
+```
+
+Ok。就这么简单！
+
+
+##### 资源
+sqlmap的官方地址：http://sqlmap.org/
