@@ -7,6 +7,9 @@ title: Ruby一些基础知识笔记
 categories:
 - Ruby
 ---
+### Ruby编程学
+
+
 #### Ruby的类
 
 -  class是一个表达式，class申明类，将创建一个常量，所以类名的首字母是大写的
@@ -33,8 +36,8 @@ categories:
 2. 对于类方法，要想在外部不可访问，譬如在使用单例模式，隐藏MyClass.new的调用，此时可以使用
 private_class_method :new
 3. 两种方式可以访问私有的方法
-3.1  obj.instance_eval { my_private_method }
-3.2  obj.send :my_private_method
+*  obj.instance_eval { my_private_method }
+*  obj.send :my_private_method
 
 
 4. 覆盖私有方法,对类成员，子类和父类同名的类成员会修改父类的类成员，这个影响对所有继承该类的子类都起作用
@@ -43,11 +46,12 @@ private_class_method :new
 7. public ,private,protected,module_function（将实例方法变为私有方法） 都是Module的私有方法
 
 #### 创建对象的方式
-1. new (allocate and initialize) | factory
-2. clone , dup and initialize_copy
-3. Marshal.load (Marshal.dump)
-4. Singleton
-5. 一个对象的单例方法是关联它的匿名Eigenclass的实例方法
++  new (allocate and initialize) ,factory
++  clone , dup and initialize_copy
++  Marshal.load (Marshal.dump)
++  Singleton
++  一个对象的单例方法是关联它的匿名Eigenclass的实例方法
+
 
 
 #### 加载方式
@@ -56,3 +60,37 @@ private_class_method :new
 - include　
 - require >> 类似php的require，会做检查，争取最少的加载
 - autoload >> 惰性加载,autoload :MYMODULE , "hello" ,在第一次使用MYMODULE的时候才加载
+
+
+
+#### Ruby常见的几个术语
+
+- [RVM](https://rvm.io/rvm/install)
+
+- [Ruby on Rails](http://rubyonrails.org/)
+
+- [RubyGems](https://rubygems.org/)
+
+- [Gem](https://rubygems.org/)
+
+- [Rake](https://github.com/ruby/rake)  make-like build utility for Ruby
+
+- [GemFile](https://rubygems.org/)
+
+- [RakeFile](https://github.com/ruby/rake)
+
+- [Bundle](http://bundler.io/)
+
+- ri
+
+### Ruby 工具集
+
+
+#### Gem做了什么？
+在终端输入：
+`sudo gem install jekyll` 发生了什么？
+
+
+1. gem命令将启动一个ruby程序，这个程序的源代码被定义在/usr/bin/gem中．可以在linux中通过 `whereis gem`来发现它的位置．其实本质是一个ruby程序．
+
+2. Rubygems 将在sources中查询jekyll并下载指定的gem,sources可以在　`gem sources -l`中查询，默认的源比较慢，切换到淘宝源，可以用 `gem sources --add https://ruby.taobao.org/ --remove https://rubygems.org/`
