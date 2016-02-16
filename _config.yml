@@ -17,3 +17,24 @@ github_username:  xxlv
 pygments: true
 # Build settings
 markdown: kramdown
+
+default:
+    -
+        scope:
+            path:""
+        values:
+            layout:"default"
+    -
+        scope:
+            path:"ruby"
+            type:"pages"
+        values:
+            layout:"ruby"
+            author:"x!"
+
+
+            
+collections:
+    my_collection:
+        output: true
+        permalink: /awesome/:path/
