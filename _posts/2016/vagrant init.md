@@ -1,0 +1,37 @@
+---
+author: X
+comments: true
+date: 2016-02-23 03:49:00+00:00
+layout: post
+title: Vagrant 使用学习笔记
+categories:
+- Vagrant
+---
+
+#### 背景和摘要
+在开发过程中，经常需要配置各种环境，譬如php，nginx，越来越多的配置细节会浪费大量的时间。
+为了解决这个问题，vagrant诞生了！
+
+#### Vagrant来统一环境
+ ###### 安装vagrant
+ 在Mac上，打开terminal ，执行：
+ - `brew cask install virtualbox`
+ - `brew cask install vagrant`
+ - `brew cask install vagrant-manager`
+
+如果还没有brew，执行
+-  `ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"`
+
+- `brew tap caskroom/cask`
+
+###### 快速熟悉vagrant
+1. `vagrant box add BOX` 增加一个box
+2. `vagrant up`  启动它
+3. `vagrant ssh` 远程登录
+4. `vagrant package` 环境打包
+5. `vagrant halt` 关闭本地环境
+6. `vagrant destroy`  彻底销毁环境
+7. `vagrant resume` 恢复本地环境
+
+#### 参考链接
+1. [http://brew.sh/](http://brew.sh/)
