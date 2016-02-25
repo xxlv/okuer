@@ -5,5 +5,5 @@ description: X's world!
 permalink: /:year/:month/:day/:title/
 paginate: 10
 highlighter: pygments
-
+pygments: true
 exclude: ['README.md', 'Gemfile.lock', 'Gemfile', 'Rakefile']
