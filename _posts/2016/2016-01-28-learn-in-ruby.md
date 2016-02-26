@@ -4,8 +4,7 @@ comments: true
 date: 2016-01-25 03:49:00+00:00
 layout: post
 title: Ruby一些基础知识笔记
-categories:
-- Ruby
+categories: ruby
 ---
 ### Ruby编程学
 
