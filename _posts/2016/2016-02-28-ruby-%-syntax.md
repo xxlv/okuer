@@ -1,13 +1,11 @@
 ---
 author: X
 comments: true
-date: 2016-01-25 03:49:00+00:00
+date: 2016-02-28 03:49:00+00:00
 layout: post
 title: Ruby的%Q,%q,%w,%s,%x
 categories: ruby
 ---
-
-
 
 ###### %Q(%q)
 优雅的转义方式：当你使用字符串的时候，你可能经常需要这样的代码：
