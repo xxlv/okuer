@@ -1,7 +1,7 @@
 ---
 author: X
 comments: true
-date: 2016-02-28 02:49:00+00:00
+date: 2016-02-27 02:49:00+00:00
 layout: post
 title: Ruby的%Q,%q,%w,%s,%x
 categories: ruby
