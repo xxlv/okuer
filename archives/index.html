@@ -14,7 +14,8 @@ title: Archives
 				</h1>
 			{% else %}
 				<h1><a href="{{ post.url }}">{{ post.title }}</a></h1>
-		
+				<p class="meta">Posted on <span class="postdate">{{ page.date | date: "%m %d, %Y" }}</span></p>
+
 			{% endif %}
 		</article>
 	{% endfor %}

@@ -32,6 +32,11 @@ categories: ruby
 
 ##### 其他的几个%x
 - %w(%W),表示数组
+{% highlight ruby %}
+    s=%w(a b c )   #=>  [a,b,c]
+    s=%w(\ ab c )   #=> [ ab,c] 空格被转义
+{% endhighlight %}
+
 - %x,表示shell
 - %s,表示symbol , %s(#{var}) 并不会转换var哦！
 - %i,生成一个symbol数组
