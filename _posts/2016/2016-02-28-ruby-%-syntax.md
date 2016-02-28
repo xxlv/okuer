@@ -19,8 +19,8 @@ categories: ruby
 
 
 你还可以编写更加优雅的代码
-{% highlight ruby %}
 
+{% highlight ruby %}
     s=%Q(""hello ,world "")  #=> ""hello ,world ""
     s=%Q+""hello ,world ""+  #=> ""hello ,world ""
     s=%!""hello ,world ""!   #=>  ""hello ,world ""
