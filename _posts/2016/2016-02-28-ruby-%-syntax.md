@@ -20,7 +20,7 @@ categories: ruby
 你不需要为双引号编写额外的转义符号。％q将对单引号起作用。
 
 
-你还可以边写更加优雅的代码
+你还可以编写更加优雅的代码
 {% highlight ruby %}
 
     s=%Q(""hello ,world "")  #=> ""hello ,world ""
@@ -31,7 +31,7 @@ categories: ruby
 {% endhighlight %}
 
 ##### 其他的几个%x
-- %w,表示数组
+- %w(%W),表示数组
 - %x,表示shell
 - %s,表示symbol , %s(#{var}) 并不会转换var哦！
 - %i,生成一个symbol数组
