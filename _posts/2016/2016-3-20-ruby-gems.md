@@ -1,7 +1,7 @@
 ---
 author: X
 comments: true
-date: 2016-03-21 09:25:00+00:00
+date: 2016-03-20 04:25:00+00:00
 layout: post
 title:  从0开始制作一个gem
 categories: ruby
