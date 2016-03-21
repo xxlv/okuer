@@ -36,10 +36,10 @@ my-gems/bin/setup
 
 ##### 一些基本的配置项整理如下：
 
-- spec.files #指定的文件将被包含，注意这里如果用`git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
+- *spec.files* 指定的文件将被包含，注意这里如果用`git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
 那么，你创建的文件要加入到gem的话，需要让git先跟踪。
 
-- spec.executables #可执行文件，将自动添加到$PATH包含的那个目录(如/usr/local/bin)
+- *spec.executables* #可执行文件，将自动添加到$PATH包含的那个目录(如/usr/local/bin)
 
 
 抛开配置的细节，下面来创建
