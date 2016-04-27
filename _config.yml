@@ -3,7 +3,7 @@ url: http://www.0x10.me
 description: X's world!
 
 permalink: /:year/:month/:day/:title/
-paginate: 10
+paginate: 5
 highlighter: pygments
 highlighter: true
 exclude: ['README.md', 'Gemfile.lock', 'Gemfile', 'Rakefile']
