@@ -4,7 +4,7 @@ comments: true
 date: 2016-03-20 04:25:00+00:00
 layout: post
 title: 解释
-categories: 杂文
+categories: novel
 ---
 
 
