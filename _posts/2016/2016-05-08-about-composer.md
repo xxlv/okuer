@@ -7,7 +7,6 @@ title:  使用composer管理依赖
 categories: php
 
 ---
-
 #### 什么是composer ?
 **一句话来说，composer是一个依赖管理工具。类似于npm或者bundle.**
 
@@ -52,10 +51,10 @@ root包和依赖包是一个相对概念，当你开发一个app，并且使用c
 composer.phar是composer的源代码的打包（类比jar）。composer是一个php程序，所以可以用 `php composer.phar 命令`的形式来执行。这是在全局没有安装composer的情况下的做法。
 composer会将你声明的依赖下载到指定的目录，默认的，如在vendor下。然后自动生成autoload.在php支持namespace之后。如下的代码
 
-`｀｀
+```
     $f=new F;
+```
 
-`｀｀
 注意，上面的代码，其实是一个相对的namespace（没有以\\开头的类都是相对namespace）在执行时候，将有一个搜索树来寻找F类的定义。这个顺序是：当前名称空间－>父namesapce->全局namesapce.
 
 详细见这里：http://php.net/manual/zh/language.namespaces.rationale.php
@@ -75,8 +74,10 @@ $f=new \f\F; #success
 $f=new \F;   # Fatal error: Class 'F' not found
 
 ```
+
 在上面定义的简单的类中，使用\f\F类似“绝对路径” 来访问类，最后一个\F,是因为在全局namesapce中并没有 F的类信息。
-当调用一个不存在的类时候，php会具有完整namespace的调用信息传递给spl_autoload_register方法。该方法处理class和真实文件的映射关系。composer做了这部分工作。composer自动将它管理的第三份的库，注册进了autoload。
+当调用一个不存在的类时候，php会具有完整namespace的调用信息传递给spl_autoload_register方法。该方法处理class和真实文件的映射关系。composer做了包括但不限于此的工作。composer自动将它管理的第三份的库，注册进了autoload。
+
 
 #### 总结
 composer管理依赖。利用php的namespace的特性，实现了autoload.
