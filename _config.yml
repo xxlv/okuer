@@ -48,15 +48,15 @@ feed: /atom.xml
 
 #Nav config
 nav:
-  - text: 首页
+  - text: Home
     url: /index.html
-  - text: 分类目录
+  - text: Categories
     url: /categories.html
-  - text: 文章归档
+  - text: Archives
     url: /archives.html
-  - text: 联系我
+  - text: About Me
     url: /contact.html
-  - text: 友情链接
+  - text: Links
     url: /links.html
 
 #Author config
@@ -66,7 +66,7 @@ author:
     imageLink: https://blog.okuer.com/images/avatar.jpg
     simpleIntro:
     detailIntro:
-      <p>X world</p>
+      <p>Hello World</p>
 
 #Follow me, you can choose your icon by http://fortawesome.github.io/Font-Awesome/icons/#brand
 # follow:
@@ -83,16 +83,14 @@ author:
 #   - class: icon-google-plus
 #     url: http://google.com
 
-#Links
-# customLinks:
-#   - item:
-#     - text: github
-#       url: http://www.github.com/xxlv
-#     - text: Jekyll
-#       url: http://jekyllrb.com
-#     - text: Jekyll Theme
-#       url: http://www.zhanxin.info/themes.html
-#     message: Friends
+
+# Links
+customLinks:
+  - item:
+    - text: Github
+      url: http://www.github.com/xxlv
+
+    # message: Friends
 #   - item:
 #     - text: Font Awesome
 #       url: http://fortawesome.github.io/Font-Awesome/
@@ -103,15 +101,15 @@ author:
 #     message: 其他相关链接
 
 #googleAnaly, your id link UA-12345678-X
-googleAnaly:
-  config: true
-  id: UA-40169250-1
+# googleAnaly:
+#   config: false
+#   id: UA-40169250-1
 
 #comment config
 disqus:
   config: false
-  id: piznblog
+  id: xxlv
 
 duoshuo:
-  config: true
-  id: zhanxin
+  config: false
+  id: xxlv
