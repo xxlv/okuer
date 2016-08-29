@@ -19,8 +19,6 @@ keywords: x
             <span class="info-date">{{ post.date | date_to_string }}</span>
         </div>
     </div>
-{% index =index+1 %}
-
 {% endfor %}
 {% if paginator.total_pages > 1 %}
     <nav class="pagination fn-clear">
