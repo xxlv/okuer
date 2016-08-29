@@ -4,19 +4,10 @@ title: X'
 keywords: x
 ---
 
-{%  assign index=0 %}
-
 {% for post in paginator.posts %}
-
-
-{% if index < 3 %}
-    {% assign red='color:red;font-weight:bold' %}
-{% else %}
-    {% assign red='' %}
-{% endif %}
     <div class="article">
         <h3 class="title">
-            <a href="{{ site.url }}{{ post.url }}" title="{{ post.title }}"  style="{{ red }}">
+            <a href="{{ site.url }}{{ post.url }}" title="{{ post.title }}" >
             {{ post.title }}
         </a></h3>
         <article class="rexp">
