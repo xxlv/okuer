@@ -29,7 +29,7 @@ h1, h2, h3, h4, h5, h6 {
 h1 { margin-bottom: 1em; }
 p { margin: 1em 0; }
 
-a         { color: #91736b; text-decoration: none; }
+a         { text-decoration: none; }
 
 ::-moz-selection {background: rgba(252, 252, 82,0.2)}
 ::selection {background: rgba(252, 252, 82,0.2)}
@@ -366,12 +366,9 @@ a         { color: #91736b; text-decoration: none; }
     width: 32px;
     height: 32px;
     display: block;
-    background: #f2eeec;
     text-align: center;
 }
 .main .pagination-list .current a {
-    background: #e54e4d;
-    color: #fefefe;
 }
 
 .main .article .article-year {
