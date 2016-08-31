@@ -299,23 +299,7 @@ a         { color: #91736b; text-decoration: none; }
 
 
 .main .article .more {
-    position: absolute;
-    width: 32px;
-    height: 32px;
-    background: #e54e4d;
-    background: -moz-linear-gradient(0deg, #e54e4d 0%, #e54e4d 90%,  #b13c3c 100%);
-    background: -webkit-linear-gradient(0deg, #e54e4d 0%, #e54e4d 90%, #b13c3c 100%);
-    background: -o-linear-gradient(0deg, #e54e4d 0%,#e54e4d 90%,   #b13c3c 100%);
-    background: -ms-linear-gradient(to 0deg, #e54e4d 0%, #e54e4d 90%,  #b13c3c 100%);
-    background: linear-gradient(to 0deg, #e54e4d 0%,#e54e4d 90%,   #b13c3c 100%);
-    display: block;
-    top: 0;
-    left: -62px;
-    text-decoration: none;
-    font-size: 18px;
-    line-height: 32px;
-    text-align: center;
-    color: rgba(255, 255, 255, 0.98);
+
 }
 .main .article .more:hover {
     border-bottom: none;
