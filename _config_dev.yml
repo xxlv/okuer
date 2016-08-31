@@ -110,8 +110,8 @@ googleAnaly:
 #comment config
 disqus:
   config: false
-  id: piznblog
+  id: xxlv
 
 duoshuo:
-  config: true
-  id: zhanxin
+  config: false
+  id: xxlv

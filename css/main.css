@@ -16,7 +16,7 @@ ul, ol {
     list-style-type: none;
 }
 body {
-    background: #92b3a2 url(../images/bg.jpg) repeat 0 0;
+    background: #dce6e0;
     font-size: 14px;
     line-height: 1.5;
     font-family: Georgia, Hiragino Sans GB,\5b8b\4f53;
@@ -99,7 +99,7 @@ a         { color: #91736b; text-decoration: none; }
     border-bottom: 3px double #46635e;
 }
 .nav-item-active a {
-    color: #f2eeec;
+    color: gray;
 }
 .nav-item-active a:hover {
     border-bottom: 3px double rgba(255, 255, 255, 0.3);
@@ -149,7 +149,6 @@ a         { color: #91736b; text-decoration: none; }
     min-height: 600px;
     height: auto;
     box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.1);
-    background: #e3ded8 url(../images/cnt-top.jpg) repeat-x 0 0;
 }
 
 .main .article {
@@ -398,23 +397,7 @@ a         { color: #91736b; text-decoration: none; }
     list-style: none;
 }
 .main .article-year:after {
-    content: attr(data-year);
-    width: 32px;
-    height: 32px;
-    display: block;
-    position: absolute;
-    top: 0;
-    left: -62px;
-    background: #e54e4d;
-    background: -moz-linear-gradient(0deg, #e54e4d 0%, #e54e4d 90%,  #b13c3c 100%);
-    background: -webkit-linear-gradient(0deg, #e54e4d 0%, #e54e4d 90%, #b13c3c 100%);
-    background: -o-linear-gradient(0deg, #e54e4d 0%,#e54e4d 90%,   #b13c3c 100%);
-    background: -ms-linear-gradient(to 0deg, #e54e4d 0%, #e54e4d 90%,  #b13c3c 100%);
-    background: linear-gradient(to 0deg, #e54e4d 0%,#e54e4d 90%,   #b13c3c 100%);
-    font-size: 12px;
-    line-height: 32px;
-    text-align: center;
-    color: rgba(255, 255, 255, 0.8);
+
 }
 .main .article-year li {
     line-height: 32px;
@@ -427,7 +410,7 @@ a         { color: #91736b; text-decoration: none; }
     display: block;
     float: left;
     line-height: 32px;
-    background: #99b9c4;
+    background: #99b;
     color: #fefefe;
 }
 .main .article-year li a {
@@ -435,7 +418,6 @@ a         { color: #91736b; text-decoration: none; }
     display: block;
     float: left;
     line-height: 32px;
-    background: #f2eeec;
     padding: 0 10px;
 }
 .main .article-year li a:hover {
@@ -448,23 +430,7 @@ a         { color: #91736b; text-decoration: none; }
     height: auto;
 }
 .main .article .about:after {
-    content: "❍";
-    width: 32px;
-    height: 32px;
-    display: block;
-    position: absolute;
-    top: 0;
-    left: -62px;
-    background: #e54e4d;
-    background: -moz-linear-gradient(0deg, #e54e4d 0%, #e54e4d 90%,  #b13c3c 100%);
-    background: -webkit-linear-gradient(0deg, #e54e4d 0%, #e54e4d 90%, #b13c3c 100%);
-    background: -o-linear-gradient(0deg, #e54e4d 0%,#e54e4d 90%,   #b13c3c 100%);
-    background: -ms-linear-gradient(to 0deg, #e54e4d 0%, #e54e4d 90%,  #b13c3c 100%);
-    background: linear-gradient(to 0deg, #e54e4d 0%,#e54e4d 90%,   #b13c3c 100%);
-    font-size: 12px;
-    line-height: 32px;
-    text-align: center;
-    color: rgba(255, 255, 255, 0.8);
+
 }
 .main .article .about-image {
     width: 200px;
@@ -615,21 +581,17 @@ a         { color: #91736b; text-decoration: none; }
 }
 .main .categories .categories-item {
     list-style-type: none;
-    background: #99b9c4;
-    color: #fff;
     margin-right: 10px;
     padding: 3px 20px;
     float: left;
 }
 .main .categories .categories-item a {
-    color: #fff;
 }
 
 .aside {
     padding: 20px 20px 40px 20px;
     margin-top: 26px;
     float: left;
-    background: #f2eeec url(../images/aside-bg.jpg) no-repeat 0px 0px;
     width: 240px;
     min-height: 500px;
     height: auto;
@@ -640,7 +602,6 @@ a         { color: #91736b; text-decoration: none; }
     height: auto;
     padding: 10px 10px;
     border-radius: 5px 5px;
-    background: rgba(110, 70, 60, 0.72);
     text-align: left;
 }
 .aside-contact .title {
@@ -648,7 +609,6 @@ a         { color: #91736b; text-decoration: none; }
     color: #232323;
     font-size: 14px;
     line-height: 24px;
-    font-family: 'Spirax', cursive;
     text-transform: uppercase;
 }
 .aside-contact .det {
@@ -700,7 +660,6 @@ a         { color: #91736b; text-decoration: none; }
     padding-bottom: 3px;
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     box-shadow: 0 1px 1px rgba(255, 255, 255, 0.2);
-    font-family: 'Spirax', cursive;
     text-transform: uppercase;
 }
 .aside-item .list {
