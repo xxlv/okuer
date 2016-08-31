@@ -42,7 +42,7 @@ timezone:      null
 title: x
 description:
 keywords:
-url: //blog.okuer.com
+url: http://blog.okuer.com
 feed: /atom.xml
 # favicon:
 
@@ -63,7 +63,7 @@ nav:
 author:
     name: x
     email: lvxiang119@gmail.com
-    imageLink: https://blog.okuer.com/images/avatar.jpg
+    imageLink: http://blog.okuer.com/images/avatar.jpg
     simpleIntro:
     detailIntro:
       <p>Hello World</p>
