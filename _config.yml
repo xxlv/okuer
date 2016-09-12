@@ -1,115 +1,55 @@
-# Where things are
-source:       .
-destination:  ./_site
-plugins:      ./_plugins
-layouts:      ./_layouts
-paginate:     8
 
-# Handling Reading
-safe:         false
-include:      [".htaccess"]
-exclude:      []
-keep_files:   [".git", ".svn"]
-encoding:     "utf-8"
-markdown_ext: "markdown,mkdown,mkdn,mkd,md"
-textile_ext:  "textile"
+# SEO settings
+title: "Think"
+title2: "space" # default: ""
+description: "Hello."
+keywords: "novel"
+url: httt://blog.okuer.com # site url
+# baseurl: "/" # apply repo name if use it under gh-pages branch
+baseurl: null # apply null if repo name is something like username.github.io
 
-# Filtering Content
-show_drafts:  null
-limit_posts:  0
-future:       true
-unpublished:  false
+google_analytics: UA-XXXXX-XX
+repo: http://github.com/heiswayi/thinkspace
+disqus_shortname: "heiswayi"
+twitter_username: "HeiswayiNrird"
+comments: true
 
-# Conversion
-markdown:     kramdown
-highlighter:  pygments
-lsi:          false
-excerpt_separator: "\n\n"
+# Build settings
+permalink   : /:year/:title/
+markdown    : kramdown
+highlighter : rouge
 
-# Serving
-detach:       false
-port:         4000
-host:         127.0.0.1
-baseurl:      "" # does not include hostname
+source: ./
+destination: ./_site
 
-# Outputting
-permalink:     date
-paginate_path: /page:num
-timezone:      null
+# Sass configuration
+sass:
+  sass_dir: assets/scss
+  style: compressed # expanded
 
-
-#Site config
-title: x
-description:
-keywords:
-url: //blog.okuer.com
-feed: /atom.xml
-# favicon:
-
-#Nav config
-nav:
-  - text: Home
-    url: /index.html
-  - text: Categories
-    url: /categories.html
-  - text: Archives
-    url: /archives.html
-  - text: About Me
-    url: /contact.html
-  - text: Links
-    url: /links.html
-
-#Author config
+# Author settings
 author:
-    name: x
-    email: lvxiang119@gmail.com
-    imageLink: http://blog.okuer.com/images/avatar.jpg
-    simpleIntro:
-    detailIntro:
-      <p>Hello World</p>
+  name     : "Ghost"
+  job      : "Software Engineer"
+  bio      : ""
+  thumb    : /images/author.jpg
+  email    : lvxiang119@gmail.com
+  url      : http://heiswayi.github.io
 
-#Follow me, you can choose your icon by http://fortawesome.github.io/Font-Awesome/icons/#brand
-# follow:
-#   - class: icon-rss
-#     url: /atom.xml
-#   - class: icon-weibo
-#     url: http://weibo.com/pizn
-#   - class: icon-renren
-#     url: http://renren.com
-#   - class: icon-github-alt
-#     url: http://github.com/xxlv
-#   - class: icon-twitter
-#     url: http://twitter.com/piznlin
-#   - class: icon-google-plus
-#     url: http://google.com
+# social settings
+# og_locale: "en_US"
+# twitter_card: "summary_large_image"
+# twitter_site: "@HeiswayiNrird"
 
+gems:
+  - bourbon
+  - jekyll-paginate
 
-# Links
-customLinks:
-  - item:
-    - text: Github
-      url: http://www.github.com/xxlv
+# navbar pages
+navbar:
+  - slug : about
+    title: About
+  - slug : blog
+    title: Blog
 
-    # message: Friends
-#   - item:
-#     - text: Font Awesome
-#       url: http://fortawesome.github.io/Font-Awesome/
-#     - text: Google Font
-#       url: http://www.google.com/fonts/
-#     - text: jQuery
-#       url: http://jquery.com/
-#     message: 其他相关链接
-
-#googleAnaly, your id link UA-12345678-X
-# googleAnaly:
-#   config: false
-#   id: UA-40169250-1
-
-#comment config
-disqus:
-  config: false
-  id: xxlv
-
-duoshuo:
-  config: false
-  id: xxlv
+exclude: ["gulp", "node_modules", "bower", "bower_components", "config.rb", "src", "Gemfile", "Gemfile.lock", ".rvmrc", ".rbenv-version", "package.json", "gulpfile.js", "README.md", "Rakefile", "changelog.md"]
