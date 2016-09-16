@@ -1,7 +1,7 @@
 ---
 author: X
 comments: true
-date: 2016-09-14 14:00:00+00:00
+date: 2016-09-16 14:00:00+00:00
 layout: post
 title:  决定性问题的一个猜想
 categories:  杂文
