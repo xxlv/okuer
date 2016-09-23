@@ -3,4 +3,7 @@ layout: page
 title: About
 permalink: /about/
 ---
-Hello , this is my home page .
+
+Hello, Wellcome to my blog. I love thinking about something very fantastic.  
+
+I love computer and fiction.  
