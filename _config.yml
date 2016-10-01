@@ -9,7 +9,7 @@ url: httt://blog.okuer.com # site url
 baseurl: null # apply null if repo name is something like username.github.io
 
 google_analytics: UA-XXXXX-XX
-repo: http://github.com/heiswayi/thinkspace
+repo: http://github.com/xxlv/okuer
 disqus_shortname: "heiswayi"
 twitter_username: "HeiswayiNrird"
 comments: true
