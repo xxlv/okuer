@@ -2,7 +2,7 @@
 # SEO settings
 title: "X's world"
 title2: "" # default: ""
-description: "Hello."
+description: "Reading"
 keywords: "novel"
 url: httt://blog.okuer.com # site url
 # baseurl: "/" # apply repo name if use it under gh-pages branch
