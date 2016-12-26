@@ -1,7 +1,7 @@
 ---
 author: X
 comments: true
-date: 2016-12-3 8:00:00+00:00
+date: 2016-12-23 8:00:00+00:00
 layout: post
 title:  Git:一种新工作模式的思考
 categories: computer
