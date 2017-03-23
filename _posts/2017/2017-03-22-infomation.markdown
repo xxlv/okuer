@@ -6,7 +6,7 @@ layout: post
 title: 基于大量信息的决策
 wordpress_id: 81
 categories:
-- 杂文
+- 随笔
 ---
 
 
