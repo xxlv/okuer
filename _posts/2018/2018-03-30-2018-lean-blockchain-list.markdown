@@ -49,7 +49,7 @@ categories:
 * web3  交与区块链
 * Dapp
 * 区块链底层协议
-* EIP|BIP  升级方案
+* EIP、BIP
 * 分叉
 * 区块的扩容
 * 挖矿
