@@ -9,7 +9,7 @@ categories:
 ---
 
 
-![](http://yuml.me/diagram/scruffy/class/[Blockchain] Oracle -.->[Real word])
+![](http://yuml.me/diagram/scruffy/class/[Blockchain] Oracle -.->[Real world])
 
 在以太坊上创建一个智能合约已经是一件是平常的事情了，这里几乎不会牵扯到复杂的编程知识或者法律合约知识。一个普通人可以快速的创建一个ERC 20 token。这使得区块链在这个世界蔓延生根的更快。基于智能合约，我们似乎要看见遥远的未来，很多事物都可以通过智能合约来进行，而不需要借助一个黑盒子的中央机构。智能合约加速了交易，并且透明的合约也保护了参与者双方在完全信息对称。
 
