@@ -8,7 +8,9 @@ categories:
 - 点滴
 ---
 
-``` solidity
+
+
+``` 
 
 pragma solidity ^0.4.24;
 /**
