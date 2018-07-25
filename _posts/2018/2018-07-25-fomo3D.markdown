@@ -3,7 +3,7 @@ author: ghost
 comments: true
 date: 2018-07-25 08:05:39+00:00
 layout: post
-title: Fomo3D-著名的旁氏实验
+title: Fomo3D-Pyramid scheme
 categories:
 - 点滴
 ---
