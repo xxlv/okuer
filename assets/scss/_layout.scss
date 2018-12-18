@@ -77,7 +77,6 @@ hr {
 .site-header {
   border-bottom: 1px solid lighten($light-gray-color, 5%);
   margin-bottom: $small-spacing;
-  min-height: 80px;
 }
 
 .intro {
@@ -112,6 +111,7 @@ hr {
 
 .nav {
   min-height: 64px;
+  background-color:black;
 }
 
 .navbar {
@@ -133,7 +133,7 @@ hr {
 }
 
 .post-list {
-  background-color: lighten($light-gray-color, 17%);
+  background-color: lighten($light-gray-color, 90%);
 }
 
 .category-title {
