@@ -3,7 +3,7 @@ author: ghost
 comments: true
 date: 2018-09-02 08:05:39+00:00
 layout: post
-title: 【纯粹理性思维】-利用工具
+title: 利用工具
 categories:
 - 纯粹理性思维
 ---

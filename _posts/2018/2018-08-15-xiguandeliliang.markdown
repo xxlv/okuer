@@ -3,7 +3,7 @@ author: ghost
 comments: true
 date: 2018-08-15 08:05:39+00:00
 layout: post
-title: 【纯粹理性思维】-习惯的力量
+title: 习惯的力量
 categories:
 - 纯粹理性思维
 ---
