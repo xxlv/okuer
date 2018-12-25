@@ -23,7 +23,7 @@ BloomFilter提供了一种判断一个值是否存在于指定集合的方法。
 核心实现的代码如下
 
 
-```
+``` java
 
 public class BloomFilter {
 
