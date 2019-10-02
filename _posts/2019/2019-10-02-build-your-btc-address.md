@@ -10,14 +10,14 @@
 sudo pip install bitcoin
 sudo pip install ecdsa
 ```
-第二步，拔掉网线或者断开wifi
+### 第二步，拔掉网线或者断开wifi
 非常重要的步骤，如果不是测试，一定要做！！！
-第三步，运行脚本，生成密钥对
+### 第三步，运行脚本，生成密钥对
 ```
 python key-to-address-ecc-example.py
 ```
 ### 生成的结果如下：
->
+```
 Private Key (hex) is:  14962ffc7f1c9dba79aadb608cd7088574e41a418a5349004309b722a9051b90
 Private Key (decimal) is:  9311615220753377728968374325829133502017354028737325199749815733352682298256
 Private Key (WIF) is:  5HyMSVcZMnBeGEoFbPqRaPHK1xVpHj6yCGnC4bvqxRUm72uuvbx
@@ -28,18 +28,21 @@ Public Key (hex) is: 0446c477454946ee7187a0b859cedf3c4799726b5d8921b22b6b366b971
 Compressed Public Key (hex) is: 0346c477454946ee7187a0b859cedf3c4799726b5d8921b22b6b366b97178d380c
 Bitcoin Address (b58check) is: 18HWNXDVj1jSz9syiJpo2YcEofympTLQgC
 Compressed Bitcoin Address (b58check) is: 1HViUwJwUofaAPKbnzNRXHqqRE6UQE7g5B
-
+```
 每个人的机器每次调用生成的都不是相同的。 这是btc账号的全部信息，建议冷藏。
 ### 第四步，生成校验签名
 执行
-```python signmessage.py  -s```
+```
+python signmessage.py  -s
+```
 依此输入：
-
 - 比特币公钥地址（上面的 Bitcoin Address (b58check) ）：18HWNXDVj1jSz9syiJpo2YcEofympTLQgC
 - 签名信息如：hello
 - 钱包格式的私钥（等价于私钥,Private Key (WIF)）：5HyMSVcZMnBeGEoFbPqRaPHK1xVpHj6yCGnC4bvqxRUm72uuvbx
-### 输出（每个的都不同）：
-```HB/9ZeoXB5zmaZq5OkC+btPcWcBly74dnJfrUmKB+EKhs+5q3stDATXXkAT2CpyovXUC6pIvD4ibfW90842f9Zw=```
+
+输出（每个的都不同）：
+```HB/9ZeoXB5zmaZq5OkC+btPcWcBly74dnJfrUmKB+EKhs+5q3stDATXXkAT2CpyovXUC6pIvD4ibfW90842f9Zw=
+```
 
 ### 第五步
 
