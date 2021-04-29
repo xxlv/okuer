@@ -41,7 +41,7 @@ author:
 # twitter_card: "summary_large_image"
 # twitter_site: "@HeiswayiNrird"
 
-gems:
+plugins:
   - bourbon
   - jekyll-paginate
 
@@ -54,4 +54,4 @@ navbar:
 
 exclude: ["gulp", "node_modules", "bower", "bower_components", "config.rb", "src", "Gemfile", "Gemfile.lock", ".rvmrc", ".rbenv-version", "package.json", "gulpfile.js", "README.md", "Rakefile", "changelog.md"]
 
-theme: jekyll-theme-merlot
+# theme: jekyll-theme-merlot
