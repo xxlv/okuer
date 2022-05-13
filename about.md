@@ -4,14 +4,19 @@ title: About
 permalink: /about/
 ---
 
- Hey There~~~, I am ghost
+Name: Lv Xiang(~)
 
- > 我目前在杭州の一家叫丁香园的可爱的公司😊，热爱技术、文学和哲学。
+Title: engineer
 
- > 信仰区块链会变革世界。
+---
 
- ``` ruby
- puts "Hello world"
- puts "love ruby python node java c and u "
- puts "AND blockchain "
-```
+My Skills (program language )
+
+- Java
+- Python
+- Ruby/PHP
+- BlockChain & Smart Contract 
+- JVM 
+- GraphQL 
+- Robot 
+

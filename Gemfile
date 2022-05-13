@@ -3,10 +3,11 @@
 source 'http://rubygems.org'
 
 group :development do
-  gem 'html-proofer'
-  gem 'jekyll', '~> 3.0', '>= 3.0.1'
-  gem 'jekyll-paginate', '~> 1.1'
-  gem 'sass', '~> 3.4', '>= 3.4.20'
-  gem 'bourbon', '~> 4.2', '>= 4.2.6'
-  gem 'pygments.rb', '~> 0.6.3'
+  gem 'html-proofer',"~>4.0.0-rc1"
+  gem 'jekyll', '~> 4.2'
+  gem 'jekyll-plantuml','~> 1.3.4'
+  gem 'jekyll-paginate', '~> 1.1.0'
+  gem 'sass', '~> 3.7.4'
+  gem 'bourbon', '~>7.2.0'
+  gem 'pygments.rb', '~> 2.3.0'
 end

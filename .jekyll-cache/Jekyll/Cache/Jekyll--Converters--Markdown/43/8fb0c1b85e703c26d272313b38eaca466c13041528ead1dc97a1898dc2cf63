@@ -1,0 +1,87 @@
+I"�<p>【思想&amp;原理】</p>
+<ul>
+  <li>blockchain的原理</li>
+  <li>主流的blockchain</li>
+  <li>点对点</li>
+  <li>分布式系统</li>
+  <li>货币的本质</li>
+  <li>ICO</li>
+  <li>Token</li>
+  <li>smart contract</li>
+  <li>主流的共识算法 pow&amp;pos&amp;dpos</li>
+  <li>一些思想，不可能三角关系定律等</li>
+  <li>比特币的架构</li>
+  <li>script 语言</li>
+  <li>拜占庭将军的问题</li>
+</ul>
+
+<p>【密码学】</p>
+<ul>
+  <li>椭圆曲线</li>
+  <li>非对称加密算法</li>
+  <li>hash , sha256</li>
+  <li>公钥&amp;私钥&amp;seed</li>
+</ul>
+
+<p>【计算机】</p>
+<ul>
+  <li>​Java、Go语言</li>
+  <li>VM 虚拟机，EVM</li>
+  <li>图灵完备执行环境</li>
+  <li>solidity语言 编写智能合约</li>
+  <li>p2p 网络</li>
+  <li>roc</li>
+  <li>分布式网络</li>
+</ul>
+
+<p>【区块链】</p>
+<ul>
+  <li>公链、私链、联盟链</li>
+  <li>闪电网络、超级账本、IPFS</li>
+  <li>​钱包</li>
+  <li>浏览器</li>
+  <li>比特币&amp;以太坊</li>
+  <li>跨链</li>
+  <li>web3  交与区块链</li>
+  <li>Dapp</li>
+  <li>区块链底层协议</li>
+  <li>EIP、BIP</li>
+  <li>分叉</li>
+  <li>区块的扩容</li>
+  <li>挖矿</li>
+</ul>
+
+<p>【博弈论】</p>
+<ul>
+  <li>​共识博弈</li>
+</ul>
+
+<p>【经济】</p>
+<ul>
+  <li>​如何构建一个去中心化的民主自组织的经济体</li>
+  <li>ICO vs IPO</li>
+</ul>
+
+<p>【金融】</p>
+<ul>
+  <li>​古典金融模式，如IPO</li>
+</ul>
+
+<p>【组织】</p>
+<ul>
+  <li>​理解自下而上管理的组织</li>
+  <li>理解组织的未来运营模式</li>
+  <li>理解去中心化后的组织的维护依赖透明的激励模型</li>
+  <li>理解收益模型（如持续收益模型）</li>
+</ul>
+
+<p>【领域】</p>
+<ul>
+  <li>银行、金融系统（银行发行的数字货币）</li>
+  <li>​医疗，电子病例系统</li>
+  <li>供应链</li>
+  <li>租赁</li>
+  <li>所有权声明</li>
+  <li>分布式DNS</li>
+</ul>
+:ET
