@@ -1,7 +1,0 @@
-I"<p>GraphQL 允许Client来 定制Server 的返回结果。传统的基于Restful的API或者rpc都面临着一个问题，就是Client 没有办法来决定服务器返回的数据</p>
-
-<p>GraphQL 定义一个Type System.</p>
-
-<p>GraphQL并不是新的协议或者技术。</p>
-
-:ET

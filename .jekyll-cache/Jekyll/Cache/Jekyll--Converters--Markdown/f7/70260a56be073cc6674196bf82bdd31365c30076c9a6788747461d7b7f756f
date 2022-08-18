@@ -1,0 +1,239 @@
+I"�><p>GraphQL 允许Client来 定制Server 的返回结果。传统的基于Restful的API或者rpc都面临着一个问题，就是Client 没有办法来决定Server返回什么数据。所有的数据的计算过程都是确定的，Client 只需要Send 一个req， 服务端接受到这个请求进行 response.
+Client并没有一种语言或者约束规则来影响服务端的执行序列。因此，一个简单的场景，</p>
+<h1 id="与rest的差异">与REST的差异</h1>
+<ul>
+  <li>基于REST的架构产生的请求如下
+    <div class="language-http highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">GET /user/1
+</span></code></pre></div>    </div>
+    <p>将返回如下的对象</p>
+    <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">User</span><span class="o">{</span>
+  <span class="n">id</span>
+  <span class="n">name</span>
+  <span class="n">avatar</span>
+  <span class="n">sex</span>
+  <span class="n">age</span>
+<span class="o">}</span>
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<p>当Client 仅仅需要一个name 的时候，Client 唯一做的，就是获取到完整的 <code class="language-plaintext highlighter-rouge">User</code> 对象，然后在浏览器端 进行过滤。</p>
+
+<ul>
+  <li>基于GraphQL 来实现一个相同的功能(通过 <code class="language-plaintext highlighter-rouge">HTTP POST</code> )
+    <div class="language-graphql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">query</span><span class="p">{</span><span class="w">
+  </span><span class="n">user</span><span class="p">{</span><span class="w">
+      </span><span class="n">name</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div>    </div>
+  </li>
+</ul>
+
+<p>Server 端将返回</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+        </span><span class="nl">"user"</span><span class="p">:{</span><span class="w">
+            </span><span class="nl">"name"</span><span class="p">:</span><span class="s2">"Leslie"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+<h2 id="类型系统">类型系统</h2>
+
+<p>GraphQL 定义一个Type System. Type 定义了数据结构与数据约束。</p>
+
+<p>这是的GraphQL成为一种应用层的协议。 通过Type 我们可以定义一个Schema。</p>
+
+<p>Schema 就像是基于REST我们定义的API 信息，如请求参数/返回值。
+Schema描述了 Type System 包含的全部信息：</p>
+
+<ul>
+  <li>
+    <p>所有的查询，都在一个<code class="language-plaintext highlighter-rouge">Query</code> 的特殊类型下。</p>
+  </li>
+  <li>
+    <p>所有的变更与修改，都在一个<code class="language-plaintext highlighter-rouge">Mutation</code>下。</p>
+  </li>
+  <li>
+    <p>同时还有一个<code class="language-plaintext highlighter-rouge">Subscription</code> 用来实现服务端的推送。</p>
+  </li>
+</ul>
+
+<p>一个 简单的Schema 如下</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># user
+type User{
+    id:ID
+    name:String!
+    avatar:URL
+    sex:Int
+    age:Int
+} 
+
+type Mutation{
+    changeUser(name:String):User!
+}
+
+type Query{
+    findUser(name:String):User!
+}
+
+</code></pre></div></div>
+<p>这是一种SDL，描述了 这个Schema包含的查询与变更。</p>
+
+<h3 id="类型">类型</h3>
+<p>GraphQL 系统支持很多类型</p>
+
+<ul>
+  <li>Scalar
+    <ul>
+      <li>ID</li>
+      <li>Int</li>
+      <li>String</li>
+      <li>…</li>
+    </ul>
+  </li>
+  <li>Object</li>
+  <li>Input</li>
+  <li>Enum</li>
+  <li><em>Union</em></li>
+  <li>
+    <p><em>Interface</em></p>
+  </li>
+  <li><strong>LIST</strong></li>
+  <li><strong>NON_NULL</strong></li>
+</ul>
+
+<p>注意，Scalar 是基本的数据类型，所有的复杂类型，如 Object和Input,都是由于Scalar构成。</p>
+
+<p>Scalar 本身定义的数据 是通过字面量 来传递到Server, GraphQL Server 有能力将一个字符序列通过序列化转换成合适的可以被网络传递的数据流（序列化）。当需要响应指定类型的数据，通过从数据流加载数据并转换成字面量。</p>
+
+<p>因此服务端可以实现自己的Scalar类型。比如一个 <code class="language-plaintext highlighter-rouge">UUID</code> 的Scalar。 
+GraphQL spec 定义了<code class="language-plaintext highlighter-rouge">ID</code> 作为资源的唯一标识。 <code class="language-plaintext highlighter-rouge">ID</code> 在有些时候，跟数据库中的auto increment id 是一样的（比如是<code class="language-plaintext highlighter-rouge">long</code>）类型，但并不总是如此。例如有些时候是<code class="language-plaintext highlighter-rouge">uuid</code>.</p>
+
+<p>GraphQL在某些时候，比如需要缓存的时候，可以根据<code class="language-plaintext highlighter-rouge">ID</code>来做。</p>
+
+<p><code class="language-plaintext highlighter-rouge">UNION</code> 和 <code class="language-plaintext highlighter-rouge">INTERFACE</code> 是两种抽象类型，它们可以被当做普通对象一样，作为field 的返回值(output type)。但是因为它们是抽象的，因此在决定它们代表的真实对象的时候，需要借助额外的手段。</p>
+
+<p><code class="language-plaintext highlighter-rouge">LIST</code> 和 <code class="language-plaintext highlighter-rouge">NON_NULL</code> 可以看做是两个 wrapped type. 它们作用在其他Type 上，用来修饰类型本身。
+在GraphQL 中，我们看到对一个对象的描述，往往是这样的:</p>
+
+<p><code class="language-plaintext highlighter-rouge">users:[User!]!</code></p>
+
+<p>这代表 这个 <code class="language-plaintext highlighter-rouge">users</code> 字段 是一个数组，并且不能为空，数组中的每一个元素是一个<code class="language-plaintext highlighter-rouge">User</code> 对象，这个<code class="language-plaintext highlighter-rouge">User</code>对象本身也不能为空。</p>
+
+<p>这样的修饰在 字段解析的时候是有含义的。它明确了字段必要的语义。并且增加了强约束。 比如spec 规定了，如果一个非空字段没有被返回，那么它的原因将出现在errors中。</p>
+
+<p><code class="language-plaintext highlighter-rouge">INPUT</code> 本身是一个Object.  拥有字段。跟<code class="language-plaintext highlighter-rouge">Object</code> 不一样的是，<code class="language-plaintext highlighter-rouge">INPUT</code> 是离散的，业务无关的，仅仅用作输入的字段的组合。<code class="language-plaintext highlighter-rouge">Object</code> 是业务内聚的，比如一个<code class="language-plaintext highlighter-rouge">User</code>对象，不能包含 一个字段叫 <code class="language-plaintext highlighter-rouge">weather</code>(实际上你也可以这样做，但并不是一个非常好的选择)。 如果没有<code class="language-plaintext highlighter-rouge">INPUT</code> 类型，当我们将一个<code class="language-plaintext highlighter-rouge">User</code> 对象作为输入，那么如果要扩展 输入源，就必然要修改<code class="language-plaintext highlighter-rouge">User</code> 本身。这样，系统的熵将越来越大。</p>
+
+<h3 id="interception">interception</h3>
+
+<p><code class="language-plaintext highlighter-rouge">GraphQL</code> 可以自省，这代表着通过<code class="language-plaintext highlighter-rouge">query</code> 我们可以观察到 graphQL 的schema结构。</p>
+
+<p>结果包含了所有的type与备注，例如<code class="language-plaintext highlighter-rouge">graphiql</code> 就是基于此来产生一个可阅读文档。</p>
+
+<h3 id="resolverdatafetcher">Resolver/DataFetcher</h3>
+
+<p>GraphQL 的核心就是通过Type构建一个Schema，来描述一张<code class="language-plaintext highlighter-rouge">graph</code>。并且对字段绑定<code class="language-plaintext highlighter-rouge">resolver</code> 函数。（有些时候叫 <code class="language-plaintext highlighter-rouge">dataFetcher</code>）。</p>
+
+<p>如 下面的例子</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+query{
+    users(filer:String!):[User]
+}
+
+enum SEX{
+    M
+    FM
+}
+
+type User{
+    idCard:ID！
+    name:String！
+    age:int
+    sex:SEX
+}
+
+</code></pre></div></div>
+
+<p>在 <code class="language-plaintext highlighter-rouge">query</code> 下 有 <code class="language-plaintext highlighter-rouge">field</code> 的名字叫 <code class="language-plaintext highlighter-rouge">users</code> ， <code class="language-plaintext highlighter-rouge">users</code> 接受一个参数 <code class="language-plaintext highlighter-rouge">filer</code>. 返回一个数组。（任何字段都可以添加0个或者多个 <code class="language-plaintext highlighter-rouge">argument</code>）</p>
+
+<p>因此服务端需要对 <code class="language-plaintext highlighter-rouge">Query</code>下的<code class="language-plaintext highlighter-rouge">users</code> 绑定一个解析函数。</p>
+
+<p>注意，<code class="language-plaintext highlighter-rouge">Query</code> 和 <code class="language-plaintext highlighter-rouge">User</code> 本质上是一样的，不同的是，GraphQL <code class="language-plaintext highlighter-rouge">Query</code>、<code class="language-plaintext highlighter-rouge">Mutation</code>、<code class="language-plaintext highlighter-rouge">Subscription</code> 是内置的。</p>
+
+<p>在GraphQL的一个<code class="language-plaintext highlighter-rouge">schema</code>中， Type是唯一的，因此你无法定义两个 <code class="language-plaintext highlighter-rouge">User</code>。 所以，每一个字段的解析函数都可以通过 <code class="language-plaintext highlighter-rouge">Type.field</code> 来确定。这个就是字段坐标。</p>
+
+<p>比如在我们的例子中，可以采用<code class="language-plaintext highlighter-rouge">Query.users</code> 来确定<code class="language-plaintext highlighter-rouge">users</code>的值.</p>
+
+<p>对于一个GraphQL 中的任意字段都可以绑定一个解析函数，</p>
+
+<p>比如当我们的<code class="language-plaintext highlighter-rouge">User</code> 对象 包含一个<code class="language-plaintext highlighter-rouge">Friend</code>数组的时候，</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+type Friend{
+    id：String!
+    touchTime:Date!
+}
+
+type User{
+    idCard:ID！
+    name:String！
+    age:int
+    sex:SEX
+    friends:[Friend!]
+}
+
+
+</code></pre></div></div>
+
+<p>我们可以单独给 friends 绑定 绑定字段解析函数</p>
+
+<p><code class="language-plaintext highlighter-rouge">User.friends=()-&gt; parseFromSomewhere()</code></p>
+
+<p>注意，当给<code class="language-plaintext highlighter-rouge">Query.users</code> 绑定一个解析函数的时候，解析函数返回的值如果包含</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[{</span><span class="w">
+    </span><span class="nl">"idCard"</span><span class="p">:</span><span class="s2">""</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"name"</span><span class="p">:</span><span class="s2">"Leslie"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"age"</span><span class="p">:</span><span class="mi">19</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"sex"</span><span class="p">:</span><span class="s2">"M"</span><span class="w">
+</span><span class="p">}]</span><span class="w">
+</span></code></pre></div></div>
+<p>GraphQL 将会自动映射到对应的字段上，无需为每一个<code class="language-plaintext highlighter-rouge">User</code> 字段都绑定解析函数。</p>
+
+<p>还有一种情况是，当我们为 <code class="language-plaintext highlighter-rouge">friends</code>绑定一个函数解析的时候，实际上我们期望获取到是
+当前<code class="language-plaintext highlighter-rouge">user</code>的朋友，因此我们在绑定 <code class="language-plaintext highlighter-rouge">User.friends</code>的时候，其实依赖的是<code class="language-plaintext highlighter-rouge">User</code>产生的上下文。比如 <code class="language-plaintext highlighter-rouge">idCard</code>， 因此在配置<code class="language-plaintext highlighter-rouge">resolver</code> 的时候，可以通过<code class="language-plaintext highlighter-rouge">source</code>来获取 <code class="language-plaintext highlighter-rouge">Query.users</code> 返回的<code class="language-plaintext highlighter-rouge">idCard</code> 作为 <code class="language-plaintext highlighter-rouge">User.friends</code> 函数的上下文。</p>
+
+<p>如</p>
+
+<p><code class="language-plaintext highlighter-rouge">loadFriendById($idCard)</code></p>
+
+<h4 id="n1">N+1</h4>
+<p>上面的<code class="language-plaintext highlighter-rouge">users</code>的例子，当获取一批<code class="language-plaintext highlighter-rouge">User</code>的<code class="language-plaintext highlighter-rouge">Friend</code>，往往需要执行两个阶段，执行序列如下，</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">-- frist </span>
+<span class="nv">`getUsers`</span> <span class="err">获取一个数组的</span><span class="n">list</span> 
+<span class="c1">---- And more </span>
+ <span class="n">loadFriendById</span><span class="p">(</span><span class="err">$</span><span class="n">idCard_1</span><span class="p">)</span>
+ <span class="n">loadFriendById</span><span class="p">(</span><span class="err">$</span><span class="n">idCard_2</span><span class="p">)</span>
+ <span class="n">loadFriendById</span><span class="p">(</span><span class="err">$</span><span class="n">idCard_3</span><span class="p">)</span>
+ <span class="n">loadFriendById</span><span class="p">(</span><span class="err">$</span><span class="n">idCard_4</span><span class="p">)</span>
+ <span class="n">loadFriendById</span><span class="p">(</span><span class="err">$</span><span class="n">idCard_5</span><span class="p">)</span>
+ <span class="n">loadFriendById</span><span class="p">(</span><span class="err">$</span><span class="n">idCard_N</span><span class="p">)</span>
+
+</code></pre></div></div>
+<p>N+1 的问题的解决方案一般是采用 <code class="language-plaintext highlighter-rouge">dataloader</code>。具体的原理是 在执行<code class="language-plaintext highlighter-rouge">loadFriendById</code>的时候，并不立即返回结果，而是返回一个<code class="language-plaintext highlighter-rouge">promise</code>, 将请求汇总在一起批量提交。
+如 <code class="language-plaintext highlighter-rouge">loadFriendsByIds($idCards)</code></p>
+
+<p>这样可以极大减少网络IO开销。</p>
+
+<h3 id="分页">分页</h3>
+
+<p>我们常常采用的分页是 <code class="language-plaintext highlighter-rouge">page</code> &amp; <code class="language-plaintext highlighter-rouge">size</code>,通过<code class="language-plaintext highlighter-rouge">page</code>+<code class="language-plaintext highlighter-rouge">size</code> 来定位到 <code class="language-plaintext highlighter-rouge">offset</code>，在进行偏移来获取数据。 <code class="language-plaintext highlighter-rouge">Relay</code>  framework 提供了一种基于 <code class="language-plaintext highlighter-rouge">cursor</code> 的分页最佳实践。</p>
+
+<p>可以参考这里
+<a href="https://relay.dev/graphql/connections.htm#sec-Reserved-Types">Relay Style Connection</a></p>
+
+:ET
