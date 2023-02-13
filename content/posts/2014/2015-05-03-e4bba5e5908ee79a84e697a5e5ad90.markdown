@@ -3,7 +3,6 @@ author: admin
 comments: true
 date: 2015-05-03 08:05:39+00:00
 layout: post
-slug: '%e4%bb%a5%e5%90%8e%e7%9a%84%e6%97%a5%e5%ad%90'
 title: 以后的日子
 wordpress_id: 81
 categories:

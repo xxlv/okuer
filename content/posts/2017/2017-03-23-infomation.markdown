@@ -1,7 +1,7 @@
 ---
 author: ghost
 comments: true
-date: 2017-3-23 21:05:39+00:00
+date: 2017-01-20 21:05:39+00:00
 layout: post
 title: 基于大量信息的决策
 wordpress_id: 81

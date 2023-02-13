@@ -3,7 +3,6 @@ author: admin
 comments: true
 date: 2015-06-18 02:34:55+00:00
 layout: post
-slug: '%e5%a4%8f%c2%b7%e5%88%bb%e6%84%8f'
 title: 夏·刻意
 wordpress_id: 127
 categories:

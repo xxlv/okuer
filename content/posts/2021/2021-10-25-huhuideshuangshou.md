@@ -1,7 +1,7 @@
 ---
 author: ghost
 comments: true
-date: 2021-10-25 05:26+00:00
+date: 2021-10-25 05:26:00+00:00
 layout: post
 title: 互绘的双手
 categories:

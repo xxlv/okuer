@@ -3,7 +3,6 @@ author: admin
 comments: true
 date: 2015-06-13 13:43:20+00:00
 layout: post
-slug: '%e6%88%91%e4%bb%bf%e4%bd%9b%e7%9c%8b%e8%a7%81%e4%bd%a0'
 title: 我仿佛看见你
 wordpress_id: 108
 categories:

@@ -1,7 +1,7 @@
 ---
 author: ghost
 comments: true
-date: 2017-3-24 21:05:39+00:00
+date: 2017-03-24 21:05:39+00:00
 layout: post
 title: 密码学货币
 categories:

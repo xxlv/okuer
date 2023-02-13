@@ -3,7 +3,6 @@ author: admin
 comments: true
 date: 2015-08-19 04:50:31+00:00
 layout: post
-slug: '%e8%99%9e%e7%be%8e%e4%ba%ba%e7%9b%9b%e5%bc%80%e7%9a%84%e5%b1%b1%e5%9d%a1'
 title: 虞美人盛开的山坡
 wordpress_id: 228
 categories:

@@ -3,7 +3,6 @@ author: admin
 comments: true
 date: 2015-05-05 15:32:09+00:00
 layout: post
-slug: '%e8%90%a4%e7%81%ab%e8%99%ab'
 title: 萤火虫
 wordpress_id: 84
 categories:

@@ -3,7 +3,6 @@ author: admin
 comments: true
 date: 2015-05-03 08:02:32+00:00
 layout: post
-slug: '%e9%81%97%e5%a4%b1%e4%b9%8b%e5%9f%8e-%ef%bc%9alin'
 title: 遗失之城 ：LIN（修正:2017-10-24）
 wordpress_id: 79
 categories:

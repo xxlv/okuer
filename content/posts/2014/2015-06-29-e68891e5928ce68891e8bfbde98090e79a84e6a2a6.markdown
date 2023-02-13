@@ -3,7 +3,6 @@ author: admin
 comments: true
 date: 2015-06-29 14:30:39+00:00
 layout: post
-slug: '%e6%88%91%e5%92%8c%e6%88%91%e8%bf%bd%e9%80%90%e7%9a%84%e6%a2%a6'
 title: 我和我追逐的梦
 wordpress_id: 135
 categories:

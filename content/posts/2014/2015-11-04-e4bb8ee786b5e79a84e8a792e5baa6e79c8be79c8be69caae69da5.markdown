@@ -3,7 +3,6 @@ author: admin
 comments: true
 date: 2015-11-04 13:14:25+00:00
 layout: post
-slug: '%e4%bb%8e%e7%86%b5%e7%9a%84%e8%a7%92%e5%ba%a6%e7%9c%8b%e7%9c%8b%e6%9c%aa%e6%9d%a5'
 title: 从“熵”的角度看看未来
 wordpress_id: 373
 categories:
