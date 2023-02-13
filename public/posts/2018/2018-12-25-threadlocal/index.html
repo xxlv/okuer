@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>
+  谈谈ThreadLocal · Okuer
+</title>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="author" content="John Doe">
+<meta name="description" content="摘要 Link to heading ThreadLocal被设计为在线程内部共享的变量。
+并发操作带来极大的性能优势，但同时在数据的一致性上也带来了挑战，当我们在线程内部要传递一个变量，如果将变量设置为局部的，当然没有任何并发问题，但是在同一个线程里，其他的方法就不能共享该变量。 如果设置为全局类变量，又导致多个线程会共享，如果解决这个问题呢？
+ThreadLocal就是为了这个目的诞生的，它提供了一种具有特殊能力的“线程私有变量”，在当前线程中，可以随意共享并且随意使用，在其他线程中，它是完全独立的。
+使用场景 Link to heading 线程内部的共享的变量在许多场景下非常有用，比如经典的web 服务，一次用户的请求，会分配一个线程去处理，使用ThreadLocal可以与一个sessionId绑定，这样的话，一个线程就处理一个用户的请求。
+实现原理 Link to heading ThreadLocal需要被设计为线程私有的，要完成这个目标，我们一般会想到借助于HashMap，使用K-&gt;V 的形式。每个线程的维护一个HashMap。
+比如这样设计
+threadMap=getMapByThread(currentThread); threadMap.put(ThreadLocal.KEY,threadLocal.VALUE) 这样，让每个线程都能获取到自己的map。就可以将threadLocal在线程中隔离出来。
+在JDK的实现中，也是采用了类似的原理，每个ThreadLocal都维护着一个map。但是区别是，这个Map是它自己实现的ThreadLocalMap而非Hashmap.
+map的key就是ThreadLocal。
+为什么要自己实现ThreadLocalMap？ Link to heading 要回答这个问题，就要考虑如下的情况:
+threadLocal=null; 此次，我们的预期是threadLocal被设置为null。在GC的时候，需要回收内存。但是，注意，在ThreadLocal内部的map中，ThreadLocal被作为key。
+ThreadLocal是有引用的，所以，在这里 threadLocal并不会被GC掉。这样带来的问题就是，线程尤其是常驻线程的大量threadLocal都不会被释放，很容易引起OOM。
+在解决这个问题上，我们看到JDK是通过weakReference来解决的。所以自然不能用Hashmap。只能用自己实现的ThreadLocalMap来解决。
+但是，对ThreadLocalMap的key做弱引用，还是导致map存在一些 NULL-&gt;V 的数据。这样的脏数据也会持续占据内存。 JDK只能在set、remove的时候，将Key为NULL的数据删除。这样做显然是无奈之举。因为，你不能指望一个用户会如你预期的调用这些方法。如果用户不调用这些方法，仍旧会存在OOM问题。
+小结 Link to heading 看到 ThreadLocal的实现其实并不完美，甚至有点丑，但ThreadLocal已经完全满足工业需求。在技术上的实现并不总是有完美的解决方案，我们看到每个通过set、remove后，这个方法总是会处理一些额外的事情，这些事情用户也许并不知情。用户期望要一个杯子，但是服务员给了一个杯子，顺便倒掉了里面剩余的水。总的而言，用户得到了他想要的，而服务员也很好的规避了用户的投诉。虽然，这一些都是在用户也许不知情的情况下发生的。">
+<meta name="keywords" content="blog,developer,personal">
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="谈谈ThreadLocal"/>
+<meta name="twitter:description" content="摘要 Link to heading ThreadLocal被设计为在线程内部共享的变量。
+并发操作带来极大的性能优势，但同时在数据的一致性上也带来了挑战，当我们在线程内部要传递一个变量，如果将变量设置为局部的，当然没有任何并发问题，但是在同一个线程里，其他的方法就不能共享该变量。 如果设置为全局类变量，又导致多个线程会共享，如果解决这个问题呢？
+ThreadLocal就是为了这个目的诞生的，它提供了一种具有特殊能力的“线程私有变量”，在当前线程中，可以随意共享并且随意使用，在其他线程中，它是完全独立的。
+使用场景 Link to heading 线程内部的共享的变量在许多场景下非常有用，比如经典的web 服务，一次用户的请求，会分配一个线程去处理，使用ThreadLocal可以与一个sessionId绑定，这样的话，一个线程就处理一个用户的请求。
+实现原理 Link to heading ThreadLocal需要被设计为线程私有的，要完成这个目标，我们一般会想到借助于HashMap，使用K-&gt;V 的形式。每个线程的维护一个HashMap。
+比如这样设计
+threadMap=getMapByThread(currentThread); threadMap.put(ThreadLocal.KEY,threadLocal.VALUE) 这样，让每个线程都能获取到自己的map。就可以将threadLocal在线程中隔离出来。
+在JDK的实现中，也是采用了类似的原理，每个ThreadLocal都维护着一个map。但是区别是，这个Map是它自己实现的ThreadLocalMap而非Hashmap.
+map的key就是ThreadLocal。
+为什么要自己实现ThreadLocalMap？ Link to heading 要回答这个问题，就要考虑如下的情况:
+threadLocal=null; 此次，我们的预期是threadLocal被设置为null。在GC的时候，需要回收内存。但是，注意，在ThreadLocal内部的map中，ThreadLocal被作为key。
+ThreadLocal是有引用的，所以，在这里 threadLocal并不会被GC掉。这样带来的问题就是，线程尤其是常驻线程的大量threadLocal都不会被释放，很容易引起OOM。
+在解决这个问题上，我们看到JDK是通过weakReference来解决的。所以自然不能用Hashmap。只能用自己实现的ThreadLocalMap来解决。
+但是，对ThreadLocalMap的key做弱引用，还是导致map存在一些 NULL-&gt;V 的数据。这样的脏数据也会持续占据内存。 JDK只能在set、remove的时候，将Key为NULL的数据删除。这样做显然是无奈之举。因为，你不能指望一个用户会如你预期的调用这些方法。如果用户不调用这些方法，仍旧会存在OOM问题。
+小结 Link to heading 看到 ThreadLocal的实现其实并不完美，甚至有点丑，但ThreadLocal已经完全满足工业需求。在技术上的实现并不总是有完美的解决方案，我们看到每个通过set、remove后，这个方法总是会处理一些额外的事情，这些事情用户也许并不知情。用户期望要一个杯子，但是服务员给了一个杯子，顺便倒掉了里面剩余的水。总的而言，用户得到了他想要的，而服务员也很好的规避了用户的投诉。虽然，这一些都是在用户也许不知情的情况下发生的。"/>
+
+<meta property="og:title" content="谈谈ThreadLocal" />
+<meta property="og:description" content="摘要 Link to heading ThreadLocal被设计为在线程内部共享的变量。
+并发操作带来极大的性能优势，但同时在数据的一致性上也带来了挑战，当我们在线程内部要传递一个变量，如果将变量设置为局部的，当然没有任何并发问题，但是在同一个线程里，其他的方法就不能共享该变量。 如果设置为全局类变量，又导致多个线程会共享，如果解决这个问题呢？
+ThreadLocal就是为了这个目的诞生的，它提供了一种具有特殊能力的“线程私有变量”，在当前线程中，可以随意共享并且随意使用，在其他线程中，它是完全独立的。
+使用场景 Link to heading 线程内部的共享的变量在许多场景下非常有用，比如经典的web 服务，一次用户的请求，会分配一个线程去处理，使用ThreadLocal可以与一个sessionId绑定，这样的话，一个线程就处理一个用户的请求。
+实现原理 Link to heading ThreadLocal需要被设计为线程私有的，要完成这个目标，我们一般会想到借助于HashMap，使用K-&gt;V 的形式。每个线程的维护一个HashMap。
+比如这样设计
+threadMap=getMapByThread(currentThread); threadMap.put(ThreadLocal.KEY,threadLocal.VALUE) 这样，让每个线程都能获取到自己的map。就可以将threadLocal在线程中隔离出来。
+在JDK的实现中，也是采用了类似的原理，每个ThreadLocal都维护着一个map。但是区别是，这个Map是它自己实现的ThreadLocalMap而非Hashmap.
+map的key就是ThreadLocal。
+为什么要自己实现ThreadLocalMap？ Link to heading 要回答这个问题，就要考虑如下的情况:
+threadLocal=null; 此次，我们的预期是threadLocal被设置为null。在GC的时候，需要回收内存。但是，注意，在ThreadLocal内部的map中，ThreadLocal被作为key。
+ThreadLocal是有引用的，所以，在这里 threadLocal并不会被GC掉。这样带来的问题就是，线程尤其是常驻线程的大量threadLocal都不会被释放，很容易引起OOM。
+在解决这个问题上，我们看到JDK是通过weakReference来解决的。所以自然不能用Hashmap。只能用自己实现的ThreadLocalMap来解决。
+但是，对ThreadLocalMap的key做弱引用，还是导致map存在一些 NULL-&gt;V 的数据。这样的脏数据也会持续占据内存。 JDK只能在set、remove的时候，将Key为NULL的数据删除。这样做显然是无奈之举。因为，你不能指望一个用户会如你预期的调用这些方法。如果用户不调用这些方法，仍旧会存在OOM问题。
+小结 Link to heading 看到 ThreadLocal的实现其实并不完美，甚至有点丑，但ThreadLocal已经完全满足工业需求。在技术上的实现并不总是有完美的解决方案，我们看到每个通过set、remove后，这个方法总是会处理一些额外的事情，这些事情用户也许并不知情。用户期望要一个杯子，但是服务员给了一个杯子，顺便倒掉了里面剩余的水。总的而言，用户得到了他想要的，而服务员也很好的规避了用户的投诉。虽然，这一些都是在用户也许不知情的情况下发生的。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.okuer.com/posts/2018/2018-12-25-threadlocal/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2018-12-25T08:05:39+00:00" />
+<meta property="article:modified_time" content="2018-12-25T08:05:39+00:00" />
+
+
+
+
+<link rel="canonical" href="https://blog.okuer.com/posts/2018/2018-12-25-threadlocal/">
+
+
+<link rel="preload" href="/fonts/forkawesome-webfont.woff2?v=1.2.0" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.0fa2dc75ed1b76894ac0e062b10a6c4730daa745096fa120114b290ed8a48788.css" integrity="sha256-D6Lcde0bdolKwOBisQpsRzDap0UJb6EgEUspDtikh4g=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.min.593028e7f7ac55c003b79c230d1cd411bb4ca53b31556c3abb7f027170e646e9.css" integrity="sha256-WTAo5/esVcADt5wjDRzUEbtMpTsxVWw6u38CcXDmRuk=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/png" href="/img/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/img/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+<meta name="generator" content="Hugo 0.110.0">
+
+
+
+
+
+  </head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="/">
+      Okuer
+    </a>
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/posts/">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/about/">About</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="https://blog.okuer.com/posts/2018/2018-12-25-threadlocal/">
+              谈谈ThreadLocal
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa fa-calendar" aria-hidden="true"></i>
+              <time datetime="2018-12-25T08:05:39Z">
+                December 25, 2018
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa fa-clock-o" aria-hidden="true"></i>
+              One-minute read
+            </span>
+          </div>
+          
+          <div class="categories">
+  <i class="fa fa-folder" aria-hidden="true"></i>
+    <a href="/categories/tech/">Tech</a></div>
+
+          
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <hr>
+<h4 id="摘要">
+  摘要
+  <a class="heading-link" href="#%e6%91%98%e8%a6%81">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h4>
+<p>ThreadLocal被设计为在线程内部共享的变量。</p>
+<p>并发操作带来极大的性能优势，但同时在数据的一致性上也带来了挑战，当我们在线程内部要传递一个变量，如果将变量设置为局部的，当然没有任何并发问题，但是在同一个线程里，其他的方法就不能共享该变量。
+如果设置为全局类变量，又导致多个线程会共享，如果解决这个问题呢？</p>
+<p>ThreadLocal就是为了这个目的诞生的，它提供了一种具有特殊能力的“线程私有变量”，在当前线程中，可以随意共享并且随意使用，在其他线程中，它是完全独立的。</p>
+<h4 id="使用场景">
+  使用场景
+  <a class="heading-link" href="#%e4%bd%bf%e7%94%a8%e5%9c%ba%e6%99%af">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h4>
+<p>线程内部的共享的变量在许多场景下非常有用，比如经典的web 服务，一次用户的请求，会分配一个线程去处理，使用ThreadLocal可以与一个sessionId绑定，这样的话，一个线程就处理一个用户的请求。</p>
+<h4 id="实现原理">
+  实现原理
+  <a class="heading-link" href="#%e5%ae%9e%e7%8e%b0%e5%8e%9f%e7%90%86">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h4>
+<p>ThreadLocal需要被设计为线程私有的，要完成这个目标，我们一般会想到借助于HashMap，使用K-&gt;V 的形式。每个线程的维护一个HashMap。</p>
+<p>比如这样设计</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>threadMap=getMapByThread(currentThread);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>threadMap.put(ThreadLocal.KEY,threadLocal.VALUE)
+</span></span></code></pre></div><p>这样，让每个线程都能获取到自己的map。就可以将threadLocal在线程中隔离出来。</p>
+<p>在JDK的实现中，也是采用了类似的原理，每个ThreadLocal都维护着一个map。但是区别是，这个Map是它自己实现的ThreadLocalMap而非Hashmap.</p>
+<p>map的key就是ThreadLocal。</p>
+<h4 id="为什么要自己实现threadlocalmap">
+  为什么要自己实现ThreadLocalMap？
+  <a class="heading-link" href="#%e4%b8%ba%e4%bb%80%e4%b9%88%e8%a6%81%e8%87%aa%e5%b7%b1%e5%ae%9e%e7%8e%b0threadlocalmap">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h4>
+<p>要回答这个问题，就要考虑如下的情况:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>threadLocal=<span style="font-weight:bold">null</span>;
+</span></span></code></pre></div><p>此次，我们的预期是threadLocal被设置为null。在GC的时候，需要回收内存。但是，注意，在ThreadLocal内部的map中，ThreadLocal被作为key。</p>
+<p>ThreadLocal是有引用的，所以，在这里 threadLocal并不会被GC掉。这样带来的问题就是，线程尤其是常驻线程的大量threadLocal都不会被释放，很容易引起OOM。</p>
+<p>在解决这个问题上，我们看到JDK是通过weakReference来解决的。所以自然不能用Hashmap。只能用自己实现的ThreadLocalMap来解决。</p>
+<p>但是，对ThreadLocalMap的key做弱引用，还是导致map存在一些 NULL-&gt;V 的数据。这样的脏数据也会持续占据内存。 JDK只能在set、remove的时候，将Key为NULL的数据删除。这样做显然是无奈之举。因为，你不能指望一个用户会如你预期的调用这些方法。如果用户不调用这些方法，仍旧会存在OOM问题。</p>
+<h4 id="小结">
+  小结
+  <a class="heading-link" href="#%e5%b0%8f%e7%bb%93">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h4>
+<p>看到 ThreadLocal的实现其实并不完美，甚至有点丑，但ThreadLocal已经完全满足工业需求。在技术上的实现并不总是有完美的解决方案，我们看到每个通过set、remove后，这个方法总是会处理一些额外的事情，这些事情用户也许并不知情。用户期望要一个杯子，但是服务员给了一个杯子，顺便倒掉了里面剩余的水。总的而言，用户得到了他想要的，而服务员也很好的规避了用户的投诉。虽然，这一些都是在用户也许不知情的情况下发生的。</p>
+
+      </div>
+
+
+      <footer>
+        
+
+
+        <div id="disqus_thread"></div>
+<script>
+  window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "okuer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+    
+    document.addEventListener('themeChanged', function (e) { 
+        if (document.readyState == 'complete') {
+          DISQUS.reset({ reload: true, config: disqus_config });
+        }
+    });
+</script>
+        
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+      2019 -
+    
+    2023
+     John Doe 
+    ·
+    
+    Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>

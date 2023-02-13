@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>
+  Git:一种新工作模式的思考 · Okuer
+</title>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="author" content="John Doe">
+<meta name="description" content="在讨论Git的协作模式的时候，思考一下，git的基因是分布式的多人协作任务流。区别于传统的流水线模式，worker在完成一个任务的时候，或多或少的依赖上一个工作的任务。这就大大阻塞的工作的效率。因为绝大多数情况下，你的任务是没必要依赖上一个环节的处理的。我的意思不是业务上的分离，而是在开发上，至少你在很多情况下，你简单的需要一个mock的data 就可以模拟你的依赖。
+所以，Git有branch这个东西。
+仔细想想，似乎是，worker在接收到一个任务后，单独的fork出一个完整的工作环境，在其上完成自己的工作，并且merge到主干上。在git上，这很容易实现：
+git branch fix-some-bug 这样就创建了一个分支，你所有的改变都在这个分支上，最后被合并到master上。
+这样的模式有一个问题，这个问题在多人协作模式下很容易就凸现出来，即：
+当多人修改同一个地方的时候，冲突（conflict）就出现了。你必须修复它才能够合并到master。
+考虑到多人工作的场景，所有人的code都合并到master，这些code将引入新的bug，所以，某些分支是受到保护的，你必须经过容许后才能够合并到其中。
+最简单的例子就是，所有的代码都需要一个良好的单元测试来保证功能的正确性，并且，在提交后经过一些core review 才能够合并到master 。甚至，只是一个PR，最终是否Accept，还需要看决策层（可以是一个有权限的人来Merge pull request)。
+core review是这个工作模式产生的一个文化，它鼓励你分享你的code并且乐于接受批评。这样做不但保证code的质量，营造了一个open的工程文化，并且能有效刺激你的编程技能迅速提升。
+但是，当事情越来越复杂的时候，一些事情的效率就变得很低了。比如，每一个developer都需要运行它的test cases ，找到一个人来review自己的code ，发送一个pull request给指定的人….
+事情渐渐又变成低效且复杂了。这些事情不能自动化么？
+自动运行我的测试，自动检测我的代码风格，自动化一切重复的工作&hellip;..
+没错，这时候,持续集成（CI）该出场了。
+你已经理解了CI是什么东西，它提供了一个构建流来持续不间断的进行project的迭代更新。
+一个简单的CI的工作流是这样的：
+当你push 到一个分支的时候，你的所有工作都已经完毕。CI将自动为了分配容器来运行你的测试。包括但不限于单元测试。
+比如当你需要这样的场景：
+首先，当你的push到某个分支的代码后，你需要它先自动运行test cases ，然后进行build期间，按照你的规则来进行一些列的构建工作，当一切都完成后，你希望自动部署到某个服务器上。
+没错，这就是CI所做的工作。它提供了一个可配置的文件让你来描述究竟要怎么完成你的任务。
+你的描述将转换成一个DevOps的Request，比如你需要一台服务器运行LAMP环境，并且安装了Mysql5.6 。这些都可以在CI里面作为一个环，其中类似申请服务器这种指令将转交给DevOps来执行。这时候，开发和部署形成了闭环。 开发完全无感知到这一切是怎么运作的。
+所需要做的，只是工具文化和约定。
+比如，在git commit 里面增加语义，来触发你所定义的事件。
+或者在一个chat room里面进行chapOps。
+BTW:
+最近一段时间DevOps被重新提起来，这个很早就出现的词再一次进入了公众的视线。 什么是DevOps，似乎首先你想到这事运维干的事情，大概就是某个家伙比较懒，把一切能自动化的工作都自动化了。 是的，确实是这样的。">
+<meta name="keywords" content="blog,developer,personal">
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Git:一种新工作模式的思考"/>
+<meta name="twitter:description" content="在讨论Git的协作模式的时候，思考一下，git的基因是分布式的多人协作任务流。区别于传统的流水线模式，worker在完成一个任务的时候，或多或少的依赖上一个工作的任务。这就大大阻塞的工作的效率。因为绝大多数情况下，你的任务是没必要依赖上一个环节的处理的。我的意思不是业务上的分离，而是在开发上，至少你在很多情况下，你简单的需要一个mock的data 就可以模拟你的依赖。
+所以，Git有branch这个东西。
+仔细想想，似乎是，worker在接收到一个任务后，单独的fork出一个完整的工作环境，在其上完成自己的工作，并且merge到主干上。在git上，这很容易实现：
+git branch fix-some-bug 这样就创建了一个分支，你所有的改变都在这个分支上，最后被合并到master上。
+这样的模式有一个问题，这个问题在多人协作模式下很容易就凸现出来，即：
+当多人修改同一个地方的时候，冲突（conflict）就出现了。你必须修复它才能够合并到master。
+考虑到多人工作的场景，所有人的code都合并到master，这些code将引入新的bug，所以，某些分支是受到保护的，你必须经过容许后才能够合并到其中。
+最简单的例子就是，所有的代码都需要一个良好的单元测试来保证功能的正确性，并且，在提交后经过一些core review 才能够合并到master 。甚至，只是一个PR，最终是否Accept，还需要看决策层（可以是一个有权限的人来Merge pull request)。
+core review是这个工作模式产生的一个文化，它鼓励你分享你的code并且乐于接受批评。这样做不但保证code的质量，营造了一个open的工程文化，并且能有效刺激你的编程技能迅速提升。
+但是，当事情越来越复杂的时候，一些事情的效率就变得很低了。比如，每一个developer都需要运行它的test cases ，找到一个人来review自己的code ，发送一个pull request给指定的人….
+事情渐渐又变成低效且复杂了。这些事情不能自动化么？
+自动运行我的测试，自动检测我的代码风格，自动化一切重复的工作&hellip;..
+没错，这时候,持续集成（CI）该出场了。
+你已经理解了CI是什么东西，它提供了一个构建流来持续不间断的进行project的迭代更新。
+一个简单的CI的工作流是这样的：
+当你push 到一个分支的时候，你的所有工作都已经完毕。CI将自动为了分配容器来运行你的测试。包括但不限于单元测试。
+比如当你需要这样的场景：
+首先，当你的push到某个分支的代码后，你需要它先自动运行test cases ，然后进行build期间，按照你的规则来进行一些列的构建工作，当一切都完成后，你希望自动部署到某个服务器上。
+没错，这就是CI所做的工作。它提供了一个可配置的文件让你来描述究竟要怎么完成你的任务。
+你的描述将转换成一个DevOps的Request，比如你需要一台服务器运行LAMP环境，并且安装了Mysql5.6 。这些都可以在CI里面作为一个环，其中类似申请服务器这种指令将转交给DevOps来执行。这时候，开发和部署形成了闭环。 开发完全无感知到这一切是怎么运作的。
+所需要做的，只是工具文化和约定。
+比如，在git commit 里面增加语义，来触发你所定义的事件。
+或者在一个chat room里面进行chapOps。
+BTW:
+最近一段时间DevOps被重新提起来，这个很早就出现的词再一次进入了公众的视线。 什么是DevOps，似乎首先你想到这事运维干的事情，大概就是某个家伙比较懒，把一切能自动化的工作都自动化了。 是的，确实是这样的。"/>
+
+<meta property="og:title" content="Git:一种新工作模式的思考" />
+<meta property="og:description" content="在讨论Git的协作模式的时候，思考一下，git的基因是分布式的多人协作任务流。区别于传统的流水线模式，worker在完成一个任务的时候，或多或少的依赖上一个工作的任务。这就大大阻塞的工作的效率。因为绝大多数情况下，你的任务是没必要依赖上一个环节的处理的。我的意思不是业务上的分离，而是在开发上，至少你在很多情况下，你简单的需要一个mock的data 就可以模拟你的依赖。
+所以，Git有branch这个东西。
+仔细想想，似乎是，worker在接收到一个任务后，单独的fork出一个完整的工作环境，在其上完成自己的工作，并且merge到主干上。在git上，这很容易实现：
+git branch fix-some-bug 这样就创建了一个分支，你所有的改变都在这个分支上，最后被合并到master上。
+这样的模式有一个问题，这个问题在多人协作模式下很容易就凸现出来，即：
+当多人修改同一个地方的时候，冲突（conflict）就出现了。你必须修复它才能够合并到master。
+考虑到多人工作的场景，所有人的code都合并到master，这些code将引入新的bug，所以，某些分支是受到保护的，你必须经过容许后才能够合并到其中。
+最简单的例子就是，所有的代码都需要一个良好的单元测试来保证功能的正确性，并且，在提交后经过一些core review 才能够合并到master 。甚至，只是一个PR，最终是否Accept，还需要看决策层（可以是一个有权限的人来Merge pull request)。
+core review是这个工作模式产生的一个文化，它鼓励你分享你的code并且乐于接受批评。这样做不但保证code的质量，营造了一个open的工程文化，并且能有效刺激你的编程技能迅速提升。
+但是，当事情越来越复杂的时候，一些事情的效率就变得很低了。比如，每一个developer都需要运行它的test cases ，找到一个人来review自己的code ，发送一个pull request给指定的人….
+事情渐渐又变成低效且复杂了。这些事情不能自动化么？
+自动运行我的测试，自动检测我的代码风格，自动化一切重复的工作&hellip;..
+没错，这时候,持续集成（CI）该出场了。
+你已经理解了CI是什么东西，它提供了一个构建流来持续不间断的进行project的迭代更新。
+一个简单的CI的工作流是这样的：
+当你push 到一个分支的时候，你的所有工作都已经完毕。CI将自动为了分配容器来运行你的测试。包括但不限于单元测试。
+比如当你需要这样的场景：
+首先，当你的push到某个分支的代码后，你需要它先自动运行test cases ，然后进行build期间，按照你的规则来进行一些列的构建工作，当一切都完成后，你希望自动部署到某个服务器上。
+没错，这就是CI所做的工作。它提供了一个可配置的文件让你来描述究竟要怎么完成你的任务。
+你的描述将转换成一个DevOps的Request，比如你需要一台服务器运行LAMP环境，并且安装了Mysql5.6 。这些都可以在CI里面作为一个环，其中类似申请服务器这种指令将转交给DevOps来执行。这时候，开发和部署形成了闭环。 开发完全无感知到这一切是怎么运作的。
+所需要做的，只是工具文化和约定。
+比如，在git commit 里面增加语义，来触发你所定义的事件。
+或者在一个chat room里面进行chapOps。
+BTW:
+最近一段时间DevOps被重新提起来，这个很早就出现的词再一次进入了公众的视线。 什么是DevOps，似乎首先你想到这事运维干的事情，大概就是某个家伙比较懒，把一切能自动化的工作都自动化了。 是的，确实是这样的。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.okuer.com/posts/2016/2016-12-23-git-work-think/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2016-12-23T08:00:00+00:00" />
+<meta property="article:modified_time" content="2016-12-23T08:00:00+00:00" />
+
+
+
+
+<link rel="canonical" href="https://blog.okuer.com/posts/2016/2016-12-23-git-work-think/">
+
+
+<link rel="preload" href="/fonts/forkawesome-webfont.woff2?v=1.2.0" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.0fa2dc75ed1b76894ac0e062b10a6c4730daa745096fa120114b290ed8a48788.css" integrity="sha256-D6Lcde0bdolKwOBisQpsRzDap0UJb6EgEUspDtikh4g=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.min.593028e7f7ac55c003b79c230d1cd411bb4ca53b31556c3abb7f027170e646e9.css" integrity="sha256-WTAo5/esVcADt5wjDRzUEbtMpTsxVWw6u38CcXDmRuk=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/png" href="/img/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/img/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+<meta name="generator" content="Hugo 0.110.0">
+
+
+
+
+
+  </head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="/">
+      Okuer
+    </a>
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/posts/">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/about/">About</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="https://blog.okuer.com/posts/2016/2016-12-23-git-work-think/">
+              Git:一种新工作模式的思考
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa fa-calendar" aria-hidden="true"></i>
+              <time datetime="2016-12-23T08:00:00Z">
+                December 23, 2016
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa fa-clock-o" aria-hidden="true"></i>
+              One-minute read
+            </span>
+          </div>
+          
+          <div class="categories">
+  <i class="fa fa-folder" aria-hidden="true"></i>
+    <a href="/categories/computer/">computer</a></div>
+
+          
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <p>在讨论Git的协作模式的时候，思考一下，git的基因是分布式的多人协作任务流。区别于传统的流水线模式，worker在完成一个任务的时候，或多或少的依赖上一个工作的任务。这就大大阻塞的工作的效率。因为绝大多数情况下，你的任务是没必要依赖上一个环节的处理的。我的意思不是业务上的分离，而是在开发上，至少你在很多情况下，你简单的需要一个mock的data 就可以模拟你的依赖。</p>
+<p>所以，Git有branch这个东西。</p>
+<p>仔细想想，似乎是，worker在接收到一个任务后，单独的fork出一个完整的工作环境，在其上完成自己的工作，并且merge到主干上。在git上，这很容易实现：</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span> git branch fix-some-bug
+</span></span></code></pre></div><p>这样就创建了一个分支，你所有的改变都在这个分支上，最后被合并到master上。</p>
+<p>这样的模式有一个问题，这个问题在多人协作模式下很容易就凸现出来，即：</p>
+<p>当多人修改同一个地方的时候，冲突（conflict）就出现了。你必须修复它才能够合并到master。</p>
+<p>考虑到多人工作的场景，所有人的code都合并到master，这些code将引入新的bug，所以，某些分支是受到保护的，你必须经过容许后才能够合并到其中。</p>
+<p>最简单的例子就是，所有的代码都需要一个良好的单元测试来保证功能的正确性，并且，在提交后经过一些core review 才能够合并到master 。甚至，只是一个PR，最终是否Accept，还需要看决策层（可以是一个有权限的人来Merge pull request)。</p>
+<p>core review是这个工作模式产生的一个文化，它鼓励你分享你的code并且乐于接受批评。这样做不但保证code的质量，营造了一个open的工程文化，并且能有效刺激你的编程技能迅速提升。</p>
+<p>但是，当事情越来越复杂的时候，一些事情的效率就变得很低了。比如，每一个developer都需要运行它的test cases ，找到一个人来review自己的code ，发送一个pull request给指定的人….</p>
+<p>事情渐渐又变成低效且复杂了。这些事情不能自动化么？</p>
+<p>自动运行我的测试，自动检测我的代码风格，自动化一切重复的工作&hellip;..</p>
+<p>没错，这时候,持续集成（CI）该出场了。</p>
+<p>你已经理解了CI是什么东西，它提供了一个构建流来持续不间断的进行project的迭代更新。</p>
+<p>一个简单的CI的工作流是这样的：</p>
+<p>当你push 到一个分支的时候，你的所有工作都已经完毕。CI将自动为了分配容器来运行你的测试。包括但不限于单元测试。</p>
+<p>比如当你需要这样的场景：</p>
+<p>首先，当你的push到某个分支的代码后，你需要它先自动运行test cases ，然后进行build期间，按照你的规则来进行一些列的构建工作，当一切都完成后，你希望自动部署到某个服务器上。</p>
+<p>没错，这就是CI所做的工作。它提供了一个可配置的文件让你来描述究竟要怎么完成你的任务。</p>
+<p>你的描述将转换成一个DevOps的Request，比如你需要一台服务器运行LAMP环境，并且安装了Mysql5.6 。这些都可以在CI里面作为一个环，其中类似申请服务器这种指令将转交给DevOps来执行。这时候，开发和部署形成了闭环。 开发完全无感知到这一切是怎么运作的。</p>
+<p>所需要做的，只是工具文化和约定。</p>
+<p>比如，在git commit 里面增加语义，来触发你所定义的事件。</p>
+<p>或者在一个chat room里面进行chapOps。</p>
+<p><strong>BTW:</strong></p>
+<p>最近一段时间DevOps被重新提起来，这个很早就出现的词再一次进入了公众的视线。
+什么是DevOps，似乎首先你想到这事运维干的事情，大概就是某个家伙比较懒，把一切能自动化的工作都自动化了。
+是的，确实是这样的。</p>
+
+      </div>
+
+
+      <footer>
+        
+
+
+        <div id="disqus_thread"></div>
+<script>
+  window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "okuer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+    
+    document.addEventListener('themeChanged', function (e) { 
+        if (document.readyState == 'complete') {
+          DISQUS.reset({ reload: true, config: disqus_config });
+        }
+    });
+</script>
+        
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+      2019 -
+    
+    2023
+     John Doe 
+    ·
+    
+    Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>

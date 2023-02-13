@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Categories on Okuer</title>
+    <link>https://blog.okuer.com/categories/</link>
+    <description>Recent content in Categories on Okuer</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Tue, 25 Dec 2018 08:05:39 +0000</lastBuildDate><atom:link href="https://blog.okuer.com/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Tech</title>
+      <link>https://blog.okuer.com/categories/tech/</link>
+      <pubDate>Tue, 25 Dec 2018 08:05:39 +0000</pubDate>
+      
+      <guid>https://blog.okuer.com/categories/tech/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>杂文</title>
+      <link>https://blog.okuer.com/categories/%E6%9D%82%E6%96%87/</link>
+      <pubDate>Tue, 27 Nov 2018 08:05:39 +0000</pubDate>
+      
+      <guid>https://blog.okuer.com/categories/%E6%9D%82%E6%96%87/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>纯粹理性思维</title>
+      <link>https://blog.okuer.com/categories/%E7%BA%AF%E7%B2%B9%E7%90%86%E6%80%A7%E6%80%9D%E7%BB%B4/</link>
+      <pubDate>Sun, 02 Sep 2018 08:05:39 +0000</pubDate>
+      
+      <guid>https://blog.okuer.com/categories/%E7%BA%AF%E7%B2%B9%E7%90%86%E6%80%A7%E6%80%9D%E7%BB%B4/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>点滴</title>
+      <link>https://blog.okuer.com/categories/%E7%82%B9%E6%BB%B4/</link>
+      <pubDate>Thu, 09 Aug 2018 08:05:39 +0000</pubDate>
+      
+      <guid>https://blog.okuer.com/categories/%E7%82%B9%E6%BB%B4/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Blockchain</title>
+      <link>https://blog.okuer.com/categories/blockchain/</link>
+      <pubDate>Wed, 02 May 2018 08:05:39 +0000</pubDate>
+      
+      <guid>https://blog.okuer.com/categories/blockchain/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>随笔</title>
+      <link>https://blog.okuer.com/categories/%E9%9A%8F%E7%AC%94/</link>
+      <pubDate>Thu, 22 Feb 2018 21:05:39 +0000</pubDate>
+      
+      <guid>https://blog.okuer.com/categories/%E9%9A%8F%E7%AC%94/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>computer</title>
+      <link>https://blog.okuer.com/categories/computer/</link>
+      <pubDate>Fri, 23 Dec 2016 08:00:00 +0000</pubDate>
+      
+      <guid>https://blog.okuer.com/categories/computer/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>novel</title>
+      <link>https://blog.okuer.com/categories/novel/</link>
+      <pubDate>Sat, 26 Nov 2016 08:00:00 +0000</pubDate>
+      
+      <guid>https://blog.okuer.com/categories/novel/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Think</title>
+      <link>https://blog.okuer.com/categories/think/</link>
+      <pubDate>Sat, 27 Aug 2016 14:00:00 +0000</pubDate>
+      
+      <guid>https://blog.okuer.com/categories/think/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>技术</title>
+      <link>https://blog.okuer.com/categories/%E6%8A%80%E6%9C%AF/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://blog.okuer.com/categories/%E6%8A%80%E6%9C%AF/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

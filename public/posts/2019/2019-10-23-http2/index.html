@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>
+   · Okuer
+</title>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="author" content="John Doe">
+<meta name="description" content="Http/2 Link to heading HTTP2 协议起源于SPDY，目的是解决http1.x 如下的问题：
+plantext 文本协议的size开销 不支持复用tcp通道 请求通道上限 队首阻塞 http1.1 Keep alive 来保证复用一个tcp连接，但严格要求响应的顺序，响应是一个队列，如果遇到队首阻塞，则整个tcp通道就无法处理别的请求了。 http/2如果解决这些问题的？
+通道复用 二进制帧层 服务端push 设置请求优先级 压缩（HPACK） 帧布局 Link to heading &#43;-----------------------------------------------&#43; | Length (24) | &#43;---------------&#43;---------------&#43;---------------&#43; | Type (8) | Flags (8) | &#43;-&#43;-------------&#43;---------------&#43;-------------------------------&#43; |R| Stream Identifier (31) | &#43;=&#43;=============================================================&#43; | Frame Payload (0...) ... &#43;---------------------------------------------------------------&#43; 帧头为固定的9个字节（(24&#43;8&#43;8&#43;1&#43;31)/8=9）呈现，变化的为帧的负载(payload)，负载内容是由帧类型（Type）定义。
+帧长度Length：无符号的自然数，24个比特表示，仅表示帧负载所占用字节数，不包括帧头所占用的9个字节。默认大小区间为为0~16,384(2^14)，一旦超过默认最大值2^14(16384)，发送方将不再允许发送，除非接收到接收方定义的SETTINGS_MAX_FRAME_SIZE（一般此值区间为2^14 ~ 2^24）值的通知。 帧类型Type：8个比特表示，定义了帧负载的具体格式和帧的语义，HTTP/2规范定义了10个帧类型，这里不包括实验类型帧和扩展类型帧 帧的标志位Flags：8个比特表示，服务于具体帧类型，默认值为0x0。有一个小技巧需要注意，一般来讲，8个比特可以容纳8个不同的标志，比如，PADDED值为0x8，二进制表示为00001000；END_HEADERS值为0x4，二进制表示为00000100；END_STREAM值为0X1，二进制为00000001。可以同时在一个字节中传达三种标志位，二进制表示为00001101，即0x13。因此，后面的帧结构中，标志位一般会使用8个比特表示，若某位不确定，使用问号?替代，表示此处可能会被设置标志位 帧保留比特为R：在HTTP/2语境下为保留的比特位，固定值为0X0 流标识符Stream Identifier：无符号的31比特表示无符号自然数。0x0值表示为帧仅作用于连接，不隶属于单独的流。 （参考：http://www.blogjava.net/yongboy/archive/2015/03/20/423655.html）
+帧类型： Link to heading HEADERS：帧仅包含 HTTP 标头信息。">
+<meta name="keywords" content="blog,developer,personal">
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content=""/>
+<meta name="twitter:description" content="Http/2 Link to heading HTTP2 协议起源于SPDY，目的是解决http1.x 如下的问题：
+plantext 文本协议的size开销 不支持复用tcp通道 请求通道上限 队首阻塞 http1.1 Keep alive 来保证复用一个tcp连接，但严格要求响应的顺序，响应是一个队列，如果遇到队首阻塞，则整个tcp通道就无法处理别的请求了。 http/2如果解决这些问题的？
+通道复用 二进制帧层 服务端push 设置请求优先级 压缩（HPACK） 帧布局 Link to heading &#43;-----------------------------------------------&#43; | Length (24) | &#43;---------------&#43;---------------&#43;---------------&#43; | Type (8) | Flags (8) | &#43;-&#43;-------------&#43;---------------&#43;-------------------------------&#43; |R| Stream Identifier (31) | &#43;=&#43;=============================================================&#43; | Frame Payload (0...) ... &#43;---------------------------------------------------------------&#43; 帧头为固定的9个字节（(24&#43;8&#43;8&#43;1&#43;31)/8=9）呈现，变化的为帧的负载(payload)，负载内容是由帧类型（Type）定义。
+帧长度Length：无符号的自然数，24个比特表示，仅表示帧负载所占用字节数，不包括帧头所占用的9个字节。默认大小区间为为0~16,384(2^14)，一旦超过默认最大值2^14(16384)，发送方将不再允许发送，除非接收到接收方定义的SETTINGS_MAX_FRAME_SIZE（一般此值区间为2^14 ~ 2^24）值的通知。 帧类型Type：8个比特表示，定义了帧负载的具体格式和帧的语义，HTTP/2规范定义了10个帧类型，这里不包括实验类型帧和扩展类型帧 帧的标志位Flags：8个比特表示，服务于具体帧类型，默认值为0x0。有一个小技巧需要注意，一般来讲，8个比特可以容纳8个不同的标志，比如，PADDED值为0x8，二进制表示为00001000；END_HEADERS值为0x4，二进制表示为00000100；END_STREAM值为0X1，二进制为00000001。可以同时在一个字节中传达三种标志位，二进制表示为00001101，即0x13。因此，后面的帧结构中，标志位一般会使用8个比特表示，若某位不确定，使用问号?替代，表示此处可能会被设置标志位 帧保留比特为R：在HTTP/2语境下为保留的比特位，固定值为0X0 流标识符Stream Identifier：无符号的31比特表示无符号自然数。0x0值表示为帧仅作用于连接，不隶属于单独的流。 （参考：http://www.blogjava.net/yongboy/archive/2015/03/20/423655.html）
+帧类型： Link to heading HEADERS：帧仅包含 HTTP 标头信息。"/>
+
+<meta property="og:title" content="" />
+<meta property="og:description" content="Http/2 Link to heading HTTP2 协议起源于SPDY，目的是解决http1.x 如下的问题：
+plantext 文本协议的size开销 不支持复用tcp通道 请求通道上限 队首阻塞 http1.1 Keep alive 来保证复用一个tcp连接，但严格要求响应的顺序，响应是一个队列，如果遇到队首阻塞，则整个tcp通道就无法处理别的请求了。 http/2如果解决这些问题的？
+通道复用 二进制帧层 服务端push 设置请求优先级 压缩（HPACK） 帧布局 Link to heading &#43;-----------------------------------------------&#43; | Length (24) | &#43;---------------&#43;---------------&#43;---------------&#43; | Type (8) | Flags (8) | &#43;-&#43;-------------&#43;---------------&#43;-------------------------------&#43; |R| Stream Identifier (31) | &#43;=&#43;=============================================================&#43; | Frame Payload (0...) ... &#43;---------------------------------------------------------------&#43; 帧头为固定的9个字节（(24&#43;8&#43;8&#43;1&#43;31)/8=9）呈现，变化的为帧的负载(payload)，负载内容是由帧类型（Type）定义。
+帧长度Length：无符号的自然数，24个比特表示，仅表示帧负载所占用字节数，不包括帧头所占用的9个字节。默认大小区间为为0~16,384(2^14)，一旦超过默认最大值2^14(16384)，发送方将不再允许发送，除非接收到接收方定义的SETTINGS_MAX_FRAME_SIZE（一般此值区间为2^14 ~ 2^24）值的通知。 帧类型Type：8个比特表示，定义了帧负载的具体格式和帧的语义，HTTP/2规范定义了10个帧类型，这里不包括实验类型帧和扩展类型帧 帧的标志位Flags：8个比特表示，服务于具体帧类型，默认值为0x0。有一个小技巧需要注意，一般来讲，8个比特可以容纳8个不同的标志，比如，PADDED值为0x8，二进制表示为00001000；END_HEADERS值为0x4，二进制表示为00000100；END_STREAM值为0X1，二进制为00000001。可以同时在一个字节中传达三种标志位，二进制表示为00001101，即0x13。因此，后面的帧结构中，标志位一般会使用8个比特表示，若某位不确定，使用问号?替代，表示此处可能会被设置标志位 帧保留比特为R：在HTTP/2语境下为保留的比特位，固定值为0X0 流标识符Stream Identifier：无符号的31比特表示无符号自然数。0x0值表示为帧仅作用于连接，不隶属于单独的流。 （参考：http://www.blogjava.net/yongboy/archive/2015/03/20/423655.html）
+帧类型： Link to heading HEADERS：帧仅包含 HTTP 标头信息。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.okuer.com/posts/2019/2019-10-23-http2/" /><meta property="article:section" content="posts" />
+
+
+
+
+
+
+<link rel="canonical" href="https://blog.okuer.com/posts/2019/2019-10-23-http2/">
+
+
+<link rel="preload" href="/fonts/forkawesome-webfont.woff2?v=1.2.0" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.0fa2dc75ed1b76894ac0e062b10a6c4730daa745096fa120114b290ed8a48788.css" integrity="sha256-D6Lcde0bdolKwOBisQpsRzDap0UJb6EgEUspDtikh4g=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.min.593028e7f7ac55c003b79c230d1cd411bb4ca53b31556c3abb7f027170e646e9.css" integrity="sha256-WTAo5/esVcADt5wjDRzUEbtMpTsxVWw6u38CcXDmRuk=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/png" href="/img/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/img/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+<meta name="generator" content="Hugo 0.110.0">
+
+
+
+
+
+  </head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="/">
+      Okuer
+    </a>
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/posts/">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/about/">About</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="https://blog.okuer.com/posts/2019/2019-10-23-http2/">
+              
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa fa-calendar" aria-hidden="true"></i>
+              <time datetime="0001-01-01T00:00:00Z">
+                January 1, 0001
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa fa-clock-o" aria-hidden="true"></i>
+              6-minute read
+            </span>
+          </div>
+          
+          
+          
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <h1 id="http2">
+  Http/2
+  <a class="heading-link" href="#http2">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>HTTP2 协议起源于<strong>SPDY</strong>，目的是解决http1.x 如下的问题：</p>
+<ul>
+<li>plantext 文本协议的size开销</li>
+<li>不支持复用tcp通道</li>
+<li>请求通道上限</li>
+<li>队首阻塞
+http1.1 Keep alive 来保证复用一个tcp连接，但严格要求响应的顺序，响应是一个队列，如果遇到队首阻塞，则整个tcp通道就无法处理别的请求了。</li>
+</ul>
+<p>http/2如果解决这些问题的？</p>
+<ul>
+<li>通道复用</li>
+<li>二进制帧层</li>
+<li>服务端push</li>
+<li>设置请求优先级</li>
+<li>压缩（HPACK）</li>
+</ul>
+<h4 id="帧布局">
+  帧布局
+  <a class="heading-link" href="#%e5%b8%a7%e5%b8%83%e5%b1%80">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h4>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>+-----------------------------------------------+  
+</span></span><span style="display:flex;"><span>|                Length (24)                    |  
+</span></span><span style="display:flex;"><span>+---------------+---------------+---------------+  
+</span></span><span style="display:flex;"><span>|  Type (8)     |  Flags (8)    |  
+</span></span><span style="display:flex;"><span>+-+-------------+---------------+-------------------------------+  
+</span></span><span style="display:flex;"><span>|R|                Stream Identifier (31)                       |  
+</span></span><span style="display:flex;"><span>+=+=============================================================+  
+</span></span><span style="display:flex;"><span>|                  Frame Payload (0...)                       ...  
+</span></span><span style="display:flex;"><span>+---------------------------------------------------------------+  
+</span></span></code></pre></div><blockquote>
+<p>帧头为固定的9个字节（(24+8+8+1+31)/8=9）呈现，变化的为帧的负载(payload)，负载内容是由帧类型（Type）定义。</p>
+</blockquote>
+<ul>
+<li>帧长度Length：无符号的自然数，24个比特表示，仅表示帧负载所占用字节数，不包括帧头所占用的9个字节。默认大小区间为为0~16,384(2^14)，一旦超过默认最大值2^14(16384)，发送方将不再允许发送，除非接收到接收方定义的SETTINGS_MAX_FRAME_SIZE（一般此值区间为2^14 ~ 2^24）值的通知。</li>
+<li>帧类型Type：8个比特表示，定义了帧负载的具体格式和帧的语义，HTTP/2规范定义了10个帧类型，这里不包括实验类型帧和扩展类型帧</li>
+<li>帧的标志位Flags：8个比特表示，服务于具体帧类型，默认值为0x0。有一个小技巧需要注意，一般来讲，8个比特可以容纳8个不同的标志，比如，PADDED值为0x8，二进制表示为00001000；END_HEADERS值为0x4，二进制表示为00000100；END_STREAM值为0X1，二进制为00000001。可以同时在一个字节中传达三种标志位，二进制表示为00001101，即0x13。因此，后面的帧结构中，标志位一般会使用8个比特表示，若某位不确定，使用问号?替代，表示此处可能会被设置标志位</li>
+<li>帧保留比特为R：在HTTP/2语境下为保留的比特位，固定值为0X0</li>
+<li>流标识符Stream Identifier：无符号的31比特表示无符号自然数。0x0值表示为帧仅作用于连接，不隶属于单独的流。</li>
+</ul>
+<blockquote>
+<p>（参考：http://www.blogjava.net/yongboy/archive/2015/03/20/423655.html）</p>
+</blockquote>
+<h4 id="帧类型">
+  帧类型：
+  <a class="heading-link" href="#%e5%b8%a7%e7%b1%bb%e5%9e%8b">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h4>
+<p><strong>HEADERS</strong>：帧仅包含 HTTP 标头信息。<br>
+<strong>DATA</strong>：帧包含消息的所有或部分有效负载。 (flag:END_STREAM|PADDED)<br>
+<strong>PRIORITY</strong>：指定分配给流的重要性。<br>
+<strong>RST_STREAM</strong>：错误通知：一个推送承诺遭到拒绝。终止流。<br>
+<strong>SETTINGS</strong>：指定连接配置。<br>
+<strong>PUSH_PROMISE</strong>：通知一个将资源推送到客户端的意图。<br>
+<strong>PING</strong>：检测信号和往返时间。<br>
+<strong>GOAWAY</strong>：停止为当前连接生成流的停止通知。<br>
+<strong>WINDOW_UPDATE</strong>：用于管理流的流控制。<br>
+<strong>CONTINUATION</strong>：用于延续某个标头碎片序列。</p>
+<blockquote>
+<p>浏览器在一个通道上跟服务器交换通过二进制协议交换数据，浏览器获取到的无序的帧数据集合，根据流标识，进行合并。</p>
+</blockquote>
+<h4 id="流">
+  流
+  <a class="heading-link" href="#%e6%b5%81">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h4>
+<p>数据流具有如下的状态：</p>
+<ul>
+<li>idle</li>
+<li>reserved(Local)</li>
+<li>reserved(remote)</li>
+<li>open</li>
+<li>half_closed(local)</li>
+<li>half_closed(remote)</li>
+<li>closed</li>
+</ul>
+<blockquote>
+<p>“新流的标识符的第一次使用隐式地关闭了所有由该对端以低值流标识符发起的处于“idle”状态的流。例如，如果客户端在流7上发送 HEADERS 帧而没有在流5上发送帧，则当流7的第一帧被发送或接收时，流5转换到“closed”状态。”</p>
+</blockquote>
+<h4 id="hpack-算法">
+  HPACK 算法
+  <a class="heading-link" href="#hpack-%e7%ae%97%e6%b3%95">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h4>
+<p>http1.x 最请求body进行gzip压缩，但是对请求头并不会压缩，现代的web请求繁多而复杂，意味着会浪费很多的流量用来传递请求头。<br>
+为此，为http/2而专门研究了一种新型压缩技术HPACK，HPACK的可以压缩头，HPACK维护了一张动态表和静态表，静态表保存固定不变的header映射，而动态表保存在一个client和server的tcp上下文中（一个client对一个server 在http/2中，一般只会创建一个tcp链接，除非客户端显示的声明）。</p>
+<p>HPACK将static table 和 dynamic table映射到同一张index address space里面。前面0~(STATIC_LEN-1)为静态表空间，后面 STATIC_LEN~DYNAMIC_LEN为动态表空间。</p>
+<p><strong>如何压缩的？</strong></p>
+<p>首先，客户端会从索引表里面获取到已存在具体header的索引，并对不存在的header使用huffman编码，动态更新到索引，请求的时候，只需要一个二进制标记位即可。
+比如（下面是静态索引表），
+静态索引表</p>
+<pre><code>      +-------+-----------------------------+---------------+
+      | Index | Header Name                 | Header Value  |
+      +-------+-----------------------------+---------------+
+      | 1     | :authority                  |               |
+      | 2     | :method                     | GET           |
+      | 3     | :method                     | POST          |
+      | 4     | :path                       | /             |
+      | 5     | :path                       | /index.html   |
+      | 6     | :scheme                     | http          |
+      | 7     | :scheme                     | https         |
+      | 8     | :status                     | 200           |
+      | 9     | :status                     | 204           |
+      | 10    | :status                     | 206           |
+      | 11    | :status                     | 304           |
+      | 12    | :status                     | 400           |
+      | 13    | :status                     | 404           |
+      | 14    | :status                     | 500           |
+      | 15    | accept-charset              |               |
+      | 16    | accept-encoding             | gzip, deflate |
+      | 17    | accept-language             |               |
+      | 18    | accept-ranges               |               |
+      | 19    | accept                      |               |
+      | 20    | access-control-allow-origin |               |
+      | 21    | age                         |               |
+      | 22    | allow                       |               |
+      | 23    | authorization               |               |
+      | 24    | cache-control               |               |
+      | 25    | content-disposition         |               |
+      | 26    | content-encoding            |               |
+      | 27    | content-language            |               |
+      | 28    | content-length              |               |
+      | 29    | content-location            |               |
+      | 30    | content-range               |               |
+</code></pre>
+<p>（表1,https://tools.ietf.org/html/rfc7541#appendix-B ）</p>
+<h4 id="无符号整数编码">
+  无符号整数编码
+  <a class="heading-link" href="#%e6%97%a0%e7%ac%a6%e5%8f%b7%e6%95%b4%e6%95%b0%e7%bc%96%e7%a0%81">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h4>
+<p><strong>用途</strong>：</p>
+<p>name索引/header索引/字符串的位长度都需要一个整数来表达，整数一定在一个字节的结尾结束。一个字节的二进制布局如下：</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>     0   1   2   3   4   5   6   7
+</span></span><span style="display:flex;"><span>   +---+---+---+---+---+---+---+---+
+</span></span><span style="display:flex;"><span>   | ? | ? | ? |       Value       |
+</span></span><span style="display:flex;"><span>   +---+---+---+-------------------+
+</span></span></code></pre></div><p>注意 0 1 2 可以被用作特殊的用途，所以value保存了具体的无符号整数的值。在上面的情况下，有5个位用来保存整数。意味着最大能保存2^ 5-1(31)，超过这个值，就没有办法保存了。</p>
+<p>那怎么办呢？ 此时就需要扩展，用第二个字节的7位来保存剩余的数字。（首字节特殊用途）</p>
+<p>比如要保存数字32，则</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>   0   1   2   3   4   5   6   7
+</span></span><span style="display:flex;"><span>   +---+---+---+---+---+---+---+---+
+</span></span><span style="display:flex;"><span>   | ? | ? | ? | 1   1   1   1   1 |
+</span></span><span style="display:flex;"><span>   +---+---+---+-------------------+
+</span></span><span style="display:flex;"><span>   | 0 | 0  0  0  0  0  0  1
+</span></span><span style="display:flex;"><span>   +---+---------------------------+
+</span></span></code></pre></div><p>注意第二个字节的<strong>0</strong>，代表是结束的字节。解码器碰到这个标志，就不能在继续搜索了。<br>
+如果第二个字节仍旧无法表达这个数，则需要调整为：</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>   0   1   2   3   4   5   6   7
+</span></span><span style="display:flex;"><span>   +---+---+---+---+---+---+---+---+
+</span></span><span style="display:flex;"><span>   | ? | ? | ? | 1   1   1   1   1 |
+</span></span><span style="display:flex;"><span>   +---+---+---+-------------------+
+</span></span><span style="display:flex;"><span>   | 1 |    Value-(2^N-1) LSB      |
+</span></span><span style="display:flex;"><span>   +---+---------------------------+
+</span></span><span style="display:flex;"><span>                  ...
+</span></span><span style="display:flex;"><span>   +---+---------------------------+
+</span></span><span style="display:flex;"><span>   | 0 |    Value-(2^N-1) MSB      |
+</span></span><span style="display:flex;"><span>   +---+---------------------------+
+</span></span></code></pre></div><p>伪代码如下：</p>
+<p>编码：</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>  if I &lt; 2^N - 1, encode I on N bits
+</span></span><span style="display:flex;"><span>   else
+</span></span><span style="display:flex;"><span>       encode (2^N - 1) on N bits
+</span></span><span style="display:flex;"><span>       I = I - (2^N - 1)
+</span></span><span style="display:flex;"><span>       while I &gt;= 128
+</span></span><span style="display:flex;"><span>            encode (I % 128 + 128) on 8 bits
+</span></span><span style="display:flex;"><span>            I = I / 128
+</span></span><span style="display:flex;"><span>       encode I on 8 bits
+</span></span></code></pre></div><p>解码：</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>decode I from the next N bits
+</span></span><span style="display:flex;"><span>   if I &lt; 2^N - 1, return I
+</span></span><span style="display:flex;"><span>   else
+</span></span><span style="display:flex;"><span>       M = 0
+</span></span><span style="display:flex;"><span>       repeat
+</span></span><span style="display:flex;"><span>           B = next octet
+</span></span><span style="display:flex;"><span>           I = I + (B &amp; 127) * 2^M
+</span></span><span style="display:flex;"><span>           M = M + 7
+</span></span><span style="display:flex;"><span>       while B &amp; 128 == 128
+</span></span><span style="display:flex;"><span>       return I
+</span></span></code></pre></div><h4 id="字符串编码">
+  字符串编码
+  <a class="heading-link" href="#%e5%ad%97%e7%ac%a6%e4%b8%b2%e7%bc%96%e7%a0%81">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h4>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>  0   1   2   3   4   5   6   7
+</span></span><span style="display:flex;"><span>+---+---+---+---+---+---+---+---+
+</span></span><span style="display:flex;"><span>| H |    String Length (7+)     |
+</span></span><span style="display:flex;"><span>+---+---------------------------+
+</span></span><span style="display:flex;"><span>|  String Data (Length octets)  |
+</span></span><span style="display:flex;"><span>+-------------------------------+
+</span></span></code></pre></div><p>从一个二进制序列中解码一个字符串，有几个非常重要的点：</p>
+<ol>
+<li>从那一位开始</li>
+<li>到那一位结束</li>
+</ol>
+<p>因此，为了表达这个信息，在二进制的布局中，需要讲长度编码进去，注意，长度是个无符号整数，按照上面的编码规则进行编码，意味着长度一定是在一个字节的结束。</p>
+<p>所以，字符串的编码会在新的字节开始，如上布局。在HPACK中，为了将常见的字符串进行压缩，经常会使用hufuman编码，因此表达字符串编码本身的字节序列的第一个位，不参与表达字符串本身。而仅仅表达后面的字符串编码是原始字符串还是hufuman编码后的字符串。</p>
+<blockquote>
+<p>H:表示是否是 huffman 编码，1:是 0:不是。</p>
+</blockquote>
+<p>length代表的是二进制位的长度，并不是字符串的长度。如果是hufuman编码的字符串。那么，String data的二进制布局是基于hufuman编码的。比如”h” 这个字符串的ascii码是104，二进制位布局为：1101000，而hufuman的布局为 100111。对于常见的web传递的header相关字符，使用hufuman编码压缩效果更好。
+仅仅
+详细的定义参见这里
+<a href="https://httpwg.org/specs/rfc7541.html#huffman.code">https://httpwg.org/specs/rfc7541.html#huffman.code</a></p>
+<h4 id="二进制格式的表达">
+  二进制格式的表达
+  <a class="heading-link" href="#%e4%ba%8c%e8%bf%9b%e5%88%b6%e6%a0%bc%e5%bc%8f%e7%9a%84%e8%a1%a8%e8%be%be">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h4>
+<p>在HPACK中，解码器通过搜索二进制位，执行不同解析逻辑。</p>
+<ul>
+<li>已被索引的header[1]</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>  0   1   2   3   4   5   6   7
+</span></span><span style="display:flex;"><span>+---+---+---+---+---+---+---+---+
+</span></span><span style="display:flex;"><span>| 1 |        Index (7+)         |
+</span></span><span style="display:flex;"><span>+---+---------------------------+
+</span></span></code></pre></div><ul>
+<li>name在索引，value不再索引且允许索引 [0 1]</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>  0   1   2   3   4   5   6   7
+</span></span><span style="display:flex;"><span>+---+---+---+---+---+---+---+---+
+</span></span><span style="display:flex;"><span>| 0 | 1 |      Index (6+)       |
+</span></span><span style="display:flex;"><span>+---+---+-----------------------+
+</span></span><span style="display:flex;"><span>| H |     Value Length (7+)     |
+</span></span><span style="display:flex;"><span>+---+---------------------------+
+</span></span><span style="display:flex;"><span>| Value String (Length octets)  |
+</span></span><span style="display:flex;"><span>+-------------------------------+
+</span></span></code></pre></div><ul>
+<li>name,value都没被索引且允许索引[0100 0000]</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>  0   1   2   3   4   5   6   7
+</span></span><span style="display:flex;"><span>+---+---+---+---+---+---+---+---+
+</span></span><span style="display:flex;"><span>| 0 | 1 |           0           |
+</span></span><span style="display:flex;"><span>+---+---+-----------------------+
+</span></span><span style="display:flex;"><span>| H |     Name Length (7+)      |
+</span></span><span style="display:flex;"><span>+---+---------------------------+
+</span></span><span style="display:flex;"><span>|  Name String (Length octets)  |
+</span></span><span style="display:flex;"><span>+---+---------------------------+
+</span></span><span style="display:flex;"><span>| H |     Value Length (7+)     |
+</span></span><span style="display:flex;"><span>+---+---------------------------+
+</span></span><span style="display:flex;"><span>| Value String (Length octets)  |
+</span></span><span style="display:flex;"><span>+-------------------------------+
+</span></span></code></pre></div><ul>
+<li>name被索引，value未索引且不保存[0000]</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>  0   1   2   3   4   5   6   7
+</span></span><span style="display:flex;"><span>+---+---+---+---+---+---+---+---+
+</span></span><span style="display:flex;"><span>| 0 | 0 | 0 | 0 |  Index (4+)   |
+</span></span><span style="display:flex;"><span>+---+---+-----------------------+
+</span></span><span style="display:flex;"><span>| H |     Value Length (7+)     |
+</span></span><span style="display:flex;"><span>+---+---------------------------+
+</span></span><span style="display:flex;"><span>| Value String (Length octets)  |
+</span></span><span style="display:flex;"><span>+-------------------------------+
+</span></span></code></pre></div><ul>
+<li>name,value都未被索引且不保存[0000 0000]</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>    0   1   2   3   4   5   6   7
+</span></span><span style="display:flex;"><span>+---+---+---+---+---+---+---+---+
+</span></span><span style="display:flex;"><span>| 0 | 0 | 0 | 0 |       0       |
+</span></span><span style="display:flex;"><span>+---+---+-----------------------+
+</span></span><span style="display:flex;"><span>| H |     Name Length (7+)      |
+</span></span><span style="display:flex;"><span>+---+---------------------------+
+</span></span><span style="display:flex;"><span>|  Name String (Length octets)  |
+</span></span><span style="display:flex;"><span>+---+---------------------------+
+</span></span><span style="display:flex;"><span>| H |     Value Length (7+)     |
+</span></span><span style="display:flex;"><span>+---+---------------------------+
+</span></span><span style="display:flex;"><span>| Value String (Length octets)  |
+</span></span><span style="display:flex;"><span>+-------------------------------+
+</span></span></code></pre></div><ul>
+<li>name在索引,value不再且绝对不能被保存索引[0001]</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>0   1   2   3   4   5   6   7
+</span></span><span style="display:flex;"><span>+---+---+---+---+---+---+---+---+
+</span></span><span style="display:flex;"><span>| 0 | 0 | 0 | 1 |  Index (4+)   |
+</span></span><span style="display:flex;"><span>+---+---+-----------------------+
+</span></span><span style="display:flex;"><span>| H |     Value Length (7+)     |
+</span></span><span style="display:flex;"><span>+---+---------------------------+
+</span></span><span style="display:flex;"><span>| Value String (Length octets)  |
+</span></span><span style="display:flex;"><span>+-------------------------------+
+</span></span></code></pre></div><ul>
+<li>name,value都不在且不允许被保存索引[0001 0000]</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>0   1   2   3   4   5   6   7
+</span></span><span style="display:flex;"><span>+---+---+---+---+---+---+---+---+
+</span></span><span style="display:flex;"><span>| 0 | 0 | 0 | 1 |       0       |
+</span></span><span style="display:flex;"><span>+---+---+-----------------------+
+</span></span><span style="display:flex;"><span>| H |     Name Length (7+)      |
+</span></span><span style="display:flex;"><span>+---+---------------------------+
+</span></span><span style="display:flex;"><span>|  Name String (Length octets)  |
+</span></span><span style="display:flex;"><span>+---+---------------------------+
+</span></span><span style="display:flex;"><span>| H |     Value Length (7+)     |
+</span></span><span style="display:flex;"><span>+---+---------------------------+
+</span></span><span style="display:flex;"><span>| Value String (Length octets)  |
+</span></span><span style="display:flex;"><span>+-------------------------------+
+</span></span></code></pre></div><ul>
+<li>修改动态表的大小[001 ] 意味着动态表的上限是（2^5-1）</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>  0   1   2   3   4   5   6   7
+</span></span><span style="display:flex;"><span>+---+---+---+---+---+---+---+---+
+</span></span><span style="display:flex;"><span>| 0 | 0 | 1 |   Max size (5+)   |
+</span></span><span style="display:flex;"><span>+---+---------------------------+
+</span></span></code></pre></div><p>客户端进行二进制编码header的时候，第一个 <strong>字节</strong> (注意不是位)是用来特殊用途的，用以表示客户端对于服务端对于索引的指示信息，服务端通过解析第一个字节获取到必要配置信息。</p>
+<p>比如是否服务端需要更新该header到动态表。 二进制编码在不同的前缀标记下有不同的含义。比如 一个请求的header二进制编码以001，那么该请求仅仅是用来修改服务端接受的最大动态表的值。</p>
+<p>如果是01前缀，则代表剩余的6位了name的索引，如<code>01 10 0001</code> ，剩余的6位就是<code>10 0001</code> 其中，第一位是1，代表是hufuman编码，代表<code>0 0001</code> 是一个hufuman编码，需要从索引表查询。在这个例子中，代表 <code>:authority</code>。（见表1）。</p>
+<h4 id="lsb--msb">
+  LSB &amp; MSB
+  <a class="heading-link" href="#lsb--msb">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h4>
+<p>The Huffman code for the symbol represented as a base-2 integer, aligned on the most significant bit (MSB)</p>
+<p>The Huffman code for the symbol, represented as a hexadecimal integer, aligned on the least significant bit (LSB).</p>
+<p><strong>Demo</strong></p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>   :method: GET
+</span></span><span style="display:flex;"><span>   :scheme: http
+</span></span><span style="display:flex;"><span>   :path: /
+</span></span><span style="display:flex;"><span>   :authority: www.example.com
+</span></span><span style="display:flex;"><span>   Hex dump of encoded data:
+</span></span><span style="display:flex;"><span>   8286 8441 0f77 7777 2e65 7861 6d70 6c65 | ...A.www.example
+</span></span><span style="display:flex;"><span>   2e63 6f6d                               | .com
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   Decoding process:
+</span></span><span style="display:flex;"><span>   82                                      | == Indexed - Add ==
+</span></span><span style="display:flex;"><span>                                           |   idx = 2
+</span></span><span style="display:flex;"><span>                                           | -&gt; :method: GET
+</span></span><span style="display:flex;"><span>   86                                      | == Indexed - Add ==
+</span></span><span style="display:flex;"><span>                                           |   idx = 6
+</span></span><span style="display:flex;"><span>                                           | -&gt; :scheme: http
+</span></span><span style="display:flex;"><span>   84                                      | == Indexed - Add ==
+</span></span><span style="display:flex;"><span>                                           |   idx = 4
+</span></span><span style="display:flex;"><span>                                           | -&gt; :path: /
+</span></span><span style="display:flex;"><span>   41                                      | == Literal indexed ==
+</span></span><span style="display:flex;"><span>                                           |   Indexed name (idx = 1)
+</span></span><span style="display:flex;"><span>                                           |     :authority
+</span></span><span style="display:flex;"><span>   0f                                      |   Literal value (len = 15)
+</span></span><span style="display:flex;"><span>   7777 772e 6578 616d 706c 652e 636f 6d   | www.example.com
+</span></span><span style="display:flex;"><span>                                           | -&gt; :authority:
+</span></span><span style="display:flex;"><span>                                           |   www.example.com
+</span></span></code></pre></div><p>注意这里的<code>41</code>，是这样布局的<code>0100 0001</code></p>
+<p>代表,name被索引，但value未被索引，且允许索引。（参见上表）。因此是<code>0 1</code>,<code>:authority</code>为<code>0001</code>，因此补全为 <code>0100 0001</code>
+根据<code>0100 0001</code> 的规则，接下来就需要跟着一个value的长度，这里是0f,接着是字符串的十六进制编码   <code>7777 772e 6578 616d 706c 652e 636f 6d </code>。</p>
+<p>对一个字符串进行编码的步骤 如 <code>:my_header hello</code>，</p>
+<p>步骤1：</p>
+<p>这个字符串并非是静态表里面的,所以前缀应该是 0100 0000（代表都没被索引且允许索引）。</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>  0   1   2   3   4   5   6   7
+</span></span><span style="display:flex;"><span>+---+---+---+---+---+---+---+---+
+</span></span><span style="display:flex;"><span>| 0 | 1 |           0           |
+</span></span><span style="display:flex;"><span>+---+---+-----------------------+
+</span></span><span style="display:flex;"><span>| H |     Name Length (7+)      |
+</span></span><span style="display:flex;"><span>+---+---------------------------+
+</span></span><span style="display:flex;"><span>|  Name String (Length octets)  |
+</span></span><span style="display:flex;"><span>+---+---------------------------+
+</span></span><span style="display:flex;"><span>| H |     Value Length (7+)     |
+</span></span><span style="display:flex;"><span>+---+---------------------------+
+</span></span><span style="display:flex;"><span>| Value String (Length octets)  |
+</span></span><span style="display:flex;"><span>+-------------------------------+
+</span></span></code></pre></div><p>二进制布局如下：</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>  0   1   2   3   4   5   6   7
+</span></span><span style="display:flex;"><span>+---+---+-----------------------+
+</span></span><span style="display:flex;"><span>| 0｜ 1 ｜ 0   0  0  0  0  0
+</span></span><span style="display:flex;"><span>+---+---------------------------+
+</span></span></code></pre></div><p>需要将:my_header编码，此处不使用hufuman编码，因此name的二进制布局如下：</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  0   1   2   3   4   5   6   7
+</span></span><span style="display:flex;"><span>+---+---+-----------------------+
+</span></span><span style="display:flex;"><span>| 0｜  Value-(2^N-1) MSB   
+</span></span><span style="display:flex;"><span>+---+---------------------------+
+</span></span></code></pre></div><p>在我们的例子中，<code>:my_header</code>的N值为：</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>3a 6d 79 5f 68 65 61 64 65 72
+</span></span></code></pre></div><p>综上，</p>
+<p>第一个字节为，<code>0100 0000</code> ,代表name和value都未被索引，但可以保存索引</p>
+<p>第二个字节为，<code>0 000 1010</code>   代表name <code>:my_header</code>字符串的长度为10</p>
+<p>接下来是 <code>3a6d 795f 6865 6164 6572</code> 是 <code>:my_header</code> 这个字符串本身的编码</p>
+<p>然后是 <code>0 000 0101</code> 代表接下来的做value(hello)的长度为5</p>
+<p>最后是 <code>68 65 6c 6c 6f</code>，是hello 这个字符串本身的编码</p>
+<blockquote>
+<p><a href="https://httpwg.org/specs/rfc7541.html">https://httpwg.org/specs/rfc7541.html</a> 点击这里可以了解到详细的技术细节。</p>
+</blockquote>
+<h4 id="升级">
+  升级
+  <a class="heading-link" href="#%e5%8d%87%e7%ba%a7">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h4>
+<blockquote>
+<p>http1.x-&gt;http2 平滑升级</p>
+</blockquote>
+<p>目前大多数app都支持http1.x，要完成http1.x到http/2,需要进行客户端发起升级协议，来询问和确认服务端对http/2的支持。</p>
+<p>具体而言，是客户端发起一个OPTIONS请求，携带代码如下：</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>GET /default.htm HTTP/1.1
+</span></span><span style="display:flex;"><span>Host: server.example.com
+</span></span><span style="display:flex;"><span>Connection: Upgrade, HTTP2-Settings
+</span></span><span style="display:flex;"><span>Upgrade: h2c
+</span></span><span style="display:flex;"><span>HTTP2-Settings: &lt;base64url encoding of HTTP/2 SETTINGS payload&gt;
+</span></span></code></pre></div><p>注意有个 <strong>upgrade:h2c</strong> 的header. 服务器在接收到这个header之后，响应101(TLS_ALPN)来接受升级。（不支持http/2的，可以返回一个不包含upgrade的响应）</p>
+<p>服务端首次发送的帧和客户端首次发送的帧，必须包含设置帧。意味着，客户端在接收到101的响应后，要发送一个包含 <strong>设置帧</strong> 的请求。</p>
+<p>h2c协议标识符一定不能被客户端发送或被服务器选择，服务器必须忽略。</p>
+<p>客户端和服务端必须发送Connection Preface作为最终确认，具体表现为，客户端需要在接收到101之后，立即发送一个客户端 以”<code>PRI * HTTP/2.0\r\n\r\nSM\r\n\r\n</code>” 开始，并且紧跟着配置帧。</p>
+<h4 id="工具js">
+  工具（js）
+  <a class="heading-link" href="#%e5%b7%a5%e5%85%b7js">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h4>
+<blockquote>
+<p>在浏览器快速获取ascii码</p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>str=&#34;:my_header&#34;;
+</span></span><span style="display:flex;"><span>len=str.length;
+</span></span><span style="display:flex;"><span>arr=[];
+</span></span><span style="display:flex;"><span>for(var i=0;i&lt;len;i++){
+</span></span><span style="display:flex;"><span>arr.push(str.charCodeAt(i).toString(16));
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>console.log(arr.join(&#34; &#34;));
+</span></span></code></pre></div><h4 id="参考">
+  参考
+  <a class="heading-link" href="#%e5%8f%82%e8%80%83">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h4>
+<p><a href="https://tools.ietf.org/html/rfc7541#appendix-B">https://tools.ietf.org/html/rfc7541#appendix-B</a></p>
+<p><a href="https://developers.google.com/web/fundamentals/performance/http2/?hl=zh-cn">https://developers.google.com/web/fundamentals/performance/http2/?hl=zh-cn</a></p>
+<p><a href="https://github.com/ye11ow/http2-explained-chinese/blob/master/part6.md">https://github.com/ye11ow/http2-explained-chinese/blob/master/part6.md</a></p>
+<p><a href="https://github.com/ye11ow/http2-explained-chinese/blob/master/part13.md">https://github.com/ye11ow/http2-explained-chinese/blob/master/part13.md</a></p>
+<p><a href="https://http2-explained.haxx.se/content/zh/part1.html">https://http2-explained.haxx.se/content/zh/part1.html</a></p>
+<p><a href="https://skyao.io/learning-http2/stream/identifier.html">https://skyao.io/learning-http2/stream/identifier.html</a></p>
+<p><a href="http://joescott.coding.me/blog/2017/03/10/http2-frame-stream/">http://joescott.coding.me/blog/2017/03/10/http2-frame-stream/</a></p>
+
+      </div>
+
+
+      <footer>
+        
+
+
+        <div id="disqus_thread"></div>
+<script>
+  window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "okuer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+    
+    document.addEventListener('themeChanged', function (e) { 
+        if (document.readyState == 'complete') {
+          DISQUS.reset({ reload: true, config: disqus_config });
+        }
+    });
+</script>
+        
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+      2019 -
+    
+    2023
+     John Doe 
+    ·
+    
+    Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>

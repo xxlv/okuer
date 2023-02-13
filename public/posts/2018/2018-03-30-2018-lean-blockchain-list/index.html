@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>
+  Blockchain checklist · Okuer
+</title>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="author" content="John Doe">
+<meta name="description" content="【思想&amp;原理】
+blockchain的原理 主流的blockchain 点对点 分布式系统 货币的本质 ICO Token smart contract 主流的共识算法 pow&amp;pos&amp;dpos 一些思想，不可能三角关系定律等 比特币的架构 script 语言 拜占庭将军的问题 【密码学】
+椭圆曲线 非对称加密算法 hash , sha256 公钥&amp;私钥&amp;seed 【计算机】
+​Java、Go语言 VM 虚拟机，EVM 图灵完备执行环境 solidity语言 编写智能合约 p2p 网络 roc 分布式网络 【区块链】
+公链、私链、联盟链 闪电网络、超级账本、IPFS ​钱包 浏览器 比特币&amp;以太坊 跨链 web3 交与区块链 Dapp 区块链底层协议 EIP、BIP 分叉 区块的扩容 挖矿 【博弈论】
+​共识博弈 【经济】
+​如何构建一个去中心化的民主自组织的经济体 ICO vs IPO 【金融】
+​古典金融模式，如IPO 【组织】
+​理解自下而上管理的组织 理解组织的未来运营模式 理解去中心化后的组织的维护依赖透明的激励模型 理解收益模型（如持续收益模型） 【领域】
+银行、金融系统（银行发行的数字货币） ​医疗，电子病例系统 供应链 租赁 所有权声明 分布式DNS ">
+<meta name="keywords" content="blog,developer,personal">
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Blockchain checklist"/>
+<meta name="twitter:description" content="【思想&amp;原理】
+blockchain的原理 主流的blockchain 点对点 分布式系统 货币的本质 ICO Token smart contract 主流的共识算法 pow&amp;pos&amp;dpos 一些思想，不可能三角关系定律等 比特币的架构 script 语言 拜占庭将军的问题 【密码学】
+椭圆曲线 非对称加密算法 hash , sha256 公钥&amp;私钥&amp;seed 【计算机】
+​Java、Go语言 VM 虚拟机，EVM 图灵完备执行环境 solidity语言 编写智能合约 p2p 网络 roc 分布式网络 【区块链】
+公链、私链、联盟链 闪电网络、超级账本、IPFS ​钱包 浏览器 比特币&amp;以太坊 跨链 web3 交与区块链 Dapp 区块链底层协议 EIP、BIP 分叉 区块的扩容 挖矿 【博弈论】
+​共识博弈 【经济】
+​如何构建一个去中心化的民主自组织的经济体 ICO vs IPO 【金融】
+​古典金融模式，如IPO 【组织】
+​理解自下而上管理的组织 理解组织的未来运营模式 理解去中心化后的组织的维护依赖透明的激励模型 理解收益模型（如持续收益模型） 【领域】
+银行、金融系统（银行发行的数字货币） ​医疗，电子病例系统 供应链 租赁 所有权声明 分布式DNS "/>
+
+<meta property="og:title" content="Blockchain checklist" />
+<meta property="og:description" content="【思想&amp;原理】
+blockchain的原理 主流的blockchain 点对点 分布式系统 货币的本质 ICO Token smart contract 主流的共识算法 pow&amp;pos&amp;dpos 一些思想，不可能三角关系定律等 比特币的架构 script 语言 拜占庭将军的问题 【密码学】
+椭圆曲线 非对称加密算法 hash , sha256 公钥&amp;私钥&amp;seed 【计算机】
+​Java、Go语言 VM 虚拟机，EVM 图灵完备执行环境 solidity语言 编写智能合约 p2p 网络 roc 分布式网络 【区块链】
+公链、私链、联盟链 闪电网络、超级账本、IPFS ​钱包 浏览器 比特币&amp;以太坊 跨链 web3 交与区块链 Dapp 区块链底层协议 EIP、BIP 分叉 区块的扩容 挖矿 【博弈论】
+​共识博弈 【经济】
+​如何构建一个去中心化的民主自组织的经济体 ICO vs IPO 【金融】
+​古典金融模式，如IPO 【组织】
+​理解自下而上管理的组织 理解组织的未来运营模式 理解去中心化后的组织的维护依赖透明的激励模型 理解收益模型（如持续收益模型） 【领域】
+银行、金融系统（银行发行的数字货币） ​医疗，电子病例系统 供应链 租赁 所有权声明 分布式DNS " />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.okuer.com/posts/2018/2018-03-30-2018-lean-blockchain-list/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2018-03-30T21:05:39+00:00" />
+<meta property="article:modified_time" content="2018-03-30T21:05:39+00:00" />
+
+
+
+
+<link rel="canonical" href="https://blog.okuer.com/posts/2018/2018-03-30-2018-lean-blockchain-list/">
+
+
+<link rel="preload" href="/fonts/forkawesome-webfont.woff2?v=1.2.0" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.0fa2dc75ed1b76894ac0e062b10a6c4730daa745096fa120114b290ed8a48788.css" integrity="sha256-D6Lcde0bdolKwOBisQpsRzDap0UJb6EgEUspDtikh4g=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.min.593028e7f7ac55c003b79c230d1cd411bb4ca53b31556c3abb7f027170e646e9.css" integrity="sha256-WTAo5/esVcADt5wjDRzUEbtMpTsxVWw6u38CcXDmRuk=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/png" href="/img/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/img/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+<meta name="generator" content="Hugo 0.110.0">
+
+
+
+
+
+  </head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="/">
+      Okuer
+    </a>
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/posts/">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/about/">About</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="https://blog.okuer.com/posts/2018/2018-03-30-2018-lean-blockchain-list/">
+              Blockchain checklist
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa fa-calendar" aria-hidden="true"></i>
+              <time datetime="2018-03-30T21:05:39Z">
+                March 30, 2018
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa fa-clock-o" aria-hidden="true"></i>
+              One-minute read
+            </span>
+          </div>
+          
+          <div class="categories">
+  <i class="fa fa-folder" aria-hidden="true"></i>
+    <a href="/categories/blockchain/">Blockchain</a></div>
+
+          
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <p>【思想&amp;原理】</p>
+<ul>
+<li>blockchain的原理</li>
+<li>主流的blockchain</li>
+<li>点对点</li>
+<li>分布式系统</li>
+<li>货币的本质</li>
+<li>ICO</li>
+<li>Token</li>
+<li>smart contract</li>
+<li>主流的共识算法 pow&amp;pos&amp;dpos</li>
+<li>一些思想，不可能三角关系定律等</li>
+<li>比特币的架构</li>
+<li>script 语言</li>
+<li>拜占庭将军的问题</li>
+</ul>
+<p>【密码学】</p>
+<ul>
+<li>椭圆曲线</li>
+<li>非对称加密算法</li>
+<li>hash , sha256</li>
+<li>公钥&amp;私钥&amp;seed</li>
+</ul>
+<p>【计算机】</p>
+<ul>
+<li>​Java、Go语言</li>
+<li>VM 虚拟机，EVM</li>
+<li>图灵完备执行环境</li>
+<li>solidity语言 编写智能合约</li>
+<li>p2p 网络</li>
+<li>roc</li>
+<li>分布式网络</li>
+</ul>
+<p>【区块链】</p>
+<ul>
+<li>公链、私链、联盟链</li>
+<li>闪电网络、超级账本、IPFS</li>
+<li>​钱包</li>
+<li>浏览器</li>
+<li>比特币&amp;以太坊</li>
+<li>跨链</li>
+<li>web3  交与区块链</li>
+<li>Dapp</li>
+<li>区块链底层协议</li>
+<li>EIP、BIP</li>
+<li>分叉</li>
+<li>区块的扩容</li>
+<li>挖矿</li>
+</ul>
+<p>【博弈论】</p>
+<ul>
+<li>​共识博弈</li>
+</ul>
+<p>【经济】</p>
+<ul>
+<li>​如何构建一个去中心化的民主自组织的经济体</li>
+<li>ICO vs IPO</li>
+</ul>
+<p>【金融】</p>
+<ul>
+<li>​古典金融模式，如IPO</li>
+</ul>
+<p>【组织】</p>
+<ul>
+<li>​理解自下而上管理的组织</li>
+<li>理解组织的未来运营模式</li>
+<li>理解去中心化后的组织的维护依赖透明的激励模型</li>
+<li>理解收益模型（如持续收益模型）</li>
+</ul>
+<p>【领域】</p>
+<ul>
+<li>银行、金融系统（银行发行的数字货币）</li>
+<li>​医疗，电子病例系统</li>
+<li>供应链</li>
+<li>租赁</li>
+<li>所有权声明</li>
+<li>分布式DNS</li>
+</ul>
+
+      </div>
+
+
+      <footer>
+        
+
+
+        <div id="disqus_thread"></div>
+<script>
+  window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "okuer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+    
+    document.addEventListener('themeChanged', function (e) { 
+        if (document.readyState == 'complete') {
+          DISQUS.reset({ reload: true, config: disqus_config });
+        }
+    });
+</script>
+        
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+      2019 -
+    
+    2023
+     John Doe 
+    ·
+    
+    Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>

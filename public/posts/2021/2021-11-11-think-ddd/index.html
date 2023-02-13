@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>
+  领域驱动设计的思考 · Okuer
+</title>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="author" content="John Doe">
+<meta name="description" content="本文思考了领域驱动究竟解决了什么事情
+不妨让我们回到互联网初始的那个时间，那时候一切都简单朴素。我们编写简单的代码来控制一件事。
+比如 if true then doThings 因为这样结构化的编程范式，我们写出了很长很长的代码，这些代码可以工作的很好。
+我们有函数，它们可以将这些长长的代码进行分割，放在一个个文件里面。似乎没有任何问题。
+时间慢慢的走，我们发现文件越来越多，我们引入来模块来将一些属于某个领域的文件集合打包。
+让我们调整视角，看看模块内部的变化。
+我们有了面向对象编程范式，大多数主流的编程语言都支持面向对象。如Java就是纯面向对象编程的。
+面向对象提供很好的封装/多态/继承，让我们很容易编写出极度符合人类认知标准的代码。它将控制流从 文件的片段中移动到对象的行为上，我们称之为方法。
+这是领域驱动的有力武器。
+那么，领域驱动到底解决来什么问题呢？
+领域驱动顾名思义就是通过领域设计来驱动开发，简单的来讲，就是在开发中引入领域概念来屏蔽调计算机领域和 业务领域的细节，让开发者和领域专家（任何对某个领域有丰富知识的人）协同开发的一种软件架构模式。
+第一个原因 Link to heading 我们当今面临的业务复杂，开发人员往往不具备业务的领域知识，领域专家不懂技术，在沟通上往往会存在障碍。 因此领域驱动在一定程度上会强迫参与者进行知识的互相分享。
+第二个原因 Link to heading 同时第二个重要的原因是，方便编写可维护性高的代码。 领域的知识往往是静态的。比如一个电商的下单流程，往往是固定的。 支付-检查锁定库存-生成订单。
+引入领域驱动，可以更利于编写有业务价值的代码。
+第三个原因 Link to heading 第三个重要的原因领域知识的沉淀，往往这些领域知识都是可以复用的。这意味着可以跨项目共享，减少开发的工作量。 领域天生具有极强的边界。所以可以拒绝不合理的系统改造。减少系统的熵。
+在如今，团队协作/跨团队协作的背景下，领域驱动开发可以很好的在保证系统边界的前提下，拥有良好的代码维护性和扩展性，增强团队的领域知识。
+当然，领域驱动是一种架构模式，跟语言无关，跟编程范式无关，这就意味着，如果不是面向对象语言，也可以做到领域驱动。
+领域驱动有几个非常核心的概念：实体、聚合根、值对象、界定上下文、资源库、领域服务、工厂、领域事件。
+这些概念是一种指导和约束，用来思考和构建领域知识。在使用领域驱动开发落地的时候，一个前提是沟通。 通过一些有意义的会议和讨论来得出一个系统的领域边界和知识。 实体就是一个个知识的代名词。
+一些编程语言都支持属性访问，将实体的属性暴露出去不会有任何问题，但是，它并不代表领域知识。比如订单的一个价格的字段，直接抛出去而不用一个行为。
+甚至在一定程度上更简洁。但是问题是，当通过某些订单拥有优惠券的时候，你必须得通知全部使用了这个字段的人，我引入了优惠券，你需要减去某个金额，
+长时间下去，系统将难易维护。
+内聚力是领域驱动的内功，如果理解领域知识使其高度内聚，是领域驱动设计的关键。
+当然，领域驱动并不是银弹，我们需要考虑输出的产品是什么，有无团队协作，是否有领域专家，以及项目的其他因素。
+并不是所有的产品都适合领域驱动设计。很多时候，我们系统更应该考虑如何模块化">
+<meta name="keywords" content="blog,developer,personal">
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="领域驱动设计的思考"/>
+<meta name="twitter:description" content="本文思考了领域驱动究竟解决了什么事情
+不妨让我们回到互联网初始的那个时间，那时候一切都简单朴素。我们编写简单的代码来控制一件事。
+比如 if true then doThings 因为这样结构化的编程范式，我们写出了很长很长的代码，这些代码可以工作的很好。
+我们有函数，它们可以将这些长长的代码进行分割，放在一个个文件里面。似乎没有任何问题。
+时间慢慢的走，我们发现文件越来越多，我们引入来模块来将一些属于某个领域的文件集合打包。
+让我们调整视角，看看模块内部的变化。
+我们有了面向对象编程范式，大多数主流的编程语言都支持面向对象。如Java就是纯面向对象编程的。
+面向对象提供很好的封装/多态/继承，让我们很容易编写出极度符合人类认知标准的代码。它将控制流从 文件的片段中移动到对象的行为上，我们称之为方法。
+这是领域驱动的有力武器。
+那么，领域驱动到底解决来什么问题呢？
+领域驱动顾名思义就是通过领域设计来驱动开发，简单的来讲，就是在开发中引入领域概念来屏蔽调计算机领域和 业务领域的细节，让开发者和领域专家（任何对某个领域有丰富知识的人）协同开发的一种软件架构模式。
+第一个原因 Link to heading 我们当今面临的业务复杂，开发人员往往不具备业务的领域知识，领域专家不懂技术，在沟通上往往会存在障碍。 因此领域驱动在一定程度上会强迫参与者进行知识的互相分享。
+第二个原因 Link to heading 同时第二个重要的原因是，方便编写可维护性高的代码。 领域的知识往往是静态的。比如一个电商的下单流程，往往是固定的。 支付-检查锁定库存-生成订单。
+引入领域驱动，可以更利于编写有业务价值的代码。
+第三个原因 Link to heading 第三个重要的原因领域知识的沉淀，往往这些领域知识都是可以复用的。这意味着可以跨项目共享，减少开发的工作量。 领域天生具有极强的边界。所以可以拒绝不合理的系统改造。减少系统的熵。
+在如今，团队协作/跨团队协作的背景下，领域驱动开发可以很好的在保证系统边界的前提下，拥有良好的代码维护性和扩展性，增强团队的领域知识。
+当然，领域驱动是一种架构模式，跟语言无关，跟编程范式无关，这就意味着，如果不是面向对象语言，也可以做到领域驱动。
+领域驱动有几个非常核心的概念：实体、聚合根、值对象、界定上下文、资源库、领域服务、工厂、领域事件。
+这些概念是一种指导和约束，用来思考和构建领域知识。在使用领域驱动开发落地的时候，一个前提是沟通。 通过一些有意义的会议和讨论来得出一个系统的领域边界和知识。 实体就是一个个知识的代名词。
+一些编程语言都支持属性访问，将实体的属性暴露出去不会有任何问题，但是，它并不代表领域知识。比如订单的一个价格的字段，直接抛出去而不用一个行为。
+甚至在一定程度上更简洁。但是问题是，当通过某些订单拥有优惠券的时候，你必须得通知全部使用了这个字段的人，我引入了优惠券，你需要减去某个金额，
+长时间下去，系统将难易维护。
+内聚力是领域驱动的内功，如果理解领域知识使其高度内聚，是领域驱动设计的关键。
+当然，领域驱动并不是银弹，我们需要考虑输出的产品是什么，有无团队协作，是否有领域专家，以及项目的其他因素。
+并不是所有的产品都适合领域驱动设计。很多时候，我们系统更应该考虑如何模块化"/>
+
+<meta property="og:title" content="领域驱动设计的思考" />
+<meta property="og:description" content="本文思考了领域驱动究竟解决了什么事情
+不妨让我们回到互联网初始的那个时间，那时候一切都简单朴素。我们编写简单的代码来控制一件事。
+比如 if true then doThings 因为这样结构化的编程范式，我们写出了很长很长的代码，这些代码可以工作的很好。
+我们有函数，它们可以将这些长长的代码进行分割，放在一个个文件里面。似乎没有任何问题。
+时间慢慢的走，我们发现文件越来越多，我们引入来模块来将一些属于某个领域的文件集合打包。
+让我们调整视角，看看模块内部的变化。
+我们有了面向对象编程范式，大多数主流的编程语言都支持面向对象。如Java就是纯面向对象编程的。
+面向对象提供很好的封装/多态/继承，让我们很容易编写出极度符合人类认知标准的代码。它将控制流从 文件的片段中移动到对象的行为上，我们称之为方法。
+这是领域驱动的有力武器。
+那么，领域驱动到底解决来什么问题呢？
+领域驱动顾名思义就是通过领域设计来驱动开发，简单的来讲，就是在开发中引入领域概念来屏蔽调计算机领域和 业务领域的细节，让开发者和领域专家（任何对某个领域有丰富知识的人）协同开发的一种软件架构模式。
+第一个原因 Link to heading 我们当今面临的业务复杂，开发人员往往不具备业务的领域知识，领域专家不懂技术，在沟通上往往会存在障碍。 因此领域驱动在一定程度上会强迫参与者进行知识的互相分享。
+第二个原因 Link to heading 同时第二个重要的原因是，方便编写可维护性高的代码。 领域的知识往往是静态的。比如一个电商的下单流程，往往是固定的。 支付-检查锁定库存-生成订单。
+引入领域驱动，可以更利于编写有业务价值的代码。
+第三个原因 Link to heading 第三个重要的原因领域知识的沉淀，往往这些领域知识都是可以复用的。这意味着可以跨项目共享，减少开发的工作量。 领域天生具有极强的边界。所以可以拒绝不合理的系统改造。减少系统的熵。
+在如今，团队协作/跨团队协作的背景下，领域驱动开发可以很好的在保证系统边界的前提下，拥有良好的代码维护性和扩展性，增强团队的领域知识。
+当然，领域驱动是一种架构模式，跟语言无关，跟编程范式无关，这就意味着，如果不是面向对象语言，也可以做到领域驱动。
+领域驱动有几个非常核心的概念：实体、聚合根、值对象、界定上下文、资源库、领域服务、工厂、领域事件。
+这些概念是一种指导和约束，用来思考和构建领域知识。在使用领域驱动开发落地的时候，一个前提是沟通。 通过一些有意义的会议和讨论来得出一个系统的领域边界和知识。 实体就是一个个知识的代名词。
+一些编程语言都支持属性访问，将实体的属性暴露出去不会有任何问题，但是，它并不代表领域知识。比如订单的一个价格的字段，直接抛出去而不用一个行为。
+甚至在一定程度上更简洁。但是问题是，当通过某些订单拥有优惠券的时候，你必须得通知全部使用了这个字段的人，我引入了优惠券，你需要减去某个金额，
+长时间下去，系统将难易维护。
+内聚力是领域驱动的内功，如果理解领域知识使其高度内聚，是领域驱动设计的关键。
+当然，领域驱动并不是银弹，我们需要考虑输出的产品是什么，有无团队协作，是否有领域专家，以及项目的其他因素。
+并不是所有的产品都适合领域驱动设计。很多时候，我们系统更应该考虑如何模块化" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.okuer.com/posts/2021/2021-11-11-think-ddd/" /><meta property="article:section" content="posts" />
+
+
+
+
+
+
+<link rel="canonical" href="https://blog.okuer.com/posts/2021/2021-11-11-think-ddd/">
+
+
+<link rel="preload" href="/fonts/forkawesome-webfont.woff2?v=1.2.0" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.0fa2dc75ed1b76894ac0e062b10a6c4730daa745096fa120114b290ed8a48788.css" integrity="sha256-D6Lcde0bdolKwOBisQpsRzDap0UJb6EgEUspDtikh4g=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.min.593028e7f7ac55c003b79c230d1cd411bb4ca53b31556c3abb7f027170e646e9.css" integrity="sha256-WTAo5/esVcADt5wjDRzUEbtMpTsxVWw6u38CcXDmRuk=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/png" href="/img/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/img/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+<meta name="generator" content="Hugo 0.110.0">
+
+
+
+
+
+  </head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="/">
+      Okuer
+    </a>
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/posts/">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/about/">About</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="https://blog.okuer.com/posts/2021/2021-11-11-think-ddd/">
+              领域驱动设计的思考
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa fa-calendar" aria-hidden="true"></i>
+              <time datetime="0001-01-01T00:00:00Z">
+                January 1, 0001
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa fa-clock-o" aria-hidden="true"></i>
+              One-minute read
+            </span>
+          </div>
+          
+          <div class="categories">
+  <i class="fa fa-folder" aria-hidden="true"></i>
+    <a href="/categories/%E9%9A%8F%E7%AC%94/">随笔</a></div>
+
+          
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <blockquote>
+</blockquote>
+<p>本文思考了领域驱动究竟解决了什么事情</p>
+<p>不妨让我们回到互联网初始的那个时间，那时候一切都简单朴素。我们编写简单的代码来控制一件事。</p>
+<p>比如 <code>if true then doThings</code>
+因为这样结构化的编程范式，我们写出了很长很长的代码，这些代码可以工作的很好。</p>
+<p>我们有函数，它们可以将这些长长的代码进行分割，放在一个个文件里面。似乎没有任何问题。</p>
+<p>时间慢慢的走，我们发现文件越来越多，我们引入来模块来将一些属于某个领域的文件集合打包。</p>
+<!-- raw HTML omitted -->
+<p>让我们调整视角，看看模块内部的变化。</p>
+<p>我们有了面向对象编程范式，大多数主流的编程语言都支持面向对象。如Java就是纯面向对象编程的。</p>
+<p>面向对象提供很好的封装/多态/继承，让我们很容易编写出极度符合人类认知标准的代码。它将控制流从
+文件的片段中移动到对象的行为上，我们称之为方法。</p>
+<p>这是领域驱动的有力武器。</p>
+<p>那么，领域驱动到底解决来什么问题呢？</p>
+<p>领域驱动顾名思义就是通过领域设计来驱动开发，简单的来讲，就是在开发中引入领域概念来屏蔽调计算机领域和
+业务领域的细节，让开发者和领域专家（任何对某个领域有丰富知识的人）协同开发的一种软件架构模式。</p>
+<!-- raw HTML omitted -->
+<h3 id="第一个原因">
+  第一个原因
+  <a class="heading-link" href="#%e7%ac%ac%e4%b8%80%e4%b8%aa%e5%8e%9f%e5%9b%a0">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<p>我们当今面临的业务复杂，开发人员往往不具备业务的领域知识，领域专家不懂技术，在沟通上往往会存在障碍。
+因此领域驱动在一定程度上会强迫参与者进行知识的互相分享。</p>
+<h3 id="第二个原因">
+  第二个原因
+  <a class="heading-link" href="#%e7%ac%ac%e4%ba%8c%e4%b8%aa%e5%8e%9f%e5%9b%a0">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<p>同时第二个重要的原因是，方便编写可维护性高的代码。 领域的知识往往是静态的。比如一个电商的下单流程，往往是固定的。
+支付-检查锁定库存-生成订单。</p>
+<p>引入领域驱动，可以更利于编写有业务价值的代码。</p>
+<h3 id="第三个原因">
+  第三个原因
+  <a class="heading-link" href="#%e7%ac%ac%e4%b8%89%e4%b8%aa%e5%8e%9f%e5%9b%a0">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<p>第三个重要的原因领域知识的沉淀，往往这些领域知识都是可以复用的。这意味着可以跨项目共享，减少开发的工作量。
+领域天生具有极强的边界。所以可以拒绝不合理的系统改造。减少系统的熵。</p>
+<p>在如今，团队协作/跨团队协作的背景下，领域驱动开发可以很好的在保证系统边界的前提下，拥有良好的代码维护性和扩展性，增强团队的领域知识。</p>
+<p>当然，领域驱动是一种<strong>架构模式，跟语言无关，跟编程范式无关</strong>，这就意味着，如果不是面向对象语言，也可以做到领域驱动。</p>
+<p>领域驱动有几个非常核心的概念：实体、聚合根、值对象、界定上下文、资源库、领域服务、工厂、领域事件。</p>
+<p>这些概念是一种指导和约束，用来思考和构建领域知识。在使用领域驱动开发落地的时候，一个前提是沟通。
+通过一些有意义的会议和讨论来得出一个系统的领域边界和知识。 实体就是一个个知识的代名词。</p>
+<p>一些编程语言都支持属性访问，将实体的属性暴露出去不会有任何问题，但是，它并不代表领域知识。比如订单的一个价格的字段，直接抛出去而不用一个行为。</p>
+<p>甚至在一定程度上更简洁。但是问题是，当通过某些订单拥有优惠券的时候，你必须得通知全部使用了这个字段的人，我引入了优惠券，你需要减去某个金额，</p>
+<p>长时间下去，系统将难易维护。</p>
+<p><strong>内聚力</strong>是领域驱动的内功，如果理解领域知识使其高度内聚，是领域驱动设计的关键。</p>
+<p>当然，领域驱动并不是银弹，我们需要考虑输出的产品是什么，有无团队协作，是否有领域专家，以及项目的其他因素。</p>
+<p><strong>并不是所有的产品都适合领域驱动设计</strong>。很多时候，我们系统更应该考虑如何模块化</p>
+
+      </div>
+
+
+      <footer>
+        
+
+
+        <div id="disqus_thread"></div>
+<script>
+  window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "okuer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+    
+    document.addEventListener('themeChanged', function (e) { 
+        if (document.readyState == 'complete') {
+          DISQUS.reset({ reload: true, config: disqus_config });
+        }
+    });
+</script>
+        
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+      2019 -
+    
+    2023
+     John Doe 
+    ·
+    
+    Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>

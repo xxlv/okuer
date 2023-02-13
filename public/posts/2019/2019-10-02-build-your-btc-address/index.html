@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>
+   · Okuer
+</title>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="author" content="John Doe">
+<meta name="description" content="安全离线生成比特币的钱包地址 Link to heading 比特币是数字资产，受到密码学（密钥对）保护，一旦你的私钥被公开，你的资产将不在安全。传统的账号/密码受到服务提供商的保护，比如在支付宝，你的账号账号被盗，导致的财产损失，会被支付宝保险赔付。因为有一个第三方信任机构（保险/支付宝）。但是比特币是构建在区块链上的，区块链是去中心化的。这意味着没有一个类似支付宝的角色来保证你的财产安全，一切都要靠自己。 目前，有许多在线生成比特币地址的服务，这些服务大大简化了生成步骤，但同时引入了非常大的分析。一旦你的账号在网络环境被生成，它有极可能被泄漏。泄漏途径有许多，如本地机器被黑客入侵、服务提供商私自保存了密钥。 因此，如果资产金额较大，强烈建议使用本地的脚本自己生成密钥对，并且永远不要在联网的环境下暴露私钥。 本文提供一种简单的离线脚本，一步步的带你生成比特币的密钥对。（本文所有脚本均在这里，https://github.com/xxlv/btc-address-gen-scripts.git）
+第一，初始化依赖 Link to heading 你需要安全python环境，同时引入包
+sudo pip install bitcoin sudo pip install ecdsa 第二步，拔掉网线或者断开wifi Link to heading 非常重要的步骤，如果不是测试，一定要做！！！
+第三步，运行脚本，生成密钥对 Link to heading python key-to-address-ecc-example.py 生成的结果如下： Link to heading Private Key (hex) is: 14962ffc7f1c9dba79aadb608cd7088574e41a418a5349004309b722a9051b90 Private Key (decimal) is: 9311615220753377728968374325829133502017354028737325199749815733352682298256 Private Key (WIF) is: 5HyMSVcZMnBeGEoFbPqRaPHK1xVpHj6yCGnC4bvqxRUm72uuvbx Private Key Compressed (hex) is: 14962ffc7f1c9dba79aadb608cd7088574e41a418a5349004309b722a9051b9001 Private Key (WIF-Compressed) is: 2SdMjLGhnybsEFJmA85WrTioEtQAaKc8PQjeMQRFd5Q6AKdxygTY5D Public Key (x,y) coordinates is: (32009024601293775410666277862003376881148118697205564723468898850638045984780, 64137136342866323469645354187456635120169454941786517702226349133247186720277) Public Key (hex) is: 0446c477454946ee7187a0b859cedf3c4799726b5d8921b22b6b366b97178d380c8dcc552e1ab8546673dcbfa05f3aa97e33df950f2020805b11e4d8489fdfd615 Compressed Public Key (hex) is: 0346c477454946ee7187a0b859cedf3c4799726b5d8921b22b6b366b97178d380c Bitcoin Address (b58check) is: 18HWNXDVj1jSz9syiJpo2YcEofympTLQgC Compressed Bitcoin Address (b58check) is: 1HViUwJwUofaAPKbnzNRXHqqRE6UQE7g5B 每个人的机器每次调用生成的都不是相同的。 这是btc账号的全部信息，建议冷藏。">
+<meta name="keywords" content="blog,developer,personal">
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content=""/>
+<meta name="twitter:description" content="安全离线生成比特币的钱包地址 Link to heading 比特币是数字资产，受到密码学（密钥对）保护，一旦你的私钥被公开，你的资产将不在安全。传统的账号/密码受到服务提供商的保护，比如在支付宝，你的账号账号被盗，导致的财产损失，会被支付宝保险赔付。因为有一个第三方信任机构（保险/支付宝）。但是比特币是构建在区块链上的，区块链是去中心化的。这意味着没有一个类似支付宝的角色来保证你的财产安全，一切都要靠自己。 目前，有许多在线生成比特币地址的服务，这些服务大大简化了生成步骤，但同时引入了非常大的分析。一旦你的账号在网络环境被生成，它有极可能被泄漏。泄漏途径有许多，如本地机器被黑客入侵、服务提供商私自保存了密钥。 因此，如果资产金额较大，强烈建议使用本地的脚本自己生成密钥对，并且永远不要在联网的环境下暴露私钥。 本文提供一种简单的离线脚本，一步步的带你生成比特币的密钥对。（本文所有脚本均在这里，https://github.com/xxlv/btc-address-gen-scripts.git）
+第一，初始化依赖 Link to heading 你需要安全python环境，同时引入包
+sudo pip install bitcoin sudo pip install ecdsa 第二步，拔掉网线或者断开wifi Link to heading 非常重要的步骤，如果不是测试，一定要做！！！
+第三步，运行脚本，生成密钥对 Link to heading python key-to-address-ecc-example.py 生成的结果如下： Link to heading Private Key (hex) is: 14962ffc7f1c9dba79aadb608cd7088574e41a418a5349004309b722a9051b90 Private Key (decimal) is: 9311615220753377728968374325829133502017354028737325199749815733352682298256 Private Key (WIF) is: 5HyMSVcZMnBeGEoFbPqRaPHK1xVpHj6yCGnC4bvqxRUm72uuvbx Private Key Compressed (hex) is: 14962ffc7f1c9dba79aadb608cd7088574e41a418a5349004309b722a9051b9001 Private Key (WIF-Compressed) is: 2SdMjLGhnybsEFJmA85WrTioEtQAaKc8PQjeMQRFd5Q6AKdxygTY5D Public Key (x,y) coordinates is: (32009024601293775410666277862003376881148118697205564723468898850638045984780, 64137136342866323469645354187456635120169454941786517702226349133247186720277) Public Key (hex) is: 0446c477454946ee7187a0b859cedf3c4799726b5d8921b22b6b366b97178d380c8dcc552e1ab8546673dcbfa05f3aa97e33df950f2020805b11e4d8489fdfd615 Compressed Public Key (hex) is: 0346c477454946ee7187a0b859cedf3c4799726b5d8921b22b6b366b97178d380c Bitcoin Address (b58check) is: 18HWNXDVj1jSz9syiJpo2YcEofympTLQgC Compressed Bitcoin Address (b58check) is: 1HViUwJwUofaAPKbnzNRXHqqRE6UQE7g5B 每个人的机器每次调用生成的都不是相同的。 这是btc账号的全部信息，建议冷藏。"/>
+
+<meta property="og:title" content="" />
+<meta property="og:description" content="安全离线生成比特币的钱包地址 Link to heading 比特币是数字资产，受到密码学（密钥对）保护，一旦你的私钥被公开，你的资产将不在安全。传统的账号/密码受到服务提供商的保护，比如在支付宝，你的账号账号被盗，导致的财产损失，会被支付宝保险赔付。因为有一个第三方信任机构（保险/支付宝）。但是比特币是构建在区块链上的，区块链是去中心化的。这意味着没有一个类似支付宝的角色来保证你的财产安全，一切都要靠自己。 目前，有许多在线生成比特币地址的服务，这些服务大大简化了生成步骤，但同时引入了非常大的分析。一旦你的账号在网络环境被生成，它有极可能被泄漏。泄漏途径有许多，如本地机器被黑客入侵、服务提供商私自保存了密钥。 因此，如果资产金额较大，强烈建议使用本地的脚本自己生成密钥对，并且永远不要在联网的环境下暴露私钥。 本文提供一种简单的离线脚本，一步步的带你生成比特币的密钥对。（本文所有脚本均在这里，https://github.com/xxlv/btc-address-gen-scripts.git）
+第一，初始化依赖 Link to heading 你需要安全python环境，同时引入包
+sudo pip install bitcoin sudo pip install ecdsa 第二步，拔掉网线或者断开wifi Link to heading 非常重要的步骤，如果不是测试，一定要做！！！
+第三步，运行脚本，生成密钥对 Link to heading python key-to-address-ecc-example.py 生成的结果如下： Link to heading Private Key (hex) is: 14962ffc7f1c9dba79aadb608cd7088574e41a418a5349004309b722a9051b90 Private Key (decimal) is: 9311615220753377728968374325829133502017354028737325199749815733352682298256 Private Key (WIF) is: 5HyMSVcZMnBeGEoFbPqRaPHK1xVpHj6yCGnC4bvqxRUm72uuvbx Private Key Compressed (hex) is: 14962ffc7f1c9dba79aadb608cd7088574e41a418a5349004309b722a9051b9001 Private Key (WIF-Compressed) is: 2SdMjLGhnybsEFJmA85WrTioEtQAaKc8PQjeMQRFd5Q6AKdxygTY5D Public Key (x,y) coordinates is: (32009024601293775410666277862003376881148118697205564723468898850638045984780, 64137136342866323469645354187456635120169454941786517702226349133247186720277) Public Key (hex) is: 0446c477454946ee7187a0b859cedf3c4799726b5d8921b22b6b366b97178d380c8dcc552e1ab8546673dcbfa05f3aa97e33df950f2020805b11e4d8489fdfd615 Compressed Public Key (hex) is: 0346c477454946ee7187a0b859cedf3c4799726b5d8921b22b6b366b97178d380c Bitcoin Address (b58check) is: 18HWNXDVj1jSz9syiJpo2YcEofympTLQgC Compressed Bitcoin Address (b58check) is: 1HViUwJwUofaAPKbnzNRXHqqRE6UQE7g5B 每个人的机器每次调用生成的都不是相同的。 这是btc账号的全部信息，建议冷藏。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.okuer.com/posts/2019/2019-10-02-build-your-btc-address/" /><meta property="article:section" content="posts" />
+
+
+
+
+
+
+<link rel="canonical" href="https://blog.okuer.com/posts/2019/2019-10-02-build-your-btc-address/">
+
+
+<link rel="preload" href="/fonts/forkawesome-webfont.woff2?v=1.2.0" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.0fa2dc75ed1b76894ac0e062b10a6c4730daa745096fa120114b290ed8a48788.css" integrity="sha256-D6Lcde0bdolKwOBisQpsRzDap0UJb6EgEUspDtikh4g=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.min.593028e7f7ac55c003b79c230d1cd411bb4ca53b31556c3abb7f027170e646e9.css" integrity="sha256-WTAo5/esVcADt5wjDRzUEbtMpTsxVWw6u38CcXDmRuk=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/png" href="/img/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/img/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+<meta name="generator" content="Hugo 0.110.0">
+
+
+
+
+
+  </head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="/">
+      Okuer
+    </a>
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/posts/">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/about/">About</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="https://blog.okuer.com/posts/2019/2019-10-02-build-your-btc-address/">
+              
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa fa-calendar" aria-hidden="true"></i>
+              <time datetime="0001-01-01T00:00:00Z">
+                January 1, 0001
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa fa-clock-o" aria-hidden="true"></i>
+              One-minute read
+            </span>
+          </div>
+          
+          
+          
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <h1 id="安全离线生成比特币的钱包地址">
+  安全离线生成比特币的钱包地址
+  <a class="heading-link" href="#%e5%ae%89%e5%85%a8%e7%a6%bb%e7%ba%bf%e7%94%9f%e6%88%90%e6%af%94%e7%89%b9%e5%b8%81%e7%9a%84%e9%92%b1%e5%8c%85%e5%9c%b0%e5%9d%80">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p>比特币是数字资产，受到密码学（密钥对）保护，一旦你的私钥被公开，你的资产将不在安全。传统的账号/密码受到服务提供商的保护，比如在支付宝，你的账号账号被盗，导致的财产损失，会被支付宝保险赔付。因为有一个第三方信任机构（保险/支付宝）。但是比特币是构建在区块链上的，区块链是去中心化的。这意味着没有一个类似支付宝的角色来保证你的财产安全，一切都要靠自己。
+目前，有许多在线生成比特币地址的服务，这些服务大大简化了生成步骤，但同时引入了非常大的分析。一旦你的账号在网络环境被生成，它有极可能被泄漏。泄漏途径有许多，如本地机器被黑客入侵、服务提供商私自保存了密钥。 因此，如果资产金额较大，强烈建议使用本地的脚本自己生成密钥对，并且永远不要在联网的环境下暴露私钥。
+本文提供一种简单的离线脚本，一步步的带你生成比特币的密钥对。（本文所有脚本均在这里，https://github.com/xxlv/btc-address-gen-scripts.git）</p>
+<h3 id="第一初始化依赖">
+  第一，初始化依赖
+  <a class="heading-link" href="#%e7%ac%ac%e4%b8%80%e5%88%9d%e5%a7%8b%e5%8c%96%e4%be%9d%e8%b5%96">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<p>你需要安全python环境，同时引入包</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>sudo pip install bitcoin
+</span></span><span style="display:flex;"><span>sudo pip install ecdsa
+</span></span></code></pre></div><h3 id="第二步拔掉网线或者断开wifi">
+  第二步，拔掉网线或者断开wifi
+  <a class="heading-link" href="#%e7%ac%ac%e4%ba%8c%e6%ad%a5%e6%8b%94%e6%8e%89%e7%bd%91%e7%ba%bf%e6%88%96%e8%80%85%e6%96%ad%e5%bc%80wifi">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<p>非常重要的步骤，如果不是测试，一定要做！！！</p>
+<h3 id="第三步运行脚本生成密钥对">
+  第三步，运行脚本，生成密钥对
+  <a class="heading-link" href="#%e7%ac%ac%e4%b8%89%e6%ad%a5%e8%bf%90%e8%a1%8c%e8%84%9a%e6%9c%ac%e7%94%9f%e6%88%90%e5%af%86%e9%92%a5%e5%af%b9">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>python key-to-address-ecc-example.py
+</span></span></code></pre></div><h3 id="生成的结果如下">
+  生成的结果如下：
+  <a class="heading-link" href="#%e7%94%9f%e6%88%90%e7%9a%84%e7%bb%93%e6%9e%9c%e5%a6%82%e4%b8%8b">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>Private Key (hex) is:  14962ffc7f1c9dba79aadb608cd7088574e41a418a5349004309b722a9051b90
+</span></span><span style="display:flex;"><span>Private Key (decimal) is:  9311615220753377728968374325829133502017354028737325199749815733352682298256
+</span></span><span style="display:flex;"><span>Private Key (WIF) is:  5HyMSVcZMnBeGEoFbPqRaPHK1xVpHj6yCGnC4bvqxRUm72uuvbx
+</span></span><span style="display:flex;"><span>Private Key Compressed (hex) is:  14962ffc7f1c9dba79aadb608cd7088574e41a418a5349004309b722a9051b9001
+</span></span><span style="display:flex;"><span>Private Key (WIF-Compressed) is:  2SdMjLGhnybsEFJmA85WrTioEtQAaKc8PQjeMQRFd5Q6AKdxygTY5D
+</span></span><span style="display:flex;"><span>Public Key (x,y) coordinates is: (32009024601293775410666277862003376881148118697205564723468898850638045984780, 64137136342866323469645354187456635120169454941786517702226349133247186720277)
+</span></span><span style="display:flex;"><span>Public Key (hex) is: 0446c477454946ee7187a0b859cedf3c4799726b5d8921b22b6b366b97178d380c8dcc552e1ab8546673dcbfa05f3aa97e33df950f2020805b11e4d8489fdfd615
+</span></span><span style="display:flex;"><span>Compressed Public Key (hex) is: 0346c477454946ee7187a0b859cedf3c4799726b5d8921b22b6b366b97178d380c
+</span></span><span style="display:flex;"><span>Bitcoin Address (b58check) is: 18HWNXDVj1jSz9syiJpo2YcEofympTLQgC
+</span></span><span style="display:flex;"><span>Compressed Bitcoin Address (b58check) is: 1HViUwJwUofaAPKbnzNRXHqqRE6UQE7g5B
+</span></span></code></pre></div><p>每个人的机器每次调用生成的都不是相同的。 这是btc账号的全部信息，建议冷藏。</p>
+<h3 id="第四步生成校验签名">
+  第四步，生成校验签名
+  <a class="heading-link" href="#%e7%ac%ac%e5%9b%9b%e6%ad%a5%e7%94%9f%e6%88%90%e6%a0%a1%e9%aa%8c%e7%ad%be%e5%90%8d">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<p>执行</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>python signmessage.py  -s
+</span></span></code></pre></div><p>依此输入：</p>
+<ul>
+<li>比特币公钥地址（上面的 Bitcoin Address (b58check) ）：18HWNXDVj1jSz9syiJpo2YcEofympTLQgC</li>
+<li>签名信息如：hello</li>
+<li>钱包格式的私钥（等价于私钥,Private Key (WIF)）：5HyMSVcZMnBeGEoFbPqRaPHK1xVpHj6yCGnC4bvqxRUm72uuvbx</li>
+</ul>
+<p>输出（每个的都不同）：</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"></code></pre></div><h3 id="第五步">
+  第五步
+  <a class="heading-link" href="#%e7%ac%ac%e4%ba%94%e6%ad%a5">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<p>确保信息被安全存储之后连网，在线校验签名：https://brainwalletx.github.io/#verify</p>
+<p>此时，你已经拥有了自己的安全的比特币地址。</p>
+
+      </div>
+
+
+      <footer>
+        
+
+
+        <div id="disqus_thread"></div>
+<script>
+  window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "okuer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+    
+    document.addEventListener('themeChanged', function (e) { 
+        if (document.readyState == 'complete') {
+          DISQUS.reset({ reload: true, config: disqus_config });
+        }
+    });
+</script>
+        
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+      2019 -
+    
+    2023
+     John Doe 
+    ·
+    
+    Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>

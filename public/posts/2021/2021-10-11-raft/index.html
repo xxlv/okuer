@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>
+  Raft协议速记 · Okuer
+</title>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="author" content="John Doe">
+<meta name="description" content="核心解决问题 Link to heading 选择Leader接管写入 分布式异构网络中共同确定一个值 不存在拜占庭将军问题
+基本原理 Link to heading Leader选择
+Node 通过投票的方式，多数服从少数
+Case Link to heading Single Node System
+客户端写入值，Node接受并更新
+Multiple Node
+Node必然在三个状态之一
+Follower state Candidate state Leader state 所有的节点开始于Follower state , Listen Leader 节点的响应。 规定时间未得到响应，成为 candidate 状态，并且发送votes(投票给自己) request 给其他的node
+其他节点进行投票。如果大多数投票给该candidate ，则该candidate 成为Leader.
+投票细节
+Node检查在当前的term内没有投票，则投票给当前的candidate Node reset lection term 这个过程是Leader 选举。 所有的写请求被Leader接管。
+如何写(Log Replication) Link to heading Leader 接受到 set 5 的请求 Leader 写入本地日志（Uncommited) Leader 广播到其他节点 大多数节点都写入成功 Leader节点commit Leader节点通知其他节点commit re-election Link to heading Leader挂了 投票可以选出Leader">
+<meta name="keywords" content="blog,developer,personal">
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Raft协议速记"/>
+<meta name="twitter:description" content="核心解决问题 Link to heading 选择Leader接管写入 分布式异构网络中共同确定一个值 不存在拜占庭将军问题
+基本原理 Link to heading Leader选择
+Node 通过投票的方式，多数服从少数
+Case Link to heading Single Node System
+客户端写入值，Node接受并更新
+Multiple Node
+Node必然在三个状态之一
+Follower state Candidate state Leader state 所有的节点开始于Follower state , Listen Leader 节点的响应。 规定时间未得到响应，成为 candidate 状态，并且发送votes(投票给自己) request 给其他的node
+其他节点进行投票。如果大多数投票给该candidate ，则该candidate 成为Leader.
+投票细节
+Node检查在当前的term内没有投票，则投票给当前的candidate Node reset lection term 这个过程是Leader 选举。 所有的写请求被Leader接管。
+如何写(Log Replication) Link to heading Leader 接受到 set 5 的请求 Leader 写入本地日志（Uncommited) Leader 广播到其他节点 大多数节点都写入成功 Leader节点commit Leader节点通知其他节点commit re-election Link to heading Leader挂了 投票可以选出Leader"/>
+
+<meta property="og:title" content="Raft协议速记" />
+<meta property="og:description" content="核心解决问题 Link to heading 选择Leader接管写入 分布式异构网络中共同确定一个值 不存在拜占庭将军问题
+基本原理 Link to heading Leader选择
+Node 通过投票的方式，多数服从少数
+Case Link to heading Single Node System
+客户端写入值，Node接受并更新
+Multiple Node
+Node必然在三个状态之一
+Follower state Candidate state Leader state 所有的节点开始于Follower state , Listen Leader 节点的响应。 规定时间未得到响应，成为 candidate 状态，并且发送votes(投票给自己) request 给其他的node
+其他节点进行投票。如果大多数投票给该candidate ，则该candidate 成为Leader.
+投票细节
+Node检查在当前的term内没有投票，则投票给当前的candidate Node reset lection term 这个过程是Leader 选举。 所有的写请求被Leader接管。
+如何写(Log Replication) Link to heading Leader 接受到 set 5 的请求 Leader 写入本地日志（Uncommited) Leader 广播到其他节点 大多数节点都写入成功 Leader节点commit Leader节点通知其他节点commit re-election Link to heading Leader挂了 投票可以选出Leader" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.okuer.com/posts/2021/2021-10-11-raft/" /><meta property="article:section" content="posts" />
+
+
+
+
+
+
+<link rel="canonical" href="https://blog.okuer.com/posts/2021/2021-10-11-raft/">
+
+
+<link rel="preload" href="/fonts/forkawesome-webfont.woff2?v=1.2.0" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.0fa2dc75ed1b76894ac0e062b10a6c4730daa745096fa120114b290ed8a48788.css" integrity="sha256-D6Lcde0bdolKwOBisQpsRzDap0UJb6EgEUspDtikh4g=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.min.593028e7f7ac55c003b79c230d1cd411bb4ca53b31556c3abb7f027170e646e9.css" integrity="sha256-WTAo5/esVcADt5wjDRzUEbtMpTsxVWw6u38CcXDmRuk=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/png" href="/img/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/img/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+<meta name="generator" content="Hugo 0.110.0">
+
+
+
+
+
+  </head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="/">
+      Okuer
+    </a>
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/posts/">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/about/">About</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="https://blog.okuer.com/posts/2021/2021-10-11-raft/">
+              Raft协议速记
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa fa-calendar" aria-hidden="true"></i>
+              <time datetime="0001-01-01T00:00:00Z">
+                January 1, 0001
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa fa-clock-o" aria-hidden="true"></i>
+              One-minute read
+            </span>
+          </div>
+          
+          <div class="categories">
+  <i class="fa fa-folder" aria-hidden="true"></i>
+    <a href="/categories/%E6%8A%80%E6%9C%AF/">技术</a></div>
+
+          
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <h2 id="核心解决问题">
+  核心解决问题
+  <a class="heading-link" href="#%e6%a0%b8%e5%bf%83%e8%a7%a3%e5%86%b3%e9%97%ae%e9%a2%98">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>选择Leader接管写入
+分布式异构网络中共同确定一个值
+不存在拜占庭将军问题</p>
+<h2 id="基本原理">
+  基本原理
+  <a class="heading-link" href="#%e5%9f%ba%e6%9c%ac%e5%8e%9f%e7%90%86">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<ul>
+<li>
+<p>Leader选择</p>
+<p>Node 通过投票的方式，多数服从少数</p>
+</li>
+</ul>
+<h2 id="case">
+  Case
+  <a class="heading-link" href="#case">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<ul>
+<li>
+<p>Single Node System</p>
+<p>客户端写入值，Node接受并更新</p>
+</li>
+<li>
+<p>Multiple Node</p>
+<p>Node必然在三个状态之一</p>
+<ol>
+<li>Follower state</li>
+<li>Candidate state</li>
+<li>Leader state</li>
+</ol>
+<p>所有的节点开始于Follower state , Listen Leader 节点的响应。 规定时间未得到响应，成为 candidate 状态，并且发送votes(投票给自己) request 给其他的node</p>
+<p>其他节点进行投票。如果大多数投票给该candidate ，则该candidate 成为Leader.</p>
+<ul>
+<li>
+<p>投票细节</p>
+<ol>
+<li>Node检查在当前的term内没有投票，则投票给当前的candidate</li>
+<li>Node reset lection term</li>
+</ol>
+<p>这个过程是Leader 选举。
+所有的写请求被Leader接管。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="如何写log-replication">
+  如何写(Log Replication)
+  <a class="heading-link" href="#%e5%a6%82%e4%bd%95%e5%86%99log-replication">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<ol>
+<li>Leader 接受到 set 5 的请求</li>
+<li>Leader 写入本地日志（Uncommited)</li>
+<li>Leader 广播到其他节点</li>
+<li>大多数节点都写入成功</li>
+<li>Leader节点commit</li>
+<li>Leader节点通知其他节点commit</li>
+</ol>
+<h2 id="re-election">
+  re-election
+  <a class="heading-link" href="#re-election">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<ul>
+<li>
+<p>Leader挂了 投票可以选出Leader</p>
+</li>
+<li>
+<p>多节点同时选举Leader. 通过 election timeout 机制可以保证选择出Leader</p>
+</li>
+</ul>
+<h2 id="网络分区问题">
+  网络分区问题
+  <a class="heading-link" href="#%e7%bd%91%e7%bb%9c%e5%88%86%e5%8c%ba%e9%97%ae%e9%a2%98">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<ul>
+<li>
+<p>当网络分区的时候，</p>
+<ul>
+<li>
+<p>Leader 在多节点区</p>
+<p>不需要重新选择，因为在少节点区，无法获得多数投票。无法产生新的Leader</p>
+</li>
+<li>
+<p>Leader 在少节点区</p>
+<p>被分割的多节点区间，重新选举Leader,term增加.
+当Client 的写请求到达该 Leader的时候，因为无法收到多数的commit,则导致该写无法被commit</p>
+</li>
+</ul>
+</li>
+<li>
+<p>当分区恢复的时候</p>
+<p>当Leader 在少数节点区，系统现在有两个Leader,但是因为 少数Leader区的terms较小。无法被系统认可，因此会回滚它们未被提交的日志。
+然后同步新Leader的log</p>
+</li>
+</ul>
+<h2 id="关键术语">
+  关键术语
+  <a class="heading-link" href="#%e5%85%b3%e9%94%ae%e6%9c%af%e8%af%ad">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<ul>
+<li>
+<p>lection term</p>
+<p>当follower 转换成candidate 的时候，开始一个新的lection term</p>
+</li>
+<li>
+<p>Timeout</p>
+<ol>
+<li>election timeout : follower 在等待该时间后未得到Leader的响应，则变化未candidate. <strong>随机时间</strong> 150ms and 300ms</li>
+<li>heartbeat timeout Leader和follower 节点的心跳检测</li>
+</ol>
+</li>
+</ul>
+<h2 id="思考">
+  思考
+  <a class="heading-link" href="#%e6%80%9d%e8%80%83">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>分布式系统中达成共识需要选择一个值。引入选举随机时间的目的是为了解决活锁问题。可以尽快选择出一个Leader。
+terms的引入可以保证多个Leader存在的时候，选择正确的Leader.
+投票机制是保证共识的机制，每个节点都有投票权。所有的节点平等。</p>
+
+      </div>
+
+
+      <footer>
+        
+
+
+        <div id="disqus_thread"></div>
+<script>
+  window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "okuer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+    
+    document.addEventListener('themeChanged', function (e) { 
+        if (document.readyState == 'complete') {
+          DISQUS.reset({ reload: true, config: disqus_config });
+        }
+    });
+</script>
+        
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+      2019 -
+    
+    2023
+     John Doe 
+    ·
+    
+    Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>

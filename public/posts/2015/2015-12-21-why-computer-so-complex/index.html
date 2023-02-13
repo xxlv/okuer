@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>
+  为什么计算机越来越复杂 · Okuer
+</title>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="author" content="John Doe">
+<meta name="description" content="从编程语言的进化路线来看，似乎能发现一些有趣的事情。计算机通过０和１将数字信息转化为电信号控制硬件的运作，所有的一切都建立在这个基础上。计算机最擅长的是重复，而且仅仅只有两种状态间重复。这些简单的规则构成了复杂无比的系统。我也抱着同样的理由深信这个世界的底层是有一系列简单的规则构成的。然而，你无法通过直接操作０和１来控制计算机，虽然这是一种可能性，但现实是，没有人愿意这样做。在计算机迅速发展的历程中，跟计算机交流的语言越来越多，汇编是对机器码（０和１）的抽象。它使用英文单词赋予语言以明确的语义。实际上，它所做的并不仅仅如此，它同样隐藏了大量的重复。用一种指令来代表一系列操作产生的结果集。这种思维在计算机的世界变成一种哲学。不久后，更复杂的需要导致理解汇编变得异常困难。更高级的语言诞生了，在这些语言中，C是一颗耀眼的明星。它的语义更加明确，规范，它隐藏了底层的许许多多细节。用C来创建超大型的软件有了可能，window和unix*是它最伟大的代表作。
+C语言是一种艺术，这是一种激动人心的创造。就像是在魔法森林找到的咒语一样。这些咒语被创造出各种奇妙的东西，图形渲染，音频处理。计算机内部拥有无限中状态等待被开启。
+在C语言的内部，你仍旧能发现无数对重复的隐藏，函数封装了重复的细节，宏被赋予更伟大的魔力。函数群一种有执行力的软件。软件将功能通过API暴漏出去。抽象时刻在进行，所有的东西都被包装在集装箱里，被打包成更大的集装箱。
+对于人类而言最痛苦的是不断的重复（然而我们也一直在重复），在我们有限的生命里，重复是多么可怕的事情，然后对于机器来讲，重复是它们最擅长也乐此不疲的事情。我们刻意隐藏重复，用一种更加乐观的态度，用天气的不同，日历的不同，地理位置的不同来告诉自己，我们不是机器，没有重复自己。
+很多更高级的语言由此诞生，它们隐藏了更多的重复（这也是它们慢的原因之一），越是高级的语言速度越慢，隐藏的细节越多，简单的逻辑背后的重复越多，这些重复将表现为磁头在扇区上的物理移动（至少目前的计算机物理架构是这样的）、一次次的内存访问、重复GC、对空间的申请、释放和锁。
+为什么事情越来越复杂，为什么普通人无法理解计算机，计算机逃脱意味着什么？
+我们很容易跟小孩子讲清楚1&#43;1这样的加法规则，然后加法重复之后。
+如2&#43;3=5，他很快就能理解，因为这些法则只是简单的抽象。但变成2*3=6这个过程，你需要解释（2&#43;2&#43;2）或者(3&#43;3)，同一个重复被抽象之后有了多层含义，但它们都是多个正确的解。
+又如2**4（代表222*2）这样的重复展开后其实是
+2&#43;2&#43;2&#43;2&#43;2&#43;2&#43;2&#43;2 。它的语义是：重复４次２的累积过程。要知道2这个数其实是我们定义的一个阿拉伯符号而已。
+２代表着1&#43;1这个表达式的值。所以
+2&#43;2 &#43;2&#43;2 &#43;2&#43;2&#43;2&#43;2 还可以继续展开变成
+1&#43;1&#43;1&#43;1&#43;1&#43;1&#43;1&#43;1&#43;1&#43;1&#43;1&#43;1&#43;1&#43;1&#43;1&#43;1 减法也可以看做是一种累计。不过它带来的副作用是削弱。
+甚至１（实际上，０－９任何一个数都是）本身也是一种抽象，这是我们的世界的基础，代表着存在本身.
+计算机正是从这些很简单的规则不断的抽象，隐藏自身，和进化的。所以，越是高级的抽象就越难以描述，为此我们制造了大量的术语和符号来表达这种东西。将重复隐藏的代价就是使用命名它。
+这样它就变成一个全新而陌生的东西。">
+<meta name="keywords" content="blog,developer,personal">
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="为什么计算机越来越复杂"/>
+<meta name="twitter:description" content="从编程语言的进化路线来看，似乎能发现一些有趣的事情。计算机通过０和１将数字信息转化为电信号控制硬件的运作，所有的一切都建立在这个基础上。计算机最擅长的是重复，而且仅仅只有两种状态间重复。这些简单的规则构成了复杂无比的系统。我也抱着同样的理由深信这个世界的底层是有一系列简单的规则构成的。然而，你无法通过直接操作０和１来控制计算机，虽然这是一种可能性，但现实是，没有人愿意这样做。在计算机迅速发展的历程中，跟计算机交流的语言越来越多，汇编是对机器码（０和１）的抽象。它使用英文单词赋予语言以明确的语义。实际上，它所做的并不仅仅如此，它同样隐藏了大量的重复。用一种指令来代表一系列操作产生的结果集。这种思维在计算机的世界变成一种哲学。不久后，更复杂的需要导致理解汇编变得异常困难。更高级的语言诞生了，在这些语言中，C是一颗耀眼的明星。它的语义更加明确，规范，它隐藏了底层的许许多多细节。用C来创建超大型的软件有了可能，window和unix*是它最伟大的代表作。
+C语言是一种艺术，这是一种激动人心的创造。就像是在魔法森林找到的咒语一样。这些咒语被创造出各种奇妙的东西，图形渲染，音频处理。计算机内部拥有无限中状态等待被开启。
+在C语言的内部，你仍旧能发现无数对重复的隐藏，函数封装了重复的细节，宏被赋予更伟大的魔力。函数群一种有执行力的软件。软件将功能通过API暴漏出去。抽象时刻在进行，所有的东西都被包装在集装箱里，被打包成更大的集装箱。
+对于人类而言最痛苦的是不断的重复（然而我们也一直在重复），在我们有限的生命里，重复是多么可怕的事情，然后对于机器来讲，重复是它们最擅长也乐此不疲的事情。我们刻意隐藏重复，用一种更加乐观的态度，用天气的不同，日历的不同，地理位置的不同来告诉自己，我们不是机器，没有重复自己。
+很多更高级的语言由此诞生，它们隐藏了更多的重复（这也是它们慢的原因之一），越是高级的语言速度越慢，隐藏的细节越多，简单的逻辑背后的重复越多，这些重复将表现为磁头在扇区上的物理移动（至少目前的计算机物理架构是这样的）、一次次的内存访问、重复GC、对空间的申请、释放和锁。
+为什么事情越来越复杂，为什么普通人无法理解计算机，计算机逃脱意味着什么？
+我们很容易跟小孩子讲清楚1&#43;1这样的加法规则，然后加法重复之后。
+如2&#43;3=5，他很快就能理解，因为这些法则只是简单的抽象。但变成2*3=6这个过程，你需要解释（2&#43;2&#43;2）或者(3&#43;3)，同一个重复被抽象之后有了多层含义，但它们都是多个正确的解。
+又如2**4（代表222*2）这样的重复展开后其实是
+2&#43;2&#43;2&#43;2&#43;2&#43;2&#43;2&#43;2 。它的语义是：重复４次２的累积过程。要知道2这个数其实是我们定义的一个阿拉伯符号而已。
+２代表着1&#43;1这个表达式的值。所以
+2&#43;2 &#43;2&#43;2 &#43;2&#43;2&#43;2&#43;2 还可以继续展开变成
+1&#43;1&#43;1&#43;1&#43;1&#43;1&#43;1&#43;1&#43;1&#43;1&#43;1&#43;1&#43;1&#43;1&#43;1&#43;1 减法也可以看做是一种累计。不过它带来的副作用是削弱。
+甚至１（实际上，０－９任何一个数都是）本身也是一种抽象，这是我们的世界的基础，代表着存在本身.
+计算机正是从这些很简单的规则不断的抽象，隐藏自身，和进化的。所以，越是高级的抽象就越难以描述，为此我们制造了大量的术语和符号来表达这种东西。将重复隐藏的代价就是使用命名它。
+这样它就变成一个全新而陌生的东西。"/>
+
+<meta property="og:title" content="为什么计算机越来越复杂" />
+<meta property="og:description" content="从编程语言的进化路线来看，似乎能发现一些有趣的事情。计算机通过０和１将数字信息转化为电信号控制硬件的运作，所有的一切都建立在这个基础上。计算机最擅长的是重复，而且仅仅只有两种状态间重复。这些简单的规则构成了复杂无比的系统。我也抱着同样的理由深信这个世界的底层是有一系列简单的规则构成的。然而，你无法通过直接操作０和１来控制计算机，虽然这是一种可能性，但现实是，没有人愿意这样做。在计算机迅速发展的历程中，跟计算机交流的语言越来越多，汇编是对机器码（０和１）的抽象。它使用英文单词赋予语言以明确的语义。实际上，它所做的并不仅仅如此，它同样隐藏了大量的重复。用一种指令来代表一系列操作产生的结果集。这种思维在计算机的世界变成一种哲学。不久后，更复杂的需要导致理解汇编变得异常困难。更高级的语言诞生了，在这些语言中，C是一颗耀眼的明星。它的语义更加明确，规范，它隐藏了底层的许许多多细节。用C来创建超大型的软件有了可能，window和unix*是它最伟大的代表作。
+C语言是一种艺术，这是一种激动人心的创造。就像是在魔法森林找到的咒语一样。这些咒语被创造出各种奇妙的东西，图形渲染，音频处理。计算机内部拥有无限中状态等待被开启。
+在C语言的内部，你仍旧能发现无数对重复的隐藏，函数封装了重复的细节，宏被赋予更伟大的魔力。函数群一种有执行力的软件。软件将功能通过API暴漏出去。抽象时刻在进行，所有的东西都被包装在集装箱里，被打包成更大的集装箱。
+对于人类而言最痛苦的是不断的重复（然而我们也一直在重复），在我们有限的生命里，重复是多么可怕的事情，然后对于机器来讲，重复是它们最擅长也乐此不疲的事情。我们刻意隐藏重复，用一种更加乐观的态度，用天气的不同，日历的不同，地理位置的不同来告诉自己，我们不是机器，没有重复自己。
+很多更高级的语言由此诞生，它们隐藏了更多的重复（这也是它们慢的原因之一），越是高级的语言速度越慢，隐藏的细节越多，简单的逻辑背后的重复越多，这些重复将表现为磁头在扇区上的物理移动（至少目前的计算机物理架构是这样的）、一次次的内存访问、重复GC、对空间的申请、释放和锁。
+为什么事情越来越复杂，为什么普通人无法理解计算机，计算机逃脱意味着什么？
+我们很容易跟小孩子讲清楚1&#43;1这样的加法规则，然后加法重复之后。
+如2&#43;3=5，他很快就能理解，因为这些法则只是简单的抽象。但变成2*3=6这个过程，你需要解释（2&#43;2&#43;2）或者(3&#43;3)，同一个重复被抽象之后有了多层含义，但它们都是多个正确的解。
+又如2**4（代表222*2）这样的重复展开后其实是
+2&#43;2&#43;2&#43;2&#43;2&#43;2&#43;2&#43;2 。它的语义是：重复４次２的累积过程。要知道2这个数其实是我们定义的一个阿拉伯符号而已。
+２代表着1&#43;1这个表达式的值。所以
+2&#43;2 &#43;2&#43;2 &#43;2&#43;2&#43;2&#43;2 还可以继续展开变成
+1&#43;1&#43;1&#43;1&#43;1&#43;1&#43;1&#43;1&#43;1&#43;1&#43;1&#43;1&#43;1&#43;1&#43;1&#43;1 减法也可以看做是一种累计。不过它带来的副作用是削弱。
+甚至１（实际上，０－９任何一个数都是）本身也是一种抽象，这是我们的世界的基础，代表着存在本身.
+计算机正是从这些很简单的规则不断的抽象，隐藏自身，和进化的。所以，越是高级的抽象就越难以描述，为此我们制造了大量的术语和符号来表达这种东西。将重复隐藏的代价就是使用命名它。
+这样它就变成一个全新而陌生的东西。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.okuer.com/posts/2015/2015-12-21-why-computer-so-complex/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2015-12-21T08:05:39+00:00" />
+<meta property="article:modified_time" content="2015-12-21T08:05:39+00:00" />
+
+
+
+
+<link rel="canonical" href="https://blog.okuer.com/posts/2015/2015-12-21-why-computer-so-complex/">
+
+
+<link rel="preload" href="/fonts/forkawesome-webfont.woff2?v=1.2.0" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.0fa2dc75ed1b76894ac0e062b10a6c4730daa745096fa120114b290ed8a48788.css" integrity="sha256-D6Lcde0bdolKwOBisQpsRzDap0UJb6EgEUspDtikh4g=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.min.593028e7f7ac55c003b79c230d1cd411bb4ca53b31556c3abb7f027170e646e9.css" integrity="sha256-WTAo5/esVcADt5wjDRzUEbtMpTsxVWw6u38CcXDmRuk=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/png" href="/img/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/img/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+<meta name="generator" content="Hugo 0.110.0">
+
+
+
+
+
+  </head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="/">
+      Okuer
+    </a>
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/posts/">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/about/">About</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="https://blog.okuer.com/posts/2015/2015-12-21-why-computer-so-complex/">
+              为什么计算机越来越复杂
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa fa-calendar" aria-hidden="true"></i>
+              <time datetime="2015-12-21T08:05:39Z">
+                December 21, 2015
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa fa-clock-o" aria-hidden="true"></i>
+              One-minute read
+            </span>
+          </div>
+          
+          <div class="categories">
+  <i class="fa fa-folder" aria-hidden="true"></i>
+    <a href="/categories/%E6%9D%82%E6%96%87/">杂文</a></div>
+
+          
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <p>从编程语言的进化路线来看，似乎能发现一些有趣的事情。计算机通过０和１将数字信息转化为电信号控制硬件的运作，所有的一切都建立在这个基础上。计算机最擅长的是重复，而且仅仅只有两种状态间重复。这些简单的规则构成了复杂无比的系统。我也抱着同样的理由深信这个世界的底层是有一系列简单的规则构成的。然而，你无法通过直接操作０和１来控制计算机，虽然这是一种可能性，但现实是，没有人愿意这样做。在计算机迅速发展的历程中，跟计算机交流的语言越来越多，汇编是对机器码（０和１）的抽象。它使用英文单词赋予语言以明确的语义。实际上，它所做的并不仅仅如此，它同样隐藏了大量的重复。用一种指令来代表一系列操作产生的结果集。这种思维在计算机的世界变成一种哲学。不久后，更复杂的需要导致理解汇编变得异常困难。更高级的语言诞生了，在这些语言中，C是一颗耀眼的明星。它的语义更加明确，规范，它隐藏了底层的许许多多细节。用C来创建超大型的软件有了可能，window和unix*是它最伟大的代表作。</p>
+<p>C语言是一种艺术，这是一种激动人心的创造。就像是在魔法森林找到的咒语一样。这些咒语被创造出各种奇妙的东西，图形渲染，音频处理。计算机内部拥有无限中状态等待被开启。</p>
+<p>在C语言的内部，你仍旧能发现无数对重复的隐藏，函数封装了重复的细节，宏被赋予更伟大的魔力。函数群一种有执行力的软件。软件将功能通过API暴漏出去。抽象时刻在进行，所有的东西都被包装在集装箱里，被打包成更大的集装箱。</p>
+<p>对于人类而言最痛苦的是不断的重复（然而我们也一直在重复），在我们有限的生命里，重复是多么可怕的事情，然后对于机器来讲，重复是它们最擅长也乐此不疲的事情。我们刻意隐藏重复，用一种更加乐观的态度，用天气的不同，日历的不同，地理位置的不同来告诉自己，我们不是机器，没有重复自己。</p>
+<p>很多更高级的语言由此诞生，它们隐藏了更多的重复（这也是它们慢的原因之一），越是高级的语言速度越慢，隐藏的细节越多，简单的逻辑背后的重复越多，这些重复将表现为磁头在扇区上的物理移动（至少目前的计算机物理架构是这样的）、一次次的内存访问、重复GC、对空间的申请、释放和锁。</p>
+<p>为什么事情越来越复杂，为什么普通人无法理解计算机，计算机逃脱意味着什么？</p>
+<p>我们很容易跟小孩子讲清楚1+1这样的加法规则，然后加法重复之后。</p>
+<p>如2+3=5，他很快就能理解，因为这些法则只是简单的抽象。但变成2*3=6这个过程，你需要解释（2+2+2）或者(3+3)，同一个重复被抽象之后有了多层含义，但它们都是多个正确的解。</p>
+<p>又如2**4（代表2<em>2</em>2*2）这样的重复展开后其实是</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>    2+2+2+2+2+2+2+2
+</span></span></code></pre></div><p>。它的语义是：重复４次２的累积过程。要知道2这个数其实是我们定义的一个阿拉伯符号而已。</p>
+<p>２代表着1+1这个表达式的值。所以</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>    2+2 +2+2 +2+2+2+2
+</span></span></code></pre></div><p>还可以继续展开变成</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>    1+1+1+1+1+1+1+1+1+1+1+1+1+1+1+1
+</span></span></code></pre></div><p>减法也可以看做是一种累计。不过它带来的副作用是削弱。</p>
+<p>甚至１（实际上，０－９任何一个数都是）本身也是一种抽象，这是我们的世界的基础，代表着存在本身.</p>
+<p>计算机正是从这些很简单的规则不断的抽象，隐藏自身，和进化的。所以，越是高级的抽象就越难以描述，为此我们制造了大量的术语和符号来表达这种东西。将重复隐藏的代价就是使用命名它。</p>
+<p>这样它就变成一个全新而陌生的东西。</p>
+
+      </div>
+
+
+      <footer>
+        
+
+
+        <div id="disqus_thread"></div>
+<script>
+  window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "okuer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+    
+    document.addEventListener('themeChanged', function (e) { 
+        if (document.readyState == 'complete') {
+          DISQUS.reset({ reload: true, config: disqus_config });
+        }
+    });
+</script>
+        
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+      2019 -
+    
+    2023
+     John Doe 
+    ·
+    
+    Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>

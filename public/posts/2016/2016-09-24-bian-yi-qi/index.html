@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>
+  编译器随想 · Okuer
+</title>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="author" content="John Doe">
+<meta name="description" content="﻿一种图灵完备的编程语言，本身就包涵了实现自举的必要条件。
+无论是从哪一种层次，从计算机科学、物理学还是从哲学，这本身就代表了一种伟大的思想：当事物由简单变得复杂的过程中，基础科学总能提供一点点难以影响质变的改变，然后借助这点改变更新自身，不断的迭代进化。 这个最简单和著名的例子就是 先有鸡蛋还是先有鸡。曾今，这似乎是一个难题。
+这个问题曾经带来哲学上的偏见，跟著名的一个问题是，人类来自哪里？如果答案是来自另一个人的子宫，那么，另一个人从哪里来&hellip;..于此循环，直到这个问题在第一个人类终止。现在我们知道，人类的诞生并非必需依赖子宫，借助实验室也可以做到。但必需获得受精卵和完整的生存环境。
+编译器也是一样，如果一个语言实现来自举（一个语言的编译器，是用它自身写的），编译器也是一个程序，那么它本身是如何被编译的呢？
+问题有趣的地方在于，我们都被一种看似悖论的东西蒙蔽了。编译器的原理很简单:
+假如一种叫x的语言要实现自举 Link to heading x首先实现一个v1的简单版本（用汇编或c来编译）
+v1支持IO.可以读取x的源代码，用v1编译x的源代码,实现v2
+v2也有能力编译x ，此时，v2编译器就是用x编写的。可以编译自身源代码
+简单来说，编译器会将文本转化成一个二进制描述。这个描述本身包含了读取文本并生成二进制的能力。一旦它存在，就不需要在使用之前的编译器了。它自身就可以描述自己并不断进化。
+注意！汇编是一种低级的编程语言，仍旧需要被解释成二进制。这个过程借助来指令集（也就是一个map)
+这个问题对长生也有很多启发，我们有把身体的构造全部改为硅而非碳为基础的科学基础。我们可以造出一些像我们一样能造出一些人的人&hellip;..或者制造出一些上帝&hellip;&hellip;
+所以，回到哲学上，我们现在处于那一个阶段？我们创造了自己，根本就没有上帝，我们就是上帝。
+阿门～">
+<meta name="keywords" content="blog,developer,personal">
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="编译器随想"/>
+<meta name="twitter:description" content="﻿一种图灵完备的编程语言，本身就包涵了实现自举的必要条件。
+无论是从哪一种层次，从计算机科学、物理学还是从哲学，这本身就代表了一种伟大的思想：当事物由简单变得复杂的过程中，基础科学总能提供一点点难以影响质变的改变，然后借助这点改变更新自身，不断的迭代进化。 这个最简单和著名的例子就是 先有鸡蛋还是先有鸡。曾今，这似乎是一个难题。
+这个问题曾经带来哲学上的偏见，跟著名的一个问题是，人类来自哪里？如果答案是来自另一个人的子宫，那么，另一个人从哪里来&hellip;..于此循环，直到这个问题在第一个人类终止。现在我们知道，人类的诞生并非必需依赖子宫，借助实验室也可以做到。但必需获得受精卵和完整的生存环境。
+编译器也是一样，如果一个语言实现来自举（一个语言的编译器，是用它自身写的），编译器也是一个程序，那么它本身是如何被编译的呢？
+问题有趣的地方在于，我们都被一种看似悖论的东西蒙蔽了。编译器的原理很简单:
+假如一种叫x的语言要实现自举 Link to heading x首先实现一个v1的简单版本（用汇编或c来编译）
+v1支持IO.可以读取x的源代码，用v1编译x的源代码,实现v2
+v2也有能力编译x ，此时，v2编译器就是用x编写的。可以编译自身源代码
+简单来说，编译器会将文本转化成一个二进制描述。这个描述本身包含了读取文本并生成二进制的能力。一旦它存在，就不需要在使用之前的编译器了。它自身就可以描述自己并不断进化。
+注意！汇编是一种低级的编程语言，仍旧需要被解释成二进制。这个过程借助来指令集（也就是一个map)
+这个问题对长生也有很多启发，我们有把身体的构造全部改为硅而非碳为基础的科学基础。我们可以造出一些像我们一样能造出一些人的人&hellip;..或者制造出一些上帝&hellip;&hellip;
+所以，回到哲学上，我们现在处于那一个阶段？我们创造了自己，根本就没有上帝，我们就是上帝。
+阿门～"/>
+
+<meta property="og:title" content="编译器随想" />
+<meta property="og:description" content="﻿一种图灵完备的编程语言，本身就包涵了实现自举的必要条件。
+无论是从哪一种层次，从计算机科学、物理学还是从哲学，这本身就代表了一种伟大的思想：当事物由简单变得复杂的过程中，基础科学总能提供一点点难以影响质变的改变，然后借助这点改变更新自身，不断的迭代进化。 这个最简单和著名的例子就是 先有鸡蛋还是先有鸡。曾今，这似乎是一个难题。
+这个问题曾经带来哲学上的偏见，跟著名的一个问题是，人类来自哪里？如果答案是来自另一个人的子宫，那么，另一个人从哪里来&hellip;..于此循环，直到这个问题在第一个人类终止。现在我们知道，人类的诞生并非必需依赖子宫，借助实验室也可以做到。但必需获得受精卵和完整的生存环境。
+编译器也是一样，如果一个语言实现来自举（一个语言的编译器，是用它自身写的），编译器也是一个程序，那么它本身是如何被编译的呢？
+问题有趣的地方在于，我们都被一种看似悖论的东西蒙蔽了。编译器的原理很简单:
+假如一种叫x的语言要实现自举 Link to heading x首先实现一个v1的简单版本（用汇编或c来编译）
+v1支持IO.可以读取x的源代码，用v1编译x的源代码,实现v2
+v2也有能力编译x ，此时，v2编译器就是用x编写的。可以编译自身源代码
+简单来说，编译器会将文本转化成一个二进制描述。这个描述本身包含了读取文本并生成二进制的能力。一旦它存在，就不需要在使用之前的编译器了。它自身就可以描述自己并不断进化。
+注意！汇编是一种低级的编程语言，仍旧需要被解释成二进制。这个过程借助来指令集（也就是一个map)
+这个问题对长生也有很多启发，我们有把身体的构造全部改为硅而非碳为基础的科学基础。我们可以造出一些像我们一样能造出一些人的人&hellip;..或者制造出一些上帝&hellip;&hellip;
+所以，回到哲学上，我们现在处于那一个阶段？我们创造了自己，根本就没有上帝，我们就是上帝。
+阿门～" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.okuer.com/posts/2016/2016-09-24-bian-yi-qi/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2016-09-24T14:00:00+00:00" />
+<meta property="article:modified_time" content="2016-09-24T14:00:00+00:00" />
+
+
+
+
+<link rel="canonical" href="https://blog.okuer.com/posts/2016/2016-09-24-bian-yi-qi/">
+
+
+<link rel="preload" href="/fonts/forkawesome-webfont.woff2?v=1.2.0" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.0fa2dc75ed1b76894ac0e062b10a6c4730daa745096fa120114b290ed8a48788.css" integrity="sha256-D6Lcde0bdolKwOBisQpsRzDap0UJb6EgEUspDtikh4g=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.min.593028e7f7ac55c003b79c230d1cd411bb4ca53b31556c3abb7f027170e646e9.css" integrity="sha256-WTAo5/esVcADt5wjDRzUEbtMpTsxVWw6u38CcXDmRuk=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/png" href="/img/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/img/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+<meta name="generator" content="Hugo 0.110.0">
+
+
+
+
+
+  </head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="/">
+      Okuer
+    </a>
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/posts/">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/about/">About</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="https://blog.okuer.com/posts/2016/2016-09-24-bian-yi-qi/">
+              编译器随想
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa fa-calendar" aria-hidden="true"></i>
+              <time datetime="2016-09-24T14:00:00Z">
+                September 24, 2016
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa fa-clock-o" aria-hidden="true"></i>
+              One-minute read
+            </span>
+          </div>
+          
+          <div class="categories">
+  <i class="fa fa-folder" aria-hidden="true"></i>
+    <a href="/categories/%E6%9D%82%E6%96%87/">杂文</a></div>
+
+          
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <p>﻿一种图灵完备的编程语言，本身就包涵了实现自举的必要条件。</p>
+<p>无论是从哪一种层次，从计算机科学、物理学还是从哲学，这本身就代表了一种伟大的思想：当事物由简单变得复杂的过程中，基础科学总能提供一点点难以影响质变的改变，然后借助这点改变更新自身，不断的迭代进化。 这个最简单和著名的例子就是 先有鸡蛋还是先有鸡。曾今，这似乎是一个难题。</p>
+<p>这个问题曾经带来哲学上的偏见，跟著名的一个问题是，人类来自哪里？如果答案是来自另一个人的子宫，那么，另一个人从哪里来&hellip;..于此循环，直到这个问题在第一个人类终止。现在我们知道，人类的诞生并非必需依赖子宫，借助实验室也可以做到。但必需获得受精卵和完整的生存环境。</p>
+<p>编译器也是一样，如果一个语言实现来自举（一个语言的编译器，是用它自身写的），编译器也是一个程序，那么它本身是如何被编译的呢？</p>
+<p>问题有趣的地方在于，我们都被一种看似悖论的东西蒙蔽了。编译器的原理很简单:</p>
+<h4 id="假如一种叫x的语言要实现自举">
+  假如一种叫x的语言要实现自举
+  <a class="heading-link" href="#%e5%81%87%e5%a6%82%e4%b8%80%e7%a7%8d%e5%8f%abx%e7%9a%84%e8%af%ad%e8%a8%80%e8%a6%81%e5%ae%9e%e7%8e%b0%e8%87%aa%e4%b8%be">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h4>
+<ol>
+<li>
+<p>x首先实现一个v1的简单版本（用汇编或c来编译）</p>
+</li>
+<li>
+<p>v1支持IO.可以读取x的源代码，用v1编译x的源代码,实现v2</p>
+</li>
+<li>
+<p>v2也有能力编译x ，此时，v2编译器就是用x编写的。可以编译自身源代码</p>
+</li>
+</ol>
+<p>简单来说，编译器会将文本转化成一个二进制描述。这个描述本身包含了读取文本并生成二进制的能力。一旦它存在，就不需要在使用之前的编译器了。它自身就可以描述自己并不断进化。</p>
+<p><strong>注意！汇编是一种低级的编程语言，仍旧需要被解释成二进制。这个过程借助来指令集（也就是一个map)</strong></p>
+<p>这个问题对长生也有很多启发，我们有把身体的构造全部改为硅而非碳为基础的科学基础。我们可以造出一些像我们一样能造出一些人的人&hellip;..或者制造出一些上帝&hellip;&hellip;</p>
+<p>所以，回到哲学上，我们现在处于那一个阶段？我们创造了自己，<strong>根本就没有上帝，我们就是上帝</strong>。</p>
+<p>阿门～</p>
+
+      </div>
+
+
+      <footer>
+        
+
+
+        <div id="disqus_thread"></div>
+<script>
+  window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "okuer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+    
+    document.addEventListener('themeChanged', function (e) { 
+        if (document.readyState == 'complete') {
+          DISQUS.reset({ reload: true, config: disqus_config });
+        }
+    });
+</script>
+        
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+      2019 -
+    
+    2023
+     John Doe 
+    ·
+    
+    Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>

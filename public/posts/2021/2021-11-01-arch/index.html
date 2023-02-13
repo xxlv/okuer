@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>
+  整洁架构之道思考 · Okuer
+</title>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="author" content="John Doe">
+<meta name="description" content="Table of Contents Link to heading 整洁架构之道 编程范式 架构关心的是什么？ 可测试的程序 延迟选择的重要性 设计的边界 整洁架构之道 Link to heading 编程范式 Link to heading 从编程范式说起，有三种编程范式，结构化编程/面向对象编程/函数式编程。 这三种编程范式可以说是计算机编程的核心范式，任何软件开发都遵守这三种范式中的某几种。
+结构化编程规定了我们使用if/else 来做条件判断执行代码，限制了在goto代码的使用。 从根本上保证了代码的可读性。可读性在计算机领域比性能更加重要，在很多的场合下，可以损失一部分性能，但一定不能损失可读性。 限制goto可以减少编程的复杂度。
+面向对象编程范式，我们可以利用多态限制用户对函数指针的使用。函数的调用栈被移动到了堆区。 当然还有更多的好处，面向对象进一步增加了可读性。通过对象的沙盒包装将函数伪装成行为，就像是一个拥有许多函数的机器人。 我们观察它的行为，而不需要关注函数指针。
+函数式编程对程序的赋值进行了限制，这意味着永远无法区改变一个存在的符号的值。 在今天的serviceless架构下，函数式编程天然的可以无所顾忌的跑在多个集群上，不需要担心任何东西。 它是无状态的。符号的值大多数情况下都没有办法改变。因此它是安全的。
+编程范式并不代表者架构本身，架构是一个决策过程。 架构很像是建筑师在完成图纸的过程，想象一个优秀的建筑师，如果设计一幢漂亮的建筑物。他必须考虑的是建筑的风格是什么、高度如何、怎样抗震、采光率…
+等等这些决策了他选择什么样子的可以落地的架构。在计算机里面架构也伴随着这样的考虑，如何高效率的开发、性能如何、扩展性怎样、是否能产生额外价值、以及能否扛住巨大的流量。
+架构关心的是什么？ Link to heading 在计算机里面，重要的是可读性、扩展性以及健壮性。
+计算机在执行二进制程序的时候是不关心可读性的，但在编程的时候，可读性往往高于一切。一个没有办法理解的系统，即便是它能很好的工作，但你敢使用么？
+面向对象编程范式和结构化编程 在提升可读性上做出了重要的贡献。
+架构需要对一些细节进行选择，比如选择采用何种数据库，就像是采用何种木材来制作一个凳子。这些都是细节，应该是架构无关的。
+在架构设计的时候，这部分应该是容易替换的，插件式的。OCP原则说，一个设计良好的计算机系统应该在不需要修改的前提下就可以轻易被扩展。 是的，了解这一点非常重要。
+有许多原则执导我们如何去架构一个系统、比如SRP原则（单一职责）。本质上还是维护来系统的可读性。一个类拥有多个行为在计算机上并没有差别。但是，如果一个类拥有了太多的行为，我们对它的修改就 变得很困难，不得不考虑一旦修改了它，会不会产生副作用。 同样我们还渴望，源代码的依赖方向和控制流的方向是相反的。一切都类型以接口的形式被声明和引用。比如Java 中@Autowride 更像是一个声明。我们并不关心注入的是什么，控制反转给上层，下层只需要关心具体的行文。
+我需要一个可以打开门的钥匙，但并不去创造一个。甚至什么门也不关心，给我一把钥匙和一扇门，我可以打开它。 业务逻辑正式描述钥匙可以打开一扇门，这个过程。但其实并不关心谁制造的钥匙。
+在以前的编程中，我们往往需要在源代码依赖方向new 一个钥匙。当这一切被反转后，我们就在也不需要担心这些细节了。
+可测试的程序 Link to heading 可读性是如此的重要，以至于我们可以为了他牺牲性能（在某些情况下，可以将性能优化的代码进行伪装，可读性仍旧在）。 但是，可读性仅仅是人类协同的一个重要前提。一段程序必须同时拥有良好的可测试性。
+测试似乎是可有可无的，没有测试的程序一样可以运行。但是测试是减少系统熵最有效的方式。系统架构无论多完美，在不同的开发者介入开发的时候，系统仍旧变得充满歧义和混乱。随着时间的推移， 这种情况只会越来越糟糕。因此正确的测试可以很好的减少这种熵。
+为了让程序可测试，我们需要在编程的时候就了解到这一点，我提供的方法改如何测试？为此有时需要调整代码的结构、层次、依赖关系和参数。 这就是TDD测试驱动的核心。它推崇一种方式，在代码编写之前先完成测试用例。一旦这样做了，代码就会自然的组织在一起，一个微小的调整引发的bug将很快暴露出来。
+测试并不是银弹，测试本身也会出错，测试并不保证程序的正确性，只能发现bug。
+延迟选择的重要性 Link to heading 不论是架构师还是产品，在设计阶段最忌讳的是陷入细节的陷进。在一开始就因为要选择Mysql还是Postgresql而陷入争执是一件不明智的选择。">
+<meta name="keywords" content="blog,developer,personal">
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="整洁架构之道思考"/>
+<meta name="twitter:description" content="Table of Contents Link to heading 整洁架构之道 编程范式 架构关心的是什么？ 可测试的程序 延迟选择的重要性 设计的边界 整洁架构之道 Link to heading 编程范式 Link to heading 从编程范式说起，有三种编程范式，结构化编程/面向对象编程/函数式编程。 这三种编程范式可以说是计算机编程的核心范式，任何软件开发都遵守这三种范式中的某几种。
+结构化编程规定了我们使用if/else 来做条件判断执行代码，限制了在goto代码的使用。 从根本上保证了代码的可读性。可读性在计算机领域比性能更加重要，在很多的场合下，可以损失一部分性能，但一定不能损失可读性。 限制goto可以减少编程的复杂度。
+面向对象编程范式，我们可以利用多态限制用户对函数指针的使用。函数的调用栈被移动到了堆区。 当然还有更多的好处，面向对象进一步增加了可读性。通过对象的沙盒包装将函数伪装成行为，就像是一个拥有许多函数的机器人。 我们观察它的行为，而不需要关注函数指针。
+函数式编程对程序的赋值进行了限制，这意味着永远无法区改变一个存在的符号的值。 在今天的serviceless架构下，函数式编程天然的可以无所顾忌的跑在多个集群上，不需要担心任何东西。 它是无状态的。符号的值大多数情况下都没有办法改变。因此它是安全的。
+编程范式并不代表者架构本身，架构是一个决策过程。 架构很像是建筑师在完成图纸的过程，想象一个优秀的建筑师，如果设计一幢漂亮的建筑物。他必须考虑的是建筑的风格是什么、高度如何、怎样抗震、采光率…
+等等这些决策了他选择什么样子的可以落地的架构。在计算机里面架构也伴随着这样的考虑，如何高效率的开发、性能如何、扩展性怎样、是否能产生额外价值、以及能否扛住巨大的流量。
+架构关心的是什么？ Link to heading 在计算机里面，重要的是可读性、扩展性以及健壮性。
+计算机在执行二进制程序的时候是不关心可读性的，但在编程的时候，可读性往往高于一切。一个没有办法理解的系统，即便是它能很好的工作，但你敢使用么？
+面向对象编程范式和结构化编程 在提升可读性上做出了重要的贡献。
+架构需要对一些细节进行选择，比如选择采用何种数据库，就像是采用何种木材来制作一个凳子。这些都是细节，应该是架构无关的。
+在架构设计的时候，这部分应该是容易替换的，插件式的。OCP原则说，一个设计良好的计算机系统应该在不需要修改的前提下就可以轻易被扩展。 是的，了解这一点非常重要。
+有许多原则执导我们如何去架构一个系统、比如SRP原则（单一职责）。本质上还是维护来系统的可读性。一个类拥有多个行为在计算机上并没有差别。但是，如果一个类拥有了太多的行为，我们对它的修改就 变得很困难，不得不考虑一旦修改了它，会不会产生副作用。 同样我们还渴望，源代码的依赖方向和控制流的方向是相反的。一切都类型以接口的形式被声明和引用。比如Java 中@Autowride 更像是一个声明。我们并不关心注入的是什么，控制反转给上层，下层只需要关心具体的行文。
+我需要一个可以打开门的钥匙，但并不去创造一个。甚至什么门也不关心，给我一把钥匙和一扇门，我可以打开它。 业务逻辑正式描述钥匙可以打开一扇门，这个过程。但其实并不关心谁制造的钥匙。
+在以前的编程中，我们往往需要在源代码依赖方向new 一个钥匙。当这一切被反转后，我们就在也不需要担心这些细节了。
+可测试的程序 Link to heading 可读性是如此的重要，以至于我们可以为了他牺牲性能（在某些情况下，可以将性能优化的代码进行伪装，可读性仍旧在）。 但是，可读性仅仅是人类协同的一个重要前提。一段程序必须同时拥有良好的可测试性。
+测试似乎是可有可无的，没有测试的程序一样可以运行。但是测试是减少系统熵最有效的方式。系统架构无论多完美，在不同的开发者介入开发的时候，系统仍旧变得充满歧义和混乱。随着时间的推移， 这种情况只会越来越糟糕。因此正确的测试可以很好的减少这种熵。
+为了让程序可测试，我们需要在编程的时候就了解到这一点，我提供的方法改如何测试？为此有时需要调整代码的结构、层次、依赖关系和参数。 这就是TDD测试驱动的核心。它推崇一种方式，在代码编写之前先完成测试用例。一旦这样做了，代码就会自然的组织在一起，一个微小的调整引发的bug将很快暴露出来。
+测试并不是银弹，测试本身也会出错，测试并不保证程序的正确性，只能发现bug。
+延迟选择的重要性 Link to heading 不论是架构师还是产品，在设计阶段最忌讳的是陷入细节的陷进。在一开始就因为要选择Mysql还是Postgresql而陷入争执是一件不明智的选择。"/>
+
+<meta property="og:title" content="整洁架构之道思考" />
+<meta property="og:description" content="Table of Contents Link to heading 整洁架构之道 编程范式 架构关心的是什么？ 可测试的程序 延迟选择的重要性 设计的边界 整洁架构之道 Link to heading 编程范式 Link to heading 从编程范式说起，有三种编程范式，结构化编程/面向对象编程/函数式编程。 这三种编程范式可以说是计算机编程的核心范式，任何软件开发都遵守这三种范式中的某几种。
+结构化编程规定了我们使用if/else 来做条件判断执行代码，限制了在goto代码的使用。 从根本上保证了代码的可读性。可读性在计算机领域比性能更加重要，在很多的场合下，可以损失一部分性能，但一定不能损失可读性。 限制goto可以减少编程的复杂度。
+面向对象编程范式，我们可以利用多态限制用户对函数指针的使用。函数的调用栈被移动到了堆区。 当然还有更多的好处，面向对象进一步增加了可读性。通过对象的沙盒包装将函数伪装成行为，就像是一个拥有许多函数的机器人。 我们观察它的行为，而不需要关注函数指针。
+函数式编程对程序的赋值进行了限制，这意味着永远无法区改变一个存在的符号的值。 在今天的serviceless架构下，函数式编程天然的可以无所顾忌的跑在多个集群上，不需要担心任何东西。 它是无状态的。符号的值大多数情况下都没有办法改变。因此它是安全的。
+编程范式并不代表者架构本身，架构是一个决策过程。 架构很像是建筑师在完成图纸的过程，想象一个优秀的建筑师，如果设计一幢漂亮的建筑物。他必须考虑的是建筑的风格是什么、高度如何、怎样抗震、采光率…
+等等这些决策了他选择什么样子的可以落地的架构。在计算机里面架构也伴随着这样的考虑，如何高效率的开发、性能如何、扩展性怎样、是否能产生额外价值、以及能否扛住巨大的流量。
+架构关心的是什么？ Link to heading 在计算机里面，重要的是可读性、扩展性以及健壮性。
+计算机在执行二进制程序的时候是不关心可读性的，但在编程的时候，可读性往往高于一切。一个没有办法理解的系统，即便是它能很好的工作，但你敢使用么？
+面向对象编程范式和结构化编程 在提升可读性上做出了重要的贡献。
+架构需要对一些细节进行选择，比如选择采用何种数据库，就像是采用何种木材来制作一个凳子。这些都是细节，应该是架构无关的。
+在架构设计的时候，这部分应该是容易替换的，插件式的。OCP原则说，一个设计良好的计算机系统应该在不需要修改的前提下就可以轻易被扩展。 是的，了解这一点非常重要。
+有许多原则执导我们如何去架构一个系统、比如SRP原则（单一职责）。本质上还是维护来系统的可读性。一个类拥有多个行为在计算机上并没有差别。但是，如果一个类拥有了太多的行为，我们对它的修改就 变得很困难，不得不考虑一旦修改了它，会不会产生副作用。 同样我们还渴望，源代码的依赖方向和控制流的方向是相反的。一切都类型以接口的形式被声明和引用。比如Java 中@Autowride 更像是一个声明。我们并不关心注入的是什么，控制反转给上层，下层只需要关心具体的行文。
+我需要一个可以打开门的钥匙，但并不去创造一个。甚至什么门也不关心，给我一把钥匙和一扇门，我可以打开它。 业务逻辑正式描述钥匙可以打开一扇门，这个过程。但其实并不关心谁制造的钥匙。
+在以前的编程中，我们往往需要在源代码依赖方向new 一个钥匙。当这一切被反转后，我们就在也不需要担心这些细节了。
+可测试的程序 Link to heading 可读性是如此的重要，以至于我们可以为了他牺牲性能（在某些情况下，可以将性能优化的代码进行伪装，可读性仍旧在）。 但是，可读性仅仅是人类协同的一个重要前提。一段程序必须同时拥有良好的可测试性。
+测试似乎是可有可无的，没有测试的程序一样可以运行。但是测试是减少系统熵最有效的方式。系统架构无论多完美，在不同的开发者介入开发的时候，系统仍旧变得充满歧义和混乱。随着时间的推移， 这种情况只会越来越糟糕。因此正确的测试可以很好的减少这种熵。
+为了让程序可测试，我们需要在编程的时候就了解到这一点，我提供的方法改如何测试？为此有时需要调整代码的结构、层次、依赖关系和参数。 这就是TDD测试驱动的核心。它推崇一种方式，在代码编写之前先完成测试用例。一旦这样做了，代码就会自然的组织在一起，一个微小的调整引发的bug将很快暴露出来。
+测试并不是银弹，测试本身也会出错，测试并不保证程序的正确性，只能发现bug。
+延迟选择的重要性 Link to heading 不论是架构师还是产品，在设计阶段最忌讳的是陷入细节的陷进。在一开始就因为要选择Mysql还是Postgresql而陷入争执是一件不明智的选择。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.okuer.com/posts/2021/2021-11-01-arch/" /><meta property="article:section" content="posts" />
+
+
+
+
+
+
+<link rel="canonical" href="https://blog.okuer.com/posts/2021/2021-11-01-arch/">
+
+
+<link rel="preload" href="/fonts/forkawesome-webfont.woff2?v=1.2.0" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.0fa2dc75ed1b76894ac0e062b10a6c4730daa745096fa120114b290ed8a48788.css" integrity="sha256-D6Lcde0bdolKwOBisQpsRzDap0UJb6EgEUspDtikh4g=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.min.593028e7f7ac55c003b79c230d1cd411bb4ca53b31556c3abb7f027170e646e9.css" integrity="sha256-WTAo5/esVcADt5wjDRzUEbtMpTsxVWw6u38CcXDmRuk=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/png" href="/img/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/img/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+<meta name="generator" content="Hugo 0.110.0">
+
+
+
+
+
+  </head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="/">
+      Okuer
+    </a>
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/posts/">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/about/">About</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="https://blog.okuer.com/posts/2021/2021-11-01-arch/">
+              整洁架构之道思考
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa fa-calendar" aria-hidden="true"></i>
+              <time datetime="0001-01-01T00:00:00Z">
+                January 1, 0001
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa fa-clock-o" aria-hidden="true"></i>
+              One-minute read
+            </span>
+          </div>
+          
+          <div class="categories">
+  <i class="fa fa-folder" aria-hidden="true"></i>
+    <a href="/categories/%E9%9A%8F%E7%AC%94/">随笔</a></div>
+
+          
+        </div>
+      </header>
+
+      <div class="post-content">
+        
+        <h1 id="table-of-contents">
+  Table of Contents
+  <a class="heading-link" href="#table-of-contents">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<ol>
+<li><a href="#orge4eab0f">整洁架构之道</a>
+<ol>
+<li><a href="#org5001a84">编程范式</a></li>
+<li><a href="#orgd5f1407">架构关心的是什么？</a></li>
+<li><a href="#org6c67193">可测试的程序</a></li>
+<li><a href="#org7b87de6">延迟选择的重要性</a></li>
+<li><a href="#orgf5f2642">设计的边界</a></li>
+</ol>
+</li>
+</ol>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<h1 id="整洁架构之道">
+  整洁架构之道
+  <a class="heading-link" href="#%e6%95%b4%e6%b4%81%e6%9e%b6%e6%9e%84%e4%b9%8b%e9%81%93">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<h2 id="编程范式">
+  编程范式
+  <a class="heading-link" href="#%e7%bc%96%e7%a8%8b%e8%8c%83%e5%bc%8f">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>从编程范式说起，有三种编程范式，结构化编程/面向对象编程/函数式编程。
+这三种编程范式可以说是计算机编程的核心范式，任何软件开发都遵守这三种范式中的某几种。</p>
+<p>结构化编程规定了我们使用if/else 来做条件判断执行代码，限制了在goto代码的使用。
+从根本上保证了代码的可读性。可读性在计算机领域比性能更加重要，在很多的场合下，可以损失一部分性能，但一定不能损失可读性。
+限制goto可以减少编程的复杂度。</p>
+<p>面向对象编程范式，我们可以利用多态限制用户对函数指针的使用。函数的调用栈被移动到了堆区。
+当然还有更多的好处，面向对象进一步增加了可读性。通过对象的沙盒包装将函数伪装成行为，就像是一个拥有许多函数的机器人。
+我们观察它的行为，而不需要关注函数指针。</p>
+<p>函数式编程对程序的赋值进行了限制，这意味着永远无法区改变一个存在的符号的值。
+在今天的serviceless架构下，函数式编程天然的可以无所顾忌的跑在多个集群上，不需要担心任何东西。
+它是无状态的。符号的值大多数情况下都没有办法改变。因此它是安全的。</p>
+<p>编程范式并不代表者架构本身，架构是一个决策过程。
+架构很像是建筑师在完成图纸的过程，想象一个优秀的建筑师，如果设计一幢漂亮的建筑物。他必须考虑的是建筑的风格是什么、高度如何、怎样抗震、采光率…</p>
+<p>等等这些决策了他选择什么样子的可以落地的架构。在计算机里面架构也伴随着这样的考虑，如何高效率的开发、性能如何、扩展性怎样、是否能产生额外价值、以及能否扛住巨大的流量。</p>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<h2 id="架构关心的是什么">
+  架构关心的是什么？
+  <a class="heading-link" href="#%e6%9e%b6%e6%9e%84%e5%85%b3%e5%bf%83%e7%9a%84%e6%98%af%e4%bb%80%e4%b9%88">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>在计算机里面，重要的是可读性、扩展性以及健壮性。</p>
+<p>计算机在执行二进制程序的时候是不关心可读性的，但在编程的时候，可读性往往高于一切。一个没有办法理解的系统，即便是它能很好的工作，但你敢使用么？</p>
+<p>面向对象编程范式和结构化编程 在提升可读性上做出了重要的贡献。</p>
+<p>架构需要对一些细节进行选择，比如选择采用何种数据库，就像是采用何种木材来制作一个凳子。这些都是细节，应该是架构无关的。</p>
+<p>在架构设计的时候，这部分应该是容易替换的，插件式的。OCP原则说，一个设计良好的计算机系统应该在不需要修改的前提下就可以轻易被扩展。
+是的，了解这一点非常重要。</p>
+<p>有许多原则执导我们如何去架构一个系统、比如SRP原则（单一职责）。本质上还是维护来系统的可读性。一个类拥有多个行为在计算机上并没有差别。但是，如果一个类拥有了太多的行为，我们对它的修改就
+变得很困难，不得不考虑一旦修改了它，会不会产生副作用。
+同样我们还渴望，源代码的依赖方向和控制流的方向是相反的。一切都类型以接口的形式被声明和引用。比如Java 中@Autowride 更像是一个声明。我们并不关心注入的是什么，控制反转给上层，下层只需要关心具体的行文。</p>
+<p>我需要一个可以打开门的钥匙，但并不去创造一个。甚至什么门也不关心，给我一把钥匙和一扇门，我可以打开它。 业务逻辑正式描述钥匙可以打开一扇门，这个过程。但其实并不关心谁制造的钥匙。</p>
+<p>在以前的编程中，我们往往需要在源代码依赖方向new 一个钥匙。当这一切被反转后，我们就在也不需要担心这些细节了。</p>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<h2 id="可测试的程序">
+  可测试的程序
+  <a class="heading-link" href="#%e5%8f%af%e6%b5%8b%e8%af%95%e7%9a%84%e7%a8%8b%e5%ba%8f">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>可读性是如此的重要，以至于我们可以为了他牺牲性能（在某些情况下，可以将性能优化的代码进行伪装，可读性仍旧在）。
+但是，可读性仅仅是人类协同的一个重要前提。一段程序必须同时拥有良好的可测试性。</p>
+<p>测试似乎是可有可无的，没有测试的程序一样可以运行。但是测试是减少系统熵最有效的方式。系统架构无论多完美，在不同的开发者介入开发的时候，系统仍旧变得充满歧义和混乱。随着时间的推移，
+这种情况只会越来越糟糕。因此正确的测试可以很好的减少这种熵。</p>
+<p>为了让程序可测试，我们需要在编程的时候就了解到这一点，我提供的方法改如何测试？为此有时需要调整代码的结构、层次、依赖关系和参数。
+这就是TDD测试驱动的核心。它推崇一种方式，在代码编写之前先完成测试用例。一旦这样做了，代码就会自然的组织在一起，一个微小的调整引发的bug将很快暴露出来。</p>
+<p>测试并不是银弹，测试本身也会出错，测试并不保证程序的正确性，只能发现bug。</p>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<h2 id="延迟选择的重要性">
+  延迟选择的重要性
+  <a class="heading-link" href="#%e5%bb%b6%e8%bf%9f%e9%80%89%e6%8b%a9%e7%9a%84%e9%87%8d%e8%a6%81%e6%80%a7">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>不论是架构师还是产品，在设计阶段最忌讳的是陷入细节的陷进。在一开始就因为要选择Mysql还是Postgresql而陷入争执是一件不明智的选择。</p>
+<p>如果一款产品强依赖Mysql，调整它需要花费很大的精力，那么一定是架构出来问题。</p>
+<p>因此在架构设计阶段，一定要学会放弃。放弃使用Mysql。放弃Redis.放弃Pulsar. 我们需要的不是MySQL，而是一个可以持久化数据的API。我们需要的也不是Redis,而是一块可以管理的内存。
+也不是Pulsar,而是一个消息队列。</p>
+<p>Mysql\Redis\Pulsar 这些只是其中的一个实现。</p>
+<p>我们需要延迟选择它们。这样在测试阶段，可以提供一个Memory的实现来替代Mysql的实现。甚至在后面切换到Mongodb的时候，我们也只需要提供一个mongoDB的实现而已。</p>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<h2 id="设计的边界">
+  设计的边界
+  <a class="heading-link" href="#%e8%ae%be%e8%ae%a1%e7%9a%84%e8%be%b9%e7%95%8c">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
+<p>在设计系统的时候考虑多个不同的团队在协同某个域/类上开发。他们有独立的决策空间。因此他们在系统上天然的拥有边界。
+如果你的修改影响到了另一个团队，你便是越界了。这样似乎很容易理解。
+系统的边界表现在如何更好的隔离不同的业务逻辑。从Package/模块 到微服务，都是在产生从系统不同纬度上划分边界。
+设计好边界可以让开发工作并行开发。本质上是一个去依赖的过程。</p>
+<p>从代码的边界到系统的边界， 从领域的边界到服务的边界，层层升纬，使得从代码到业务，高度组织。从里面看去就像是一个房间里面，每个抽屉放置什么东西都被分类整理,而从外面看去一排排排房间整整齐齐。</p>
+<p>每个房间的门是边界，每个抽屉也是边界。边界代表着有序，代表了更低的熵。而这样设计的系统，往往具有更高的可读性。</p>
+
+      </div>
+
+
+      <footer>
+        
+
+
+        <div id="disqus_thread"></div>
+<script>
+  window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "okuer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+    
+    document.addEventListener('themeChanged', function (e) { 
+        if (document.readyState == 'complete') {
+          DISQUS.reset({ reload: true, config: disqus_config });
+        }
+    });
+</script>
+        
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+      2019 -
+    
+    2023
+     John Doe 
+    ·
+    
+    Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
+</html>

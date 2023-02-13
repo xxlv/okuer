@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>技术 on Okuer</title>
+    <link>https://blog.okuer.com/categories/%E6%8A%80%E6%9C%AF/</link>
+    <description>Recent content in 技术 on Okuer</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language><atom:link href="https://blog.okuer.com/categories/%E6%8A%80%E6%9C%AF/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>About GraphQL</title>
+      <link>https://blog.okuer.com/posts/2022/2022-05-13-2022/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://blog.okuer.com/posts/2022/2022-05-13-2022/</guid>
+      <description>GraphQL 允许Client来 定制Server 的返回结果。传统的基于Restful的API或者rpc都面临着一个问题，就是Client 没有办法来决定Server返回什么数据。所有的数据的计算过程都是确定的，Client 只需要Send 一个req， 服务端接受到这个请求进行 response. Client并没有一种语言或者约束规则来影响服务端的执行序列。因此，一个简单的场景，
+与REST的差异 Link to heading 基于REST的架构产生的请求如下 GET /user/1 将返回如下的对象
+User{ id name avatar sex age } 当Client 仅仅需要一个name 的时候，Client 唯一做的，就是获取到完整的 User 对象，然后在浏览器端 进行过滤。
+基于GraphQL 来实现一个相同的功能(通过 HTTP POST ) query{ user{ name } } Server 端将返回
+{ &amp;#34;user&amp;#34;:{ &amp;#34;name&amp;#34;:&amp;#34;Leslie&amp;#34; } } 类型系统 Link to heading GraphQL 定义一个Type System. Type 定义了数据结构与数据约束。
+这是的GraphQL成为一种应用层的协议。 通过Type 我们可以定义一个Schema。
+Schema 就像是基于REST我们定义的API 信息，如请求参数/返回值。 Schema描述了 Type System 包含的全部信息：
+所有的查询，都在一个Query 的特殊类型下。</description>
+    </item>
+    
+    <item>
+      <title>Raft协议速记</title>
+      <link>https://blog.okuer.com/posts/2021/2021-10-11-raft/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://blog.okuer.com/posts/2021/2021-10-11-raft/</guid>
+      <description>核心解决问题 Link to heading 选择Leader接管写入 分布式异构网络中共同确定一个值 不存在拜占庭将军问题
+基本原理 Link to heading Leader选择
+Node 通过投票的方式，多数服从少数
+Case Link to heading Single Node System
+客户端写入值，Node接受并更新
+Multiple Node
+Node必然在三个状态之一
+Follower state Candidate state Leader state 所有的节点开始于Follower state , Listen Leader 节点的响应。 规定时间未得到响应，成为 candidate 状态，并且发送votes(投票给自己) request 给其他的node
+其他节点进行投票。如果大多数投票给该candidate ，则该candidate 成为Leader.
+投票细节
+Node检查在当前的term内没有投票，则投票给当前的candidate Node reset lection term 这个过程是Leader 选举。 所有的写请求被Leader接管。
+如何写(Log Replication) Link to heading Leader 接受到 set 5 的请求 Leader 写入本地日志（Uncommited) Leader 广播到其他节点 大多数节点都写入成功 Leader节点commit Leader节点通知其他节点commit re-election Link to heading Leader挂了 投票可以选出Leader</description>
+    </item>
+    
+  </channel>
+</rss>
