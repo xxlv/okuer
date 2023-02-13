@@ -3,13 +3,10 @@ title = "Okuer"
 theme = "hugo-coder"
 languagecode = "en"
 defaultcontentlanguage = "en"
-
-paginate = 20
-
+paginate = 100
 pygmentsstyle = "bw"
 pygmentscodefences = true
 pygmentscodefencesguesssyntax = true
-
 disqusShortname = "okuer"
 
 [params]
