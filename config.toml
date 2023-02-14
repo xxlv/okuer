@@ -54,7 +54,13 @@ disqusShortname = "okuer"
   name = "Go"
   weight = 2
   url  = "/go"
+
+[[menu.main]]
+  name = "Projects"
+  weight = 3
+  url  = "project"
+
 [[menu.main]]
   name = "About"
-  weight = 3
+  weight = 13
   url = "about/"

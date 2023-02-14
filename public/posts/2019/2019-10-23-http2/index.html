@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <title>
-   · Okuer
+  http2.0 · Okuer
 </title>
     <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,7 +11,7 @@
 
 
 
-<meta name="author" content="John Doe">
+<meta name="author" content="ghost">
 <meta name="description" content="Http/2 Link to heading HTTP2 协议起源于SPDY，目的是解决http1.x 如下的问题：
 plantext 文本协议的size开销 不支持复用tcp通道 请求通道上限 队首阻塞 http1.1 Keep alive 来保证复用一个tcp连接，但严格要求响应的顺序，响应是一个队列，如果遇到队首阻塞，则整个tcp通道就无法处理别的请求了。 http/2如果解决这些问题的？
 通道复用 二进制帧层 服务端push 设置请求优先级 压缩（HPACK） 帧布局 Link to heading &#43;-----------------------------------------------&#43; | Length (24) | &#43;---------------&#43;---------------&#43;---------------&#43; | Type (8) | Flags (8) | &#43;-&#43;-------------&#43;---------------&#43;-------------------------------&#43; |R| Stream Identifier (31) | &#43;=&#43;=============================================================&#43; | Frame Payload (0...) ... &#43;---------------------------------------------------------------&#43; 帧头为固定的9个字节（(24&#43;8&#43;8&#43;1&#43;31)/8=9）呈现，变化的为帧的负载(payload)，负载内容是由帧类型（Type）定义。
@@ -20,14 +20,14 @@ plantext 文本协议的size开销 不支持复用tcp通道 请求通道上限 �
 <meta name="keywords" content="blog,developer,personal">
 
 <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content=""/>
+<meta name="twitter:title" content="http2.0"/>
 <meta name="twitter:description" content="Http/2 Link to heading HTTP2 协议起源于SPDY，目的是解决http1.x 如下的问题：
 plantext 文本协议的size开销 不支持复用tcp通道 请求通道上限 队首阻塞 http1.1 Keep alive 来保证复用一个tcp连接，但严格要求响应的顺序，响应是一个队列，如果遇到队首阻塞，则整个tcp通道就无法处理别的请求了。 http/2如果解决这些问题的？
 通道复用 二进制帧层 服务端push 设置请求优先级 压缩（HPACK） 帧布局 Link to heading &#43;-----------------------------------------------&#43; | Length (24) | &#43;---------------&#43;---------------&#43;---------------&#43; | Type (8) | Flags (8) | &#43;-&#43;-------------&#43;---------------&#43;-------------------------------&#43; |R| Stream Identifier (31) | &#43;=&#43;=============================================================&#43; | Frame Payload (0...) ... &#43;---------------------------------------------------------------&#43; 帧头为固定的9个字节（(24&#43;8&#43;8&#43;1&#43;31)/8=9）呈现，变化的为帧的负载(payload)，负载内容是由帧类型（Type）定义。
 帧长度Length：无符号的自然数，24个比特表示，仅表示帧负载所占用字节数，不包括帧头所占用的9个字节。默认大小区间为为0~16,384(2^14)，一旦超过默认最大值2^14(16384)，发送方将不再允许发送，除非接收到接收方定义的SETTINGS_MAX_FRAME_SIZE（一般此值区间为2^14 ~ 2^24）值的通知。 帧类型Type：8个比特表示，定义了帧负载的具体格式和帧的语义，HTTP/2规范定义了10个帧类型，这里不包括实验类型帧和扩展类型帧 帧的标志位Flags：8个比特表示，服务于具体帧类型，默认值为0x0。有一个小技巧需要注意，一般来讲，8个比特可以容纳8个不同的标志，比如，PADDED值为0x8，二进制表示为00001000；END_HEADERS值为0x4，二进制表示为00000100；END_STREAM值为0X1，二进制为00000001。可以同时在一个字节中传达三种标志位，二进制表示为00001101，即0x13。因此，后面的帧结构中，标志位一般会使用8个比特表示，若某位不确定，使用问号?替代，表示此处可能会被设置标志位 帧保留比特为R：在HTTP/2语境下为保留的比特位，固定值为0X0 流标识符Stream Identifier：无符号的31比特表示无符号自然数。0x0值表示为帧仅作用于连接，不隶属于单独的流。 （参考：http://www.blogjava.net/yongboy/archive/2015/03/20/423655.html）
 帧类型： Link to heading HEADERS：帧仅包含 HTTP 标头信息。"/>
 
-<meta property="og:title" content="" />
+<meta property="og:title" content="http2.0" />
 <meta property="og:description" content="Http/2 Link to heading HTTP2 协议起源于SPDY，目的是解决http1.x 如下的问题：
 plantext 文本协议的size开销 不支持复用tcp通道 请求通道上限 队首阻塞 http1.1 Keep alive 来保证复用一个tcp连接，但严格要求响应的顺序，响应是一个队列，如果遇到队首阻塞，则整个tcp通道就无法处理别的请求了。 http/2如果解决这些问题的？
 通道复用 二进制帧层 服务端push 设置请求优先级 压缩（HPACK） 帧布局 Link to heading &#43;-----------------------------------------------&#43; | Length (24) | &#43;---------------&#43;---------------&#43;---------------&#43; | Type (8) | Flags (8) | &#43;-&#43;-------------&#43;---------------&#43;-------------------------------&#43; |R| Stream Identifier (31) | &#43;=&#43;=============================================================&#43; | Frame Payload (0...) ... &#43;---------------------------------------------------------------&#43; 帧头为固定的9个字节（(24&#43;8&#43;8&#43;1&#43;31)/8=9）呈现，变化的为帧的负载(payload)，负载内容是由帧类型（Type）定义。
@@ -35,8 +35,8 @@ plantext 文本协议的size开销 不支持复用tcp通道 请求通道上限 �
 帧类型： Link to heading HEADERS：帧仅包含 HTTP 标头信息。" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://blog.okuer.com/posts/2019/2019-10-23-http2/" /><meta property="article:section" content="posts" />
-
-
+<meta property="article:published_time" content="2019-12-23T21:05:39+00:00" />
+<meta property="article:modified_time" content="2019-12-23T21:05:39+00:00" />
 
 
 
@@ -69,8 +69,8 @@ plantext 文本协议的size开销 不支持复用tcp通道 请求通道上限 �
 
 
 
-<link rel="icon" type="image/png" href="/img/favicon-32x32.png" sizes="32x32">
-<link rel="icon" type="image/png" href="/img/favicon-16x16.png" sizes="16x16">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
 
 <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
@@ -118,7 +118,11 @@ plantext 文本协议的size开销 不支持复用tcp通道 请求通道上限 �
         
           
             <li class="navigation-item">
-              <a class="navigation-link" href="/posts/">Blog</a>
+              <a class="navigation-link" href="/posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/go">Go</a>
             </li>
           
             <li class="navigation-item">
@@ -141,7 +145,7 @@ plantext 文本协议的size开销 不支持复用tcp通道 请求通道上限 �
         <div class="post-title">
           <h1 class="title">
             <a class="title-link" href="https://blog.okuer.com/posts/2019/2019-10-23-http2/">
-              
+              http2.0
             </a>
           </h1>
         </div>
@@ -149,8 +153,8 @@ plantext 文本协议的size开销 不支持复用tcp通道 请求通道上限 �
           <div class="date">
             <span class="posted-on">
               <i class="fa fa-calendar" aria-hidden="true"></i>
-              <time datetime="0001-01-01T00:00:00Z">
-                January 1, 0001
+              <time datetime="2019-12-23T21:05:39Z">
+                December 23, 2019
               </time>
             </span>
             <span class="reading-time">
@@ -159,7 +163,10 @@ plantext 文本协议的size开销 不支持复用tcp通道 请求通道上限 �
             </span>
           </div>
           
-          
+          <div class="categories">
+  <i class="fa fa-folder" aria-hidden="true"></i>
+    <a href="/categories/btc/">btc</a></div>
+
           
         </div>
       </header>
@@ -666,10 +673,10 @@ http1.1 Keep alive 来保证复用一个tcp连接，但严格要求响应的顺�
   <section class="container">
     ©
     
-      2019 -
+      2014 -
     
     2023
-     John Doe 
+     ghost 
     ·
     
     Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.

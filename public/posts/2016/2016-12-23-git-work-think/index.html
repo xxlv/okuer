@@ -11,7 +11,7 @@
 
 
 
-<meta name="author" content="John Doe">
+<meta name="author" content="ghost">
 <meta name="description" content="在讨论Git的协作模式的时候，思考一下，git的基因是分布式的多人协作任务流。区别于传统的流水线模式，worker在完成一个任务的时候，或多或少的依赖上一个工作的任务。这就大大阻塞的工作的效率。因为绝大多数情况下，你的任务是没必要依赖上一个环节的处理的。我的意思不是业务上的分离，而是在开发上，至少你在很多情况下，你简单的需要一个mock的data 就可以模拟你的依赖。
 所以，Git有branch这个东西。
 仔细想想，似乎是，worker在接收到一个任务后，单独的fork出一个完整的工作环境，在其上完成自己的工作，并且merge到主干上。在git上，这很容易实现：
@@ -129,8 +129,8 @@ BTW:
 
 
 
-<link rel="icon" type="image/png" href="/img/favicon-32x32.png" sizes="32x32">
-<link rel="icon" type="image/png" href="/img/favicon-16x16.png" sizes="16x16">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
 
 <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
@@ -178,7 +178,11 @@ BTW:
         
           
             <li class="navigation-item">
-              <a class="navigation-link" href="/posts/">Blog</a>
+              <a class="navigation-link" href="/posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/go">Go</a>
             </li>
           
             <li class="navigation-item">
@@ -304,10 +308,10 @@ BTW:
   <section class="container">
     ©
     
-      2019 -
+      2014 -
     
     2023
-     John Doe 
+     ghost 
     ·
     
     Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.

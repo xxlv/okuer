@@ -11,7 +11,7 @@
 
 
 
-<meta name="author" content="John Doe">
+<meta name="author" content="ghost">
 <meta name="description" content="摘要 Link to heading BloomFilter提供了一种判断一个值是否存在于指定集合的方法。在一个数据量较低的场景下，将数据保存到Hashset，然后利用hash检索某个值是否存在，但是在一个非常大的数据集中，传统的方法会消耗大量的内存，这导致OOM问题。BloomFilter的思路是，将一个value经过多次不同的hash映射到一个有限长度的bit数组中。当检测某个值是否存在的时候，只需要使用相同的hash检测,在bit数组中同时存在，则证明value大概率出现在集合中。如果有任何一次hash的index在bit map中被标记为0（代表无效），则证明value 一定不出现在该集合中。
 之所以出现这个原因（大概率出现），是因为A和B两个value经过多次hash后，可能同时将bit map中相同的index标记为1。 使用bloomFilter可以节省大量的内存，在很多对结果要求并不很严格的场景下，bloomFilter是高效的。
 核心实现的代码如下
@@ -66,8 +66,8 @@ public class BloomFilter { private static final int MAX_HASH_COUNT=3; private by
 
 
 
-<link rel="icon" type="image/png" href="/img/favicon-32x32.png" sizes="32x32">
-<link rel="icon" type="image/png" href="/img/favicon-16x16.png" sizes="16x16">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
 
 <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
@@ -115,7 +115,11 @@ public class BloomFilter { private static final int MAX_HASH_COUNT=3; private by
         
           
             <li class="navigation-item">
-              <a class="navigation-link" href="/posts/">Blog</a>
+              <a class="navigation-link" href="/posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/go">Go</a>
             </li>
           
             <li class="navigation-item">
@@ -313,10 +317,10 @@ public class BloomFilter { private static final int MAX_HASH_COUNT=3; private by
   <section class="container">
     ©
     
-      2019 -
+      2014 -
     
     2023
-     John Doe 
+     ghost 
     ·
     
     Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.

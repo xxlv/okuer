@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <title>
-   · Okuer
+  生成比特币地址 · Okuer
 </title>
     <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,7 +11,7 @@
 
 
 
-<meta name="author" content="John Doe">
+<meta name="author" content="ghost">
 <meta name="description" content="安全离线生成比特币的钱包地址 Link to heading 比特币是数字资产，受到密码学（密钥对）保护，一旦你的私钥被公开，你的资产将不在安全。传统的账号/密码受到服务提供商的保护，比如在支付宝，你的账号账号被盗，导致的财产损失，会被支付宝保险赔付。因为有一个第三方信任机构（保险/支付宝）。但是比特币是构建在区块链上的，区块链是去中心化的。这意味着没有一个类似支付宝的角色来保证你的财产安全，一切都要靠自己。 目前，有许多在线生成比特币地址的服务，这些服务大大简化了生成步骤，但同时引入了非常大的分析。一旦你的账号在网络环境被生成，它有极可能被泄漏。泄漏途径有许多，如本地机器被黑客入侵、服务提供商私自保存了密钥。 因此，如果资产金额较大，强烈建议使用本地的脚本自己生成密钥对，并且永远不要在联网的环境下暴露私钥。 本文提供一种简单的离线脚本，一步步的带你生成比特币的密钥对。（本文所有脚本均在这里，https://github.com/xxlv/btc-address-gen-scripts.git）
 第一，初始化依赖 Link to heading 你需要安全python环境，同时引入包
 sudo pip install bitcoin sudo pip install ecdsa 第二步，拔掉网线或者断开wifi Link to heading 非常重要的步骤，如果不是测试，一定要做！！！
@@ -19,21 +19,21 @@ sudo pip install bitcoin sudo pip install ecdsa 第二步，拔掉网线或者�
 <meta name="keywords" content="blog,developer,personal">
 
 <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content=""/>
+<meta name="twitter:title" content="生成比特币地址"/>
 <meta name="twitter:description" content="安全离线生成比特币的钱包地址 Link to heading 比特币是数字资产，受到密码学（密钥对）保护，一旦你的私钥被公开，你的资产将不在安全。传统的账号/密码受到服务提供商的保护，比如在支付宝，你的账号账号被盗，导致的财产损失，会被支付宝保险赔付。因为有一个第三方信任机构（保险/支付宝）。但是比特币是构建在区块链上的，区块链是去中心化的。这意味着没有一个类似支付宝的角色来保证你的财产安全，一切都要靠自己。 目前，有许多在线生成比特币地址的服务，这些服务大大简化了生成步骤，但同时引入了非常大的分析。一旦你的账号在网络环境被生成，它有极可能被泄漏。泄漏途径有许多，如本地机器被黑客入侵、服务提供商私自保存了密钥。 因此，如果资产金额较大，强烈建议使用本地的脚本自己生成密钥对，并且永远不要在联网的环境下暴露私钥。 本文提供一种简单的离线脚本，一步步的带你生成比特币的密钥对。（本文所有脚本均在这里，https://github.com/xxlv/btc-address-gen-scripts.git）
 第一，初始化依赖 Link to heading 你需要安全python环境，同时引入包
 sudo pip install bitcoin sudo pip install ecdsa 第二步，拔掉网线或者断开wifi Link to heading 非常重要的步骤，如果不是测试，一定要做！！！
 第三步，运行脚本，生成密钥对 Link to heading python key-to-address-ecc-example.py 生成的结果如下： Link to heading Private Key (hex) is: 14962ffc7f1c9dba79aadb608cd7088574e41a418a5349004309b722a9051b90 Private Key (decimal) is: 9311615220753377728968374325829133502017354028737325199749815733352682298256 Private Key (WIF) is: 5HyMSVcZMnBeGEoFbPqRaPHK1xVpHj6yCGnC4bvqxRUm72uuvbx Private Key Compressed (hex) is: 14962ffc7f1c9dba79aadb608cd7088574e41a418a5349004309b722a9051b9001 Private Key (WIF-Compressed) is: 2SdMjLGhnybsEFJmA85WrTioEtQAaKc8PQjeMQRFd5Q6AKdxygTY5D Public Key (x,y) coordinates is: (32009024601293775410666277862003376881148118697205564723468898850638045984780, 64137136342866323469645354187456635120169454941786517702226349133247186720277) Public Key (hex) is: 0446c477454946ee7187a0b859cedf3c4799726b5d8921b22b6b366b97178d380c8dcc552e1ab8546673dcbfa05f3aa97e33df950f2020805b11e4d8489fdfd615 Compressed Public Key (hex) is: 0346c477454946ee7187a0b859cedf3c4799726b5d8921b22b6b366b97178d380c Bitcoin Address (b58check) is: 18HWNXDVj1jSz9syiJpo2YcEofympTLQgC Compressed Bitcoin Address (b58check) is: 1HViUwJwUofaAPKbnzNRXHqqRE6UQE7g5B 每个人的机器每次调用生成的都不是相同的。 这是btc账号的全部信息，建议冷藏。"/>
 
-<meta property="og:title" content="" />
+<meta property="og:title" content="生成比特币地址" />
 <meta property="og:description" content="安全离线生成比特币的钱包地址 Link to heading 比特币是数字资产，受到密码学（密钥对）保护，一旦你的私钥被公开，你的资产将不在安全。传统的账号/密码受到服务提供商的保护，比如在支付宝，你的账号账号被盗，导致的财产损失，会被支付宝保险赔付。因为有一个第三方信任机构（保险/支付宝）。但是比特币是构建在区块链上的，区块链是去中心化的。这意味着没有一个类似支付宝的角色来保证你的财产安全，一切都要靠自己。 目前，有许多在线生成比特币地址的服务，这些服务大大简化了生成步骤，但同时引入了非常大的分析。一旦你的账号在网络环境被生成，它有极可能被泄漏。泄漏途径有许多，如本地机器被黑客入侵、服务提供商私自保存了密钥。 因此，如果资产金额较大，强烈建议使用本地的脚本自己生成密钥对，并且永远不要在联网的环境下暴露私钥。 本文提供一种简单的离线脚本，一步步的带你生成比特币的密钥对。（本文所有脚本均在这里，https://github.com/xxlv/btc-address-gen-scripts.git）
 第一，初始化依赖 Link to heading 你需要安全python环境，同时引入包
 sudo pip install bitcoin sudo pip install ecdsa 第二步，拔掉网线或者断开wifi Link to heading 非常重要的步骤，如果不是测试，一定要做！！！
 第三步，运行脚本，生成密钥对 Link to heading python key-to-address-ecc-example.py 生成的结果如下： Link to heading Private Key (hex) is: 14962ffc7f1c9dba79aadb608cd7088574e41a418a5349004309b722a9051b90 Private Key (decimal) is: 9311615220753377728968374325829133502017354028737325199749815733352682298256 Private Key (WIF) is: 5HyMSVcZMnBeGEoFbPqRaPHK1xVpHj6yCGnC4bvqxRUm72uuvbx Private Key Compressed (hex) is: 14962ffc7f1c9dba79aadb608cd7088574e41a418a5349004309b722a9051b9001 Private Key (WIF-Compressed) is: 2SdMjLGhnybsEFJmA85WrTioEtQAaKc8PQjeMQRFd5Q6AKdxygTY5D Public Key (x,y) coordinates is: (32009024601293775410666277862003376881148118697205564723468898850638045984780, 64137136342866323469645354187456635120169454941786517702226349133247186720277) Public Key (hex) is: 0446c477454946ee7187a0b859cedf3c4799726b5d8921b22b6b366b97178d380c8dcc552e1ab8546673dcbfa05f3aa97e33df950f2020805b11e4d8489fdfd615 Compressed Public Key (hex) is: 0346c477454946ee7187a0b859cedf3c4799726b5d8921b22b6b366b97178d380c Bitcoin Address (b58check) is: 18HWNXDVj1jSz9syiJpo2YcEofympTLQgC Compressed Bitcoin Address (b58check) is: 1HViUwJwUofaAPKbnzNRXHqqRE6UQE7g5B 每个人的机器每次调用生成的都不是相同的。 这是btc账号的全部信息，建议冷藏。" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://blog.okuer.com/posts/2019/2019-10-02-build-your-btc-address/" /><meta property="article:section" content="posts" />
-
-
+<meta property="article:published_time" content="2019-12-23T21:05:39+00:00" />
+<meta property="article:modified_time" content="2019-12-23T21:05:39+00:00" />
 
 
 
@@ -66,8 +66,8 @@ sudo pip install bitcoin sudo pip install ecdsa 第二步，拔掉网线或者�
 
 
 
-<link rel="icon" type="image/png" href="/img/favicon-32x32.png" sizes="32x32">
-<link rel="icon" type="image/png" href="/img/favicon-16x16.png" sizes="16x16">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
 
 <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
@@ -115,7 +115,11 @@ sudo pip install bitcoin sudo pip install ecdsa 第二步，拔掉网线或者�
         
           
             <li class="navigation-item">
-              <a class="navigation-link" href="/posts/">Blog</a>
+              <a class="navigation-link" href="/posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/go">Go</a>
             </li>
           
             <li class="navigation-item">
@@ -138,7 +142,7 @@ sudo pip install bitcoin sudo pip install ecdsa 第二步，拔掉网线或者�
         <div class="post-title">
           <h1 class="title">
             <a class="title-link" href="https://blog.okuer.com/posts/2019/2019-10-02-build-your-btc-address/">
-              
+              生成比特币地址
             </a>
           </h1>
         </div>
@@ -146,8 +150,8 @@ sudo pip install bitcoin sudo pip install ecdsa 第二步，拔掉网线或者�
           <div class="date">
             <span class="posted-on">
               <i class="fa fa-calendar" aria-hidden="true"></i>
-              <time datetime="0001-01-01T00:00:00Z">
-                January 1, 0001
+              <time datetime="2019-12-23T21:05:39Z">
+                December 23, 2019
               </time>
             </span>
             <span class="reading-time">
@@ -156,7 +160,10 @@ sudo pip install bitcoin sudo pip install ecdsa 第二步，拔掉网线或者�
             </span>
           </div>
           
-          
+          <div class="categories">
+  <i class="fa fa-folder" aria-hidden="true"></i>
+    <a href="/categories/btc/">btc</a></div>
+
           
         </div>
       </header>
@@ -289,10 +296,10 @@ sudo pip install bitcoin sudo pip install ecdsa 第二步，拔掉网线或者�
   <section class="container">
     ©
     
-      2019 -
+      2014 -
     
     2023
-     John Doe 
+     ghost 
     ·
     
     Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.

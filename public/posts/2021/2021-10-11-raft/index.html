@@ -11,7 +11,7 @@
 
 
 
-<meta name="author" content="John Doe">
+<meta name="author" content="ghost">
 <meta name="description" content="核心解决问题 Link to heading 选择Leader接管写入 分布式异构网络中共同确定一个值 不存在拜占庭将军问题
 基本原理 Link to heading Leader选择
 Node 通过投票的方式，多数服从少数
@@ -56,8 +56,8 @@ Node检查在当前的term内没有投票，则投票给当前的candidate Node 
 如何写(Log Replication) Link to heading Leader 接受到 set 5 的请求 Leader 写入本地日志（Uncommited) Leader 广播到其他节点 大多数节点都写入成功 Leader节点commit Leader节点通知其他节点commit re-election Link to heading Leader挂了 投票可以选出Leader" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://blog.okuer.com/posts/2021/2021-10-11-raft/" /><meta property="article:section" content="posts" />
-
-
+<meta property="article:published_time" content="2021-10-11T05:26:00+00:00" />
+<meta property="article:modified_time" content="2021-10-11T05:26:00+00:00" />
 
 
 
@@ -90,8 +90,8 @@ Node检查在当前的term内没有投票，则投票给当前的candidate Node 
 
 
 
-<link rel="icon" type="image/png" href="/img/favicon-32x32.png" sizes="32x32">
-<link rel="icon" type="image/png" href="/img/favicon-16x16.png" sizes="16x16">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
 
 <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
@@ -139,7 +139,11 @@ Node检查在当前的term内没有投票，则投票给当前的candidate Node 
         
           
             <li class="navigation-item">
-              <a class="navigation-link" href="/posts/">Blog</a>
+              <a class="navigation-link" href="/posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/go">Go</a>
             </li>
           
             <li class="navigation-item">
@@ -170,8 +174,8 @@ Node检查在当前的term内没有投票，则投票给当前的candidate Node 
           <div class="date">
             <span class="posted-on">
               <i class="fa fa-calendar" aria-hidden="true"></i>
-              <time datetime="0001-01-01T00:00:00Z">
-                January 1, 0001
+              <time datetime="2021-10-11T05:26:00Z">
+                October 11, 2021
               </time>
             </span>
             <span class="reading-time">
@@ -383,10 +387,10 @@ terms的引入可以保证多个Leader存在的时候，选择正确的Leader.
   <section class="container">
     ©
     
-      2019 -
+      2014 -
     
     2023
-     John Doe 
+     ghost 
     ·
     
     Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.

@@ -5,11 +5,12 @@
     <link>https://blog.okuer.com/categories/%E6%8A%80%E6%9C%AF/</link>
     <description>Recent content in 技术 on Okuer</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en</language><atom:link href="https://blog.okuer.com/categories/%E6%8A%80%E6%9C%AF/index.xml" rel="self" type="application/rss+xml" />
+    <language>en</language>
+    <lastBuildDate>Fri, 13 May 2022 05:26:00 +0000</lastBuildDate><atom:link href="https://blog.okuer.com/categories/%E6%8A%80%E6%9C%AF/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>About GraphQL</title>
       <link>https://blog.okuer.com/posts/2022/2022-05-13-2022/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <pubDate>Fri, 13 May 2022 05:26:00 +0000</pubDate>
       
       <guid>https://blog.okuer.com/posts/2022/2022-05-13-2022/</guid>
       <description>GraphQL 允许Client来 定制Server 的返回结果。传统的基于Restful的API或者rpc都面临着一个问题，就是Client 没有办法来决定Server返回什么数据。所有的数据的计算过程都是确定的，Client 只需要Send 一个req， 服务端接受到这个请求进行 response. Client并没有一种语言或者约束规则来影响服务端的执行序列。因此，一个简单的场景，
@@ -25,7 +26,7 @@ Schema 就像是基于REST我们定义的API 信息，如请求参数/返回值�
     <item>
       <title>Raft协议速记</title>
       <link>https://blog.okuer.com/posts/2021/2021-10-11-raft/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <pubDate>Mon, 11 Oct 2021 05:26:00 +0000</pubDate>
       
       <guid>https://blog.okuer.com/posts/2021/2021-10-11-raft/</guid>
       <description>核心解决问题 Link to heading 选择Leader接管写入 分布式异构网络中共同确定一个值 不存在拜占庭将军问题

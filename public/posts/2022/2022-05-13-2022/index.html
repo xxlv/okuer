@@ -11,7 +11,7 @@
 
 
 
-<meta name="author" content="John Doe">
+<meta name="author" content="ghost">
 <meta name="description" content="GraphQL 允许Client来 定制Server 的返回结果。传统的基于Restful的API或者rpc都面临着一个问题，就是Client 没有办法来决定Server返回什么数据。所有的数据的计算过程都是确定的，Client 只需要Send 一个req， 服务端接受到这个请求进行 response. Client并没有一种语言或者约束规则来影响服务端的执行序列。因此，一个简单的场景，
 与REST的差异 Link to heading 基于REST的架构产生的请求如下 GET /user/1 将返回如下的对象
 User{ id name avatar sex age } 当Client 仅仅需要一个name 的时候，Client 唯一做的，就是获取到完整的 User 对象，然后在浏览器端 进行过滤。
@@ -44,8 +44,8 @@ Schema 就像是基于REST我们定义的API 信息，如请求参数/返回值�
 所有的查询，都在一个Query 的特殊类型下。" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://blog.okuer.com/posts/2022/2022-05-13-2022/" /><meta property="article:section" content="posts" />
-
-
+<meta property="article:published_time" content="2022-05-13T05:26:00+00:00" />
+<meta property="article:modified_time" content="2022-05-13T05:26:00+00:00" />
 
 
 
@@ -78,8 +78,8 @@ Schema 就像是基于REST我们定义的API 信息，如请求参数/返回值�
 
 
 
-<link rel="icon" type="image/png" href="/img/favicon-32x32.png" sizes="32x32">
-<link rel="icon" type="image/png" href="/img/favicon-16x16.png" sizes="16x16">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
 
 <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
@@ -127,7 +127,11 @@ Schema 就像是基于REST我们定义的API 信息，如请求参数/返回值�
         
           
             <li class="navigation-item">
-              <a class="navigation-link" href="/posts/">Blog</a>
+              <a class="navigation-link" href="/posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/go">Go</a>
             </li>
           
             <li class="navigation-item">
@@ -158,8 +162,8 @@ Schema 就像是基于REST我们定义的API 信息，如请求参数/返回值�
           <div class="date">
             <span class="posted-on">
               <i class="fa fa-calendar" aria-hidden="true"></i>
-              <time datetime="0001-01-01T00:00:00Z">
-                January 1, 0001
+              <time datetime="2022-05-13T05:26:00Z">
+                May 13, 2022
               </time>
             </span>
             <span class="reading-time">
@@ -452,10 +456,10 @@ GraphQL spec 定义了<code>ID</code> 作为资源的唯一标识。 <code>ID</c
   <section class="container">
     ©
     
-      2019 -
+      2014 -
     
     2023
-     John Doe 
+     ghost 
     ·
     
     Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.

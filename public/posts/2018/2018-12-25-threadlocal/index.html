@@ -11,7 +11,7 @@
 
 
 
-<meta name="author" content="John Doe">
+<meta name="author" content="ghost">
 <meta name="description" content="摘要 Link to heading ThreadLocal被设计为在线程内部共享的变量。
 并发操作带来极大的性能优势，但同时在数据的一致性上也带来了挑战，当我们在线程内部要传递一个变量，如果将变量设置为局部的，当然没有任何并发问题，但是在同一个线程里，其他的方法就不能共享该变量。 如果设置为全局类变量，又导致多个线程会共享，如果解决这个问题呢？
 ThreadLocal就是为了这个目的诞生的，它提供了一种具有特殊能力的“线程私有变量”，在当前线程中，可以随意共享并且随意使用，在其他线程中，它是完全独立的。
@@ -99,8 +99,8 @@ ThreadLocal是有引用的，所以，在这里 threadLocal并不会被GC掉。�
 
 
 
-<link rel="icon" type="image/png" href="/img/favicon-32x32.png" sizes="32x32">
-<link rel="icon" type="image/png" href="/img/favicon-16x16.png" sizes="16x16">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
 
 <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
@@ -148,7 +148,11 @@ ThreadLocal是有引用的，所以，在这里 threadLocal并不会被GC掉。�
         
           
             <li class="navigation-item">
-              <a class="navigation-link" href="/posts/">Blog</a>
+              <a class="navigation-link" href="/posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/go">Go</a>
             </li>
           
             <li class="navigation-item">
@@ -303,10 +307,10 @@ ThreadLocal是有引用的，所以，在这里 threadLocal并不会被GC掉。�
   <section class="container">
     ©
     
-      2019 -
+      2014 -
     
     2023
-     John Doe 
+     ghost 
     ·
     
     Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.
