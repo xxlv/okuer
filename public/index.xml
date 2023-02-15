@@ -6,7 +6,17 @@
     <description>Recent content on Okuer</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Fri, 13 May 2022 05:26:00 +0000</lastBuildDate><atom:link href="https://blog.okuer.com/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 14 Feb 2023 10:57:56 +0800</lastBuildDate><atom:link href="https://blog.okuer.com/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>❤️ Blog 迁移</title>
+      <link>https://blog.okuer.com/posts/2023/2023-02-14-10-57-56-go/</link>
+      <pubDate>Tue, 14 Feb 2023 10:57:56 +0800</pubDate>
+      
+      <guid>https://blog.okuer.com/posts/2023/2023-02-14-10-57-56-go/</guid>
+      <description>今天，将blog 从 jekyll 迁移到 hugo啦～
+原因在于 jekyll 基于 ruby 的技术栈，目前 个人的兴趣方向是 go. 因此 blog 采用了 hugo。</description>
+    </item>
+    
     <item>
       <title>About GraphQL</title>
       <link>https://blog.okuer.com/posts/2022/2022-05-13-2022/</link>
@@ -1502,6 +1512,15 @@ Lin说她只有一个愿望，希望能尽快的死去。她感染了我，我�
 那一天，我发现我自己是空荡荡的，我不知道我的名字，我忘记了我的性别。
 我想象着有一天我从别人的子宫里出来，看着这个世界，看着我疲倦的身躯，看着我生出双翅，我会忽然想起我是被保存在海边的‘安塔拉’的记忆。我受着不死的诅咒，失眠症的诅咒，又时而躺在四下安静的监狱里。想象着一群老鼠在我的耳边跑来跑去，听我絮絮叨叨。想象着无数岁月前，我跟Lin在一起相互拥抱，亲吻。
 我给这座监狱起了一个非常好听的名称，我叫它，‘火柴匣’。</description>
+    </item>
+    
+    <item>
+      <title>Projects</title>
+      <link>https://blog.okuer.com/project/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://blog.okuer.com/project/</guid>
+      <description> Project List Link to heading Graphql 实践标准 Ailove 基于 openAI 的人工智能杂志. </description>
     </item>
     
   </channel>

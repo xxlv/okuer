@@ -2,19 +2,22 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://blog.okuer.com/posts/2022/2022-05-13-2022/</loc>
-    <lastmod>2022-05-13T05:26:00+00:00</lastmod>
+    <loc>https://blog.okuer.com/posts/2023/2023-02-14-10-57-56-go/</loc>
+    <lastmod>2023-02-14T10:57:56+08:00</lastmod>
   </url><url>
     <loc>https://blog.okuer.com/categories/</loc>
-    <lastmod>2022-05-13T05:26:00+00:00</lastmod>
+    <lastmod>2023-02-14T10:57:56+08:00</lastmod>
   </url><url>
     <loc>https://blog.okuer.com/</loc>
-    <lastmod>2022-05-13T05:26:00+00:00</lastmod>
+    <lastmod>2023-02-14T10:57:56+08:00</lastmod>
   </url><url>
     <loc>https://blog.okuer.com/posts/</loc>
-    <lastmod>2022-05-13T05:26:00+00:00</lastmod>
+    <lastmod>2023-02-14T10:57:56+08:00</lastmod>
   </url><url>
     <loc>https://blog.okuer.com/categories/%E6%8A%80%E6%9C%AF/</loc>
+    <lastmod>2023-02-14T10:57:56+08:00</lastmod>
+  </url><url>
+    <loc>https://blog.okuer.com/posts/2022/2022-05-13-2022/</loc>
     <lastmod>2022-05-13T05:26:00+00:00</lastmod>
   </url><url>
     <loc>https://blog.okuer.com/categories/%E9%9A%8F%E7%AC%94/</loc>
@@ -204,6 +207,8 @@
     <lastmod>2015-05-03T08:02:32+00:00</lastmod>
   </url><url>
     <loc>https://blog.okuer.com/authors/</loc>
+  </url><url>
+    <loc>https://blog.okuer.com/project/</loc>
   </url><url>
     <loc>https://blog.okuer.com/series/</loc>
   </url><url>

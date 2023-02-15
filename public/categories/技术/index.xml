@@ -6,7 +6,17 @@
     <description>Recent content in 技术 on Okuer</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Fri, 13 May 2022 05:26:00 +0000</lastBuildDate><atom:link href="https://blog.okuer.com/categories/%E6%8A%80%E6%9C%AF/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 14 Feb 2023 10:57:56 +0800</lastBuildDate><atom:link href="https://blog.okuer.com/categories/%E6%8A%80%E6%9C%AF/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>❤️ Blog 迁移</title>
+      <link>https://blog.okuer.com/posts/2023/2023-02-14-10-57-56-go/</link>
+      <pubDate>Tue, 14 Feb 2023 10:57:56 +0800</pubDate>
+      
+      <guid>https://blog.okuer.com/posts/2023/2023-02-14-10-57-56-go/</guid>
+      <description>今天，将blog 从 jekyll 迁移到 hugo啦～
+原因在于 jekyll 基于 ruby 的技术栈，目前 个人的兴趣方向是 go. 因此 blog 采用了 hugo。</description>
+    </item>
+    
     <item>
       <title>About GraphQL</title>
       <link>https://blog.okuer.com/posts/2022/2022-05-13-2022/</link>
