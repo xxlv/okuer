@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Goes on Okuer</title>
+    <link>https://blog.okuer.com/go/</link>
+    <description>Recent content in Goes on Okuer</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Tue, 14 Feb 2023 15:16:24 +0800</lastBuildDate><atom:link href="https://blog.okuer.com/go/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>GPM调度模型解析</title>
+      <link>https://blog.okuer.com/go/hello-go/</link>
+      <pubDate>Tue, 14 Feb 2023 15:16:24 +0800</pubDate>
+      
+      <guid>https://blog.okuer.com/go/hello-go/</guid>
+      <description>什么是GPM? Link to heading G-P-M 模型是 go 语言最重要的调度模型。
+简单来说,开发者编写的任务包装成G交给P,M在P的G队列上获取G进行计算。
+KSE内核调度 Link to heading KSE (Kernel Scheduling Entity) 是FreeBSD内核中用于调度线程的实体。KSE内核调度是指FreeBSD内核根据KSE的状态、优先级和其他因素来决定在何时执行某个KSE上的线程。KSE内核调度采用多级反馈队列调度算法，并考虑了线程的优先级、I/O等待、CPU时间片使用情况等因素，以提高系统的性能和响应能力。
+线程与进程 Link to heading 操作系统的最小调度单元是线程，线程可以共享进程内的资源.
+操作系统的调度模型 Link to heading 一切都是资源，无论计算还是存储，操作系统来负责协调
+计算机结构 Link to heading SMP 对称多处理器（Symmetric Multiprocessing，SMP）是一种计算机体系结构，其中多个处理器共享同一物理内存和系统总线，可以同时执行多个线程或进程。
+NUMA 非一致性存储（Non-Uniform Memory Access，NUMA）是一种多处理器计算机体系结构，在该体系结构中，每个处理器与本地内存模块相连，但可以通过互连网络访问其他处理器的内存模块。由于访问远程内存可能需要更长的时间，因此 NUMA 系统中的内存访问时间不是均匀的。
+OS线程模型 Link to heading 内核态 操作系统管理,绑定一个KSE，可以看作就是一个KSE，KSE用来分配CPU
+用户态 用户态的线程需要映射到内核态线程，属于用户空间上虚拟的线程，最终还是要通过KSE来分配CPU
+调度的实现 Link to heading 用户级 1:N 内核级 1:1 两级线程模型 N:N 为什么这么设计？ Link to heading 计算一般分为 CPU密集型 和 IO密集型
+CPU密集的计算往往依赖CPU,因此直接KSE进度调度CPU速度更快。一些需要IO的，往往时间比较久，如果长时间占据CPU会导致空闲等待。 因此不同的线程模型应对不同的场景。</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -38,16 +38,16 @@ G-P-M 模型是 go 语言最重要的调度模型。
 
 - 用户级 1:N
 
-![label](https://mmbiz.qpic.cn/mmbiz_png/VY8SELNGe95xtElNsKdc7hfa48Ol5JBa48FNoFXdJPwrKBZhtqtFLCwKqQ9jFg2VoYw0ZMVnycbxn9yEu4Ddqw/640?wx_fmt%3Dpng%26wxfrom%3D5%26wx_lazy%3D1%26wx_co%3D1)
+![label](/atts/2.png)
 
 - 内核级 1:1
 
-![label](https://mmbiz.qpic.cn/mmbiz_png/VY8SELNGe95xtElNsKdc7hfa48Ol5JBa77u7nN7jElvMfZWS2W8rn3MCL2ibCgG0NO8icXFhsveqrf81AmDN7VNg/640?wx_fmt%3Dpng%26wxfrom%3D5%26wx_lazy%3D1%26wx_co%3D1)
+![label](/atts/3.png)
 
 
 - 两级线程模型 N:N
 
-![label](https://mmbiz.qpic.cn/mmbiz_png/VY8SELNGe95xtElNsKdc7hfa48Ol5JBaqVXjqaRItZl1gkcXvIGq3ECDUaVVFvhB7GyLMaqdbexiaCEXDMSECzg/640?wx_fmt%3Dpng%26wxfrom%3D5%26wx_lazy%3D1%26wx_co%3D1)
+![label](/atts/4.png)
 
 
 ##### 为什么这么设计？
