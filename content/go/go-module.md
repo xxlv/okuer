@@ -94,3 +94,4 @@ go get github.com/some/package@v1.2.3
 ```go
 go mod vendor
 ```
+
