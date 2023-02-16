@@ -2,7 +2,6 @@
 author: ghost
 title: "Go 模块化"
 date: 2023-02-15T14:23:09+08:00
-draft: true
 ---
 
 # Topic 
