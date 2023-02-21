@@ -33,7 +33,7 @@ Go 语言的 WebAssembly（wasm）支持允许开发人员编写 Go 语言代码
 
 ## 原生go 
 
-### 生成方法
+### code
 ```go
 package main
 
@@ -94,3 +94,66 @@ func main() {
 
 
 
+
+## tinygo 
+`brew tap tinygo-org/tools && brew install tinygo`
+
+### code 
+
+```go 
+package main
+
+// This calls a JS function from Go.
+func main() {
+    println("adding two numbers:", add(2, 3)) // expecting 5
+}
+
+// This function is imported from JavaScript, as it doesn't define a body.
+// You should define a function named 'add' in the WebAssembly 'env'
+// module from JavaScript.
+//
+//export add
+func add(x, y int) int
+
+// This function is exported to JavaScript, so can be called using
+// exports.multiply() in JavaScript.
+//export multiply
+func multiply(x, y int) int {
+    return x * y;
+}
+
+```
+
+
+### 运行
+`tinygo build -o wasm.wasm -target wasm ./main.go`
+
+> 注意 需要执行 `cp $(tinygo env TINYGOROOT)/targets/wasm_exec.js .` 来下载tinygo的 wasm_exec.js
+
+
+### js 访问
+
+```js 
+instance.exports.multiply()
+
+```
+
+
+
+### tinygo 特色
+TinyGo 是一种针对嵌入式设备的 Go 编译器，它可以将 Go 代码编译成非常小的、快速运行的二进制文件，以适应嵌入式设备的资源限制。以下是一些 TinyGo 的场景：
+
+物联网设备：由于嵌入式设备通常具有较小的存储和内存，TinyGo 可以帮助将 Go 代码编译为更小、更快的二进制文件，以满足 IoT 设备的资源限制。
+
+机器人和无人机：TinyGo 可以使机器人和无人机的控制系统更加灵活和可靠，提高其自主决策和反应速度。
+
+传感器：TinyGo 可以编写用于读取和处理传感器数据的代码，并将其编译为小型二进制文件，以在资源受限的设备上运行。
+
+嵌入式系统：TinyGo 也可用于构建嵌入式系统的固件和驱动程序，从而提高系统的效率和可靠性。
+
+游戏控制器：TinyGo 可以用于编写游戏控制器代码，以实现更快的响应时间和更低的延迟，从而提高游戏体验。
+
+
+
+## 差异
+tinygo 生成的wasm提交较小,推荐用`tinygo`
