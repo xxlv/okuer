@@ -1,0 +1,27 @@
+
+
+Goroutine1:|go
+    // G1
+    // create new lock
+   var lockMe=Lock 
+|
+
+
+Goroutine2:|go
+    // G2
+    // copy lock
+    var copyLock=lockMe  
+|
+
+
+Goroutine3:|go
+    // G3
+    go func(){
+        // do write 
+        writeData(Data)
+    }
+|
+Goroutine1->Data: Lock-1
+Goroutine1->Data: Unlock-4 
+Goroutine2-->Data: Unlock-2  
+Goroutine3-->Data: Access-3  
