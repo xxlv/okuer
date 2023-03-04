@@ -16,7 +16,8 @@ PGO 通常分为三个步骤：
 
 
 # In Go 
-> Go 1.20版本于2023年2月份正式发布，在这个版本里引入了PGO性能优化机制。
+> Go 1.20版本于2023年2月份正式发布，在这个版本里引入了[PGO](https://go.dev/doc/pgo)性能优化机制。
+
 
 ## 步骤
 
@@ -40,6 +41,12 @@ PGO 通常分为三个步骤：
 
 ####  生成 统计结果
 -  go test load -bench=. -count=20  > a.txt 
+ 
+##### bench基础测试参数解释 
+> BenchmarkMyFunction-8   	 1000000	      1021 ns/op	     256 B/op	       2 allocs/op
+
+    其中 256 B/op 表示每次操作平均分配了 256 字节的内存，2 allocs/op 表示每次操作平均进行了 2 次内存分配。-8 表示测试使用了 8 个并发线程。
+
 #### 比较统计
 -  benchstat  a.txt  b.txt
 
