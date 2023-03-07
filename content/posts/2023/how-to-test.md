@@ -34,8 +34,8 @@ class MyUser(HttpUser):
 在这个示例中，定义了一个名为 MyUser 的 Locust 用户类，它继承自 HttpUser 类，并定义了一个名为 my_task 的任务方法。任务方法使用 self.client 对象来发送 HTTP 请求。wait_time 属性指定了任务之间的等待时间。
 
 #### 运行测试
-命令行方式：在命令行中进入脚本所在目录，然后运行 locust -f script.py 命令启动 Locust。
-Web 界面方式：在命令行中运行 locust -f script.py --web-host=0.0.0.0 启动 Locust Web 界面，在浏览器中打开 http://localhost:8089 即可访问 
+命令行方式：在命令行中进入脚本所在目录，然后运行 `locust -f script.py` 命令启动 Locust。
+Web 界面方式：在命令行中运行 `locust -f script.py --web-host=0.0.0.0` 启动 Locust Web 界面，在浏览器中打开 `http://localhost:8089` 即可访问 
 
 ## Locust Web 界面
 Locust Web 界面提供了一些方便的功能，如：
