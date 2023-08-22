@@ -4,7 +4,7 @@ date: 2023-02-21T11:52:51+08:00
 
 ---
 
-{{<notice info>}}以下内容基于chaptGPT,文中的代码示例经过验证和修订{{</notice>}}
+以下内容基于chaptGPT,文中的代码示例经过验证和修订
 
 # WASM
 
@@ -19,10 +19,6 @@ WebAssembly（缩写为 wasm）是一种低级的、面向栈的虚拟机，用�
 
 
 
-
-{{< tabgroup >}}
-  {{< tab name="Go" >}}
- 
 # In Go 
 
 Go 语言的 WebAssembly（wasm）支持允许开发人员编写 Go 语言代码，并将其编译为 wasm 模块，以便在 Web 平台上运行。Go 语言的 wasm 支持是 Go 1.11 版本中引入的，并在后续版本中得到了进一步的改进和优化。
@@ -101,10 +97,7 @@ func main() {
 ```
 
 
-  {{< /tab >}}
 
-  {{< tab name="Tinygo" >}}
-  
 ## tinygo 
 `brew tap tinygo-org/tools && brew install tinygo`
 
@@ -165,8 +158,6 @@ TinyGo 是一种针对嵌入式设备的 Go 编译器，它可以将 Go 代码�
 
 
 
-  {{< /tab >}}
-{{< /tabgroup >}}
 
 
 

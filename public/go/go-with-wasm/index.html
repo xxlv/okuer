@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>Go with wasm - Okuer</title><meta name="Description" content="ghost&#39;s personal website"><meta property="og:title" content="Go with wasm" />
+<meta property="og:description" content="以下内容基于chaptGPT,文中的代码示例经过验证和修订
+WASM WebAssembly（缩写为 wasm）是一种低级的、面向栈的虚拟机，用于在现代 Web 浏览器中执行二进制代码。它被设计成一个可移植、高效和安全的执行环境，可以被用于许多不同的场景，包括：
+在 Web 浏览器中提供比 JavaScript 更高效的编程语言。wasm 可以使得高性能的编程语言如 C/C&#43;&#43;、Rust 和 Go 等运行在 Web 平台上，从而为 Web 应用提供更快的执行速度和更好的用户体验。
+在 Web 应用中使用第三方库。由于 wasm 的二进制格式可以被多种语言所编译生成，因此可以在 Web 应用中使用其他语言编写的库，而不需要对库的源代码进行修改。
+跨平台开发。wasm 可以在多个平台上运行，因此可以在不同的硬件和操作系统上共享代码，简化跨平台开发的难度和成本。
+In Go Go 语言的 WebAssembly（wasm）支持允许开发人员编写 Go 语言代码，并将其编译为 wasm 模块，以便在 Web 平台上运行。Go 语言的 wasm 支持是 Go 1.11 版本中引入的，并在后续版本中得到了进一步的改进和优化。
+使用 Go 语言的 wasm 支持，可以将现有的 Go 语言代码直接编译为 wasm 模块，然后在 Web 平台上运行。这为开发人员提供了许多好处，包括：
+更高的性能。由于 wasm 是一种比 JavaScript 更低级别的虚拟机，因此可以提供更高的性能和更低的内存消耗。
+更好的安全性。由于 wasm 运行在 Web 浏览器的安全沙箱中，因此可以提供更好的安全性，避免 Web 应用被恶意代码攻击。
+更高的可移植性。由于 wasm 的二进制格式可以在多个平台上运行，因此可以使得 Go 语言代码在不同的平台上共享，从而简化了跨平台开发的难度。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.okuer.com/go/go-with-wasm/" /><meta property="article:section" content="go" />
+<meta property="article:published_time" content="2023-02-21T11:52:51+08:00" />
+<meta property="article:modified_time" content="2023-02-21T11:52:51+08:00" /><meta property="og:site_name" content="My cool site" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Go with wasm"/>
+<meta name="twitter:description" content="以下内容基于chaptGPT,文中的代码示例经过验证和修订
+WASM WebAssembly（缩写为 wasm）是一种低级的、面向栈的虚拟机，用于在现代 Web 浏览器中执行二进制代码。它被设计成一个可移植、高效和安全的执行环境，可以被用于许多不同的场景，包括：
+在 Web 浏览器中提供比 JavaScript 更高效的编程语言。wasm 可以使得高性能的编程语言如 C/C&#43;&#43;、Rust 和 Go 等运行在 Web 平台上，从而为 Web 应用提供更快的执行速度和更好的用户体验。
+在 Web 应用中使用第三方库。由于 wasm 的二进制格式可以被多种语言所编译生成，因此可以在 Web 应用中使用其他语言编写的库，而不需要对库的源代码进行修改。
+跨平台开发。wasm 可以在多个平台上运行，因此可以在不同的硬件和操作系统上共享代码，简化跨平台开发的难度和成本。
+In Go Go 语言的 WebAssembly（wasm）支持允许开发人员编写 Go 语言代码，并将其编译为 wasm 模块，以便在 Web 平台上运行。Go 语言的 wasm 支持是 Go 1.11 版本中引入的，并在后续版本中得到了进一步的改进和优化。
+使用 Go 语言的 wasm 支持，可以将现有的 Go 语言代码直接编译为 wasm 模块，然后在 Web 平台上运行。这为开发人员提供了许多好处，包括：
+更高的性能。由于 wasm 是一种比 JavaScript 更低级别的虚拟机，因此可以提供更高的性能和更低的内存消耗。
+更好的安全性。由于 wasm 运行在 Web 浏览器的安全沙箱中，因此可以提供更好的安全性，避免 Web 应用被恶意代码攻击。
+更高的可移植性。由于 wasm 的二进制格式可以在多个平台上运行，因此可以使得 Go 语言代码在不同的平台上共享，从而简化了跨平台开发的难度。"/>
+<meta name="application-name" content="My cool site">
+<meta name="apple-mobile-web-app-title" content="My cool site"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://blog.okuer.com/go/go-with-wasm/" /><link rel="prev" href="https://blog.okuer.com/go/go-module/" /><link rel="next" href="https://blog.okuer.com/go/go-no-copy/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css"></noscript><link rel="preload" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Go with wasm",
+        "inLanguage": "en",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/blog.okuer.com\/go\/go-with-wasm\/"
+        },"genre": "go","wordcount":  336 ,
+        "url": "https:\/\/blog.okuer.com\/go\/go-with-wasm\/","datePublished": "2023-02-21T11:52:51+08:00","dateModified": "2023-02-21T11:52:51+08:00","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "Author"
+            },"description": ""
+    }
+    </script></head>
+    <body data-header-desktop="fixed" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Okuer">My cool site</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts"> Blog </a><a class="menu-item" href="/go"> Go </a><a class="menu-item" href="/project"> Projects </a><a class="menu-item" href="/about/"> About </a><span class="menu-item delimiter"></span><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a></div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Okuer">My cool site</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><a class="menu-item" href="/posts" title="">Blog</a><a class="menu-item" href="/go" title="">Go</a><a class="menu-item" href="/project" title="">Projects</a><a class="menu-item" href="/about/" title="">About</a><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a></div>
+    </div>
+</header><main class="main">
+                <div class="container"><div class="page single special"><h1 class="single-title animate__animated animate__pulse animate__faster">Go with wasm</h1><div class="content" id="content"><p>以下内容基于chaptGPT,文中的代码示例经过验证和修订</p>
+<h1 id="wasm">WASM</h1>
+<p>WebAssembly（缩写为 wasm）是一种低级的、面向栈的虚拟机，用于在现代 Web 浏览器中执行二进制代码。它被设计成一个可移植、高效和安全的执行环境，可以被用于许多不同的场景，包括：</p>
+<p>在 Web 浏览器中提供比 JavaScript 更高效的编程语言。wasm 可以使得高性能的编程语言如 C/C++、Rust 和 Go 等运行在 Web 平台上，从而为 Web 应用提供更快的执行速度和更好的用户体验。</p>
+<p>在 Web 应用中使用第三方库。由于 wasm 的二进制格式可以被多种语言所编译生成，因此可以在 Web 应用中使用其他语言编写的库，而不需要对库的源代码进行修改。</p>
+<p>跨平台开发。wasm 可以在多个平台上运行，因此可以在不同的硬件和操作系统上共享代码，简化跨平台开发的难度和成本。</p>
+<h1 id="in-go">In Go</h1>
+<p>Go 语言的 WebAssembly（wasm）支持允许开发人员编写 Go 语言代码，并将其编译为 wasm 模块，以便在 Web 平台上运行。Go 语言的 wasm 支持是 Go 1.11 版本中引入的，并在后续版本中得到了进一步的改进和优化。</p>
+<p>使用 Go 语言的 wasm 支持，可以将现有的 Go 语言代码直接编译为 wasm 模块，然后在 Web 平台上运行。这为开发人员提供了许多好处，包括：</p>
+<p>更高的性能。由于 wasm 是一种比 JavaScript 更低级别的虚拟机，因此可以提供更高的性能和更低的内存消耗。</p>
+<p>更好的安全性。由于 wasm 运行在 Web 浏览器的安全沙箱中，因此可以提供更好的安全性，避免 Web 应用被恶意代码攻击。</p>
+<p>更高的可移植性。由于 wasm 的二进制格式可以在多个平台上运行，因此可以使得 Go 语言代码在不同的平台上共享，从而简化了跨平台开发的难度。</p>
+<h1 id="demo">Demo</h1>
+<h2 id="原生go">原生go</h2>
+<h3 id="code">code</h3>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="font-weight:bold">package</span> main
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="font-weight:bold">import</span> <span style="font-style:italic">&#34;syscall/js&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="font-weight:bold">func</span> Add(his js.Value, args []js.Value) any {
+</span></span><span style="display:flex;"><span>	<span style="font-weight:bold">return</span> <span style="font-style:italic">&#34;ok &#34;</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="font-weight:bold">func</span> main() {
+</span></span><span style="display:flex;"><span>	alert := js.Global().Get(<span style="font-style:italic">&#34;alert&#34;</span>)
+</span></span><span style="display:flex;"><span>    js.Global().Set(<span style="font-style:italic">&#34;Add&#34;</span>, js.FuncOf(Add))
+</span></span><span style="display:flex;"><span>	alert.Invoke(<span style="font-style:italic">&#34;Hello World!&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	&lt;-make(<span style="font-weight:bold">chan</span> <span style="">int</span>, 0)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><blockquote>
+<p>注意  js.Global().Set(&ldquo;Add&rdquo;,js.FuncOf(Add)) 这里是需要将go的方法注册到js中</p>
+</blockquote>
+<h3 id="编译成为wasm">编译成为wasm</h3>
+<p><code>GOOS=js GOARCH=wasm go build -o add.wasm</code></p>
+<h3 id="js调用">js调用</h3>
+<blockquote>
+<p>wasm_exec.js 位于 <code>$GOROOT/misc/wasm/wasm_exec.js</code> 属于js 补丁</p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-js" data-lang="js"><span style="display:flex;"><span>	&lt;script src=<span style="font-style:italic">&#34;wasm_exec.js&#34;</span>&gt;&lt;<span style="">/script&gt;</span>
+</span></span><span style="display:flex;"><span>	&lt;script&gt;
+</span></span><span style="display:flex;"><span>		<span style="font-weight:bold">if</span> (!WebAssembly.instantiateStreaming) { <span style="font-style:italic">// polyfill
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>			WebAssembly.instantiateStreaming = <span style="font-weight:bold">async</span> (resp, importObject) =&gt; {
+</span></span><span style="display:flex;"><span>				<span style="font-weight:bold">const</span> source = <span style="font-weight:bold">await</span> (<span style="font-weight:bold">await</span> resp).arrayBuffer();
+</span></span><span style="display:flex;"><span>				<span style="font-weight:bold">return</span> <span style="font-weight:bold">await</span> WebAssembly.instantiate(source, importObject);
+</span></span><span style="display:flex;"><span>			};
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		<span style="font-weight:bold">const</span> go = <span style="font-weight:bold">new</span> Go();
+</span></span><span style="display:flex;"><span>		<span style="font-weight:bold">let</span> mod, inst;
+</span></span><span style="display:flex;"><span>		WebAssembly.instantiateStreaming(fetch(<span style="font-style:italic">&#34;add.wasm&#34;</span>), go.importObject).then((result) =&gt; {
+</span></span><span style="display:flex;"><span>			mod = result.module;
+</span></span><span style="display:flex;"><span>			inst = result.instance;
+</span></span><span style="display:flex;"><span>			document.getElementById(<span style="font-style:italic">&#34;runButton&#34;</span>).disabled = <span style="font-weight:bold">false</span>;
+</span></span><span style="display:flex;"><span>		}).<span style="font-weight:bold">catch</span>((err) =&gt; {
+</span></span><span style="display:flex;"><span>			console.error(err);
+</span></span><span style="display:flex;"><span>		});
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		<span style="font-weight:bold">async</span> <span style="font-weight:bold">function</span> run() {
+</span></span><span style="display:flex;"><span>			console.clear();
+</span></span><span style="display:flex;"><span>			<span style="font-weight:bold">await</span> go.run(inst);
+</span></span><span style="display:flex;"><span>			inst = <span style="font-weight:bold">await</span> WebAssembly.instantiate(mod, go.importObject); <span style="font-style:italic">// reset instance
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>	&lt;<span style="">/script&gt;</span>
+</span></span></code></pre></div><h2 id="tinygo">tinygo</h2>
+<p><code>brew tap tinygo-org/tools &amp;&amp; brew install tinygo</code></p>
+<h3 id="code-1">code</h3>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="font-weight:bold">package</span> main
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="font-style:italic">// This calls a JS function from Go.
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span><span style="font-weight:bold">func</span> main() {
+</span></span><span style="display:flex;"><span>    println(<span style="font-style:italic">&#34;adding two numbers:&#34;</span>, add(2, 3)) <span style="font-style:italic">// expecting 5
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="font-style:italic">// This function is imported from JavaScript, as it doesn&#39;t define a body.
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic">// You should define a function named &#39;add&#39; in the WebAssembly &#39;env&#39;
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic">// module from JavaScript.
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic">//
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic">//export add
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span><span style="font-weight:bold">func</span> add(x, y <span style="">int</span>) <span style="">int</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="font-style:italic">// This function is exported to JavaScript, so can be called using
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic">// exports.multiply() in JavaScript.
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic">//export multiply
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span><span style="font-weight:bold">func</span> multiply(x, y <span style="">int</span>) <span style="">int</span> {
+</span></span><span style="display:flex;"><span>    <span style="font-weight:bold">return</span> x * y;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="运行">运行</h3>
+<p><code>tinygo build -o wasm.wasm -target wasm ./main.go</code></p>
+<blockquote>
+<p>注意 需要执行 <code>cp $(tinygo env TINYGOROOT)/targets/wasm_exec.js .</code> 来下载tinygo的 wasm_exec.js</p>
+</blockquote>
+<h3 id="js-访问">js 访问</h3>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-js" data-lang="js"><span style="display:flex;"><span>instance.exports.multiply()
+</span></span></code></pre></div><h3 id="tinygo-特色">tinygo 特色</h3>
+<p>TinyGo 是一种针对嵌入式设备的 Go 编译器，它可以将 Go 代码编译成非常小的、快速运行的二进制文件，以适应嵌入式设备的资源限制。以下是一些 TinyGo 的场景：</p>
+<p>物联网设备：由于嵌入式设备通常具有较小的存储和内存，TinyGo 可以帮助将 Go 代码编译为更小、更快的二进制文件，以满足 IoT 设备的资源限制。</p>
+<p>机器人和无人机：TinyGo 可以使机器人和无人机的控制系统更加灵活和可靠，提高其自主决策和反应速度。</p>
+<p>传感器：TinyGo 可以编写用于读取和处理传感器数据的代码，并将其编译为小型二进制文件，以在资源受限的设备上运行。</p>
+<p>嵌入式系统：TinyGo 也可用于构建嵌入式系统的固件和驱动程序，从而提高系统的效率和可靠性。</p>
+<p>游戏控制器：TinyGo 可以用于编写游戏控制器代码，以实现更快的响应时间和更低的延迟，从而提高游戏体验。</p>
+<h2 id="差异">差异</h2>
+<p>tinygo 生成的wasm提交较小,推荐用<code>tinygo</code></p>
+</div></div></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.110.0">Hugo</a> | Theme - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2022 - 2023</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank"></a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="Back to Top">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="View Comments">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sharer.js@0.5.1/sharer.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"Copy to clipboard","maxShownLines":50},"comment":{}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>

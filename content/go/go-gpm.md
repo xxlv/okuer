@@ -60,7 +60,7 @@ CPU密集的计算往往依赖CPU,因此直接KSE进度调度CPU速度更快。�
 比如一个在一个4C的计算机上进行CPU密集运算，通过4个KSE进行调度的性能更高，因为不需要切换上下文。
 而一个处理数据库链接的，如果还按照这个模型，则最多处理4个链接,因此需要在执行IO的时候快速的让出CPU. 此种条件下，选择1:N或N:N的模型可以获得更高的并发。
 
-{{< notice note >}} 用户级的线程 1:N 注意无法充分利用多核CPU.. {{< /notice >}}
+用户级的线程 1:N 注意无法充分利用多核CPU..
 
 ## Go的调度模型
 
@@ -83,7 +83,7 @@ P是一个中间层, 拥有M 调度所需要的上下文,一个P必须通过M调
 而如Java 创建的传统的线程成本可能在2M。
 
 
-{{< notice info >}}Java19 提供了[虚拟线程](https://docs.oracle.com/en/java/javase/19/core/virtual-threads.html#GUID-7F5DA570-4B24-4CF6-899C-0424464B6032),以更廉价的方式创建线程 {{< /notice >}}
+Java19 提供了[虚拟线程](https://docs.oracle.com/en/java/javase/19/core/virtual-threads.html#GUID-7F5DA570-4B24-4CF6-899C-0424464B6032),以更廉价的方式创建线程
 
 
 ![label](/atts/1.png)

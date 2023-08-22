@@ -1,0 +1,59 @@
+#+title: AI工具
+#+date: <2023-08-22 Tue>
+#+draft: true
+
+
+* 工具时代AI思维
+  
+** AI的技术领域[collect]
+**** chatGPT 
+**** claude  https://claude.ai/chat/1fed3d3e-2cc0-4d4d-8354-db567df78fc9
+**** LLM 大语言模型框架 https://github.com/langchain-ai/langchain  
+**** AI绘图工具 midjourney 通过prompt 生成image
+***** 类似开源免费 https://www.wbolt.com/midjourney-alternatives.html
+***** https://github.com/lucidrains/big-sleep/issues/135  开源的 但可惜只能在cuda  NVIDIA开发的并行计算的平台和编程模型上运行
+***** [#A] https://qiuyu96.github.io/CoDeF/ 图片动画化 也依赖CUDA
+      https://tusi.art/?source=bd&keyword=controlnet
+***** 
+**** AI 克隆声音 https://github.com/babysor/MockingBird
+**** PyTorch  https://pytorch.org/
+**** https://github.com/microsoft/Typechat use type   **结构化**  chatGPT等Response 方便程序处理
+**** copilot
+**** sourcegraph 阅读/解释代码
+*** 方向 
+**** 通过一种工具来实现个人知识网络的构建 例如编程工具等
+**** 场景举例
+***** 编程业务代码与重复性工具建设
+******  提醒邮件/简单的能力/原型设计/ 方案美化等（ chatGPT的核心能力的子集)
+****** 游戏原型开发
+******* 快速生成sprite/ tilemap 等
+****** 调研工具  描述需求进行调研 
+***** 工作场景
+****** 日志排查 检查核心链路上的日志是否打印
+******  编写文档 & 优化文档
+** 如何描述你的需求
+*** 想法
+**** 从信息中找到想法
+     想法是一个灵光一现的idea 可以是一个独立的产品、工具。
+     
+*** 描述
+**** 使用语音(或文字)进行快速的验证
+***** Action
+****** 找到安静的环境，将你的想法说出来，并进行录音
+****** 将录音通过AI转化成文字
+****** 将文件交给AI 美化
+****** 将文字转化需求文档
+****** 根据需求划分模块（最小到可独立测试的unit)
+****** 使用AI为你的unit 生成测试
+       
+*** 模块化思路快速开发产品
+**** [#A] 1 模块 分层级进行拆分,使得每一个模块都是独立可测试的
+**** [#A] 2 执行Unit 将每个模块继续拆分成独立的unit 是的每个单元都拥有可执行的action序列 每个action 都是拥有输入和输出的简单函数
+**** [#B] 互斥性 如果一个unit与另一个unit 在同一个模块中存在矛盾,导致程序的错误。则应该重新设计。不应让两个unit共存。         
+**** [#A] 3 工具生成  将每个函数通过AI工具动态生成
+***** 将promt 看作是函数
+***** 将响应看做模版
+**** [#A] 4 Link  将一些都链接在一起  交付一个独立的模块
+**** 5 递归 递归1-4步骤
+*** 实战
+    

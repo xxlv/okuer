@@ -6,13 +6,91 @@
     <description>Recent content in Goes on Okuer</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Tue, 14 Feb 2023 15:16:24 +0800</lastBuildDate><atom:link href="https://blog.okuer.com/go/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 08 Mar 2023 21:09:14 +0800</lastBuildDate><atom:link href="https://blog.okuer.com/go/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Go Linter</title>
+      <link>https://blog.okuer.com/go/linter/</link>
+      <pubDate>Wed, 08 Mar 2023 21:09:14 +0800</pubDate>
+      
+      <guid>https://blog.okuer.com/go/linter/</guid>
+      <description> Linter 能做什么? Link to heading Linter是一种工具，用于检查代码中的语法错误、潜在问题和编码约定是否符合规范。Linter可以分析源代码文件，查找并报告与规则不符合的部分，以帮助开发人员减少bug，并确保代码质量。
+如何编写自己的linter? Link to heading 参考资料 Link to heading https://toutiao.io/posts/fzt61t/preview </description>
+    </item>
+    
+    <item>
+      <title>Go 1.20 Pgo优化</title>
+      <link>https://blog.okuer.com/go/pgo/</link>
+      <pubDate>Sat, 04 Mar 2023 15:32:55 +0800</pubDate>
+      
+      <guid>https://blog.okuer.com/go/pgo/</guid>
+      <description>介绍 Link to heading Profile Guided Optimization (PGO) 是一种编译器优化技术，通过基于应用程序的运行时间信息优化生成的机器代码。具体来说，PGO 通过使用编译器生成的剖面数据文件（即有关程序在运行时执行情况的信息），来指导机器代码的优化过程。这些信息可以帮助编译器更好地理解应用程序的性能瓶颈，并生成更高效的代码。
+PGO 通常分为三个步骤：
+使用编译器创建一个基准版本的可执行文件； 在训练阶段中运行此基准文件，并收集各种性能统计数据，如函数调用频率、循环迭代次数等； 使用这些统计数据重新编译程序，并应用优化策略，以生成经过改进的代码。 相比于传统的静态编译优化方式，PGO 的优势在于，它可以根据实际运行情况进行优化，因此可以更准确地优化重要的代码路径，而不是仅仅优化一些假定的热点代码。因此，PGO 可以提供更好的性能和更低的代码大小，尤其对于大型项目或者需要处理大量数据的应用程序，效果更加明显。
+In Go Link to heading Go 1.20版本于2023年2月份正式发布，在这个版本里引入了PGO性能优化机制。
+步骤 Link to heading 引入 pprof // 项目中引入 _ &amp;#34;net/http/pprof&amp;#34; 采集 curl -o cpu.pprof &amp;quot;http://localhost:8080/debug/pprof/profile?seconds=30&amp;quot;
+修改为 default.pgo 执行 mv cpu.pprof default.pgo
+go build -pgo=auto -o pro.withPgo
+auto 模式将自动的使用 default.pgo 来进行优化 默认-pgo 为 off
+压力测试 Link to heading 生成 统计结果 Link to heading go test load -bench=.</description>
+    </item>
+    
+    <item>
+      <title>Go No Copy</title>
+      <link>https://blog.okuer.com/go/go-no-copy/</link>
+      <pubDate>Fri, 24 Feb 2023 10:09:05 +0800</pubDate>
+      
+      <guid>https://blog.okuer.com/go/go-no-copy/</guid>
+      <description>什么是no copy? Link to heading Lock &amp;amp; Unlock 代表对一种临界资源的保护。go 提供的 vet 工具可以针对copylocks进行检查。
+但是如waitGroup 等同样需要配对操作的组件并没有更好的办法来阻止开发者。
+因此在 #8005中 采用了 noCopy 的struct.
+需要禁止copy就可以include 这个struct .
+为什么不能？ Link to heading 设想,如果允许copy lock ，会发生什么?
+如上会产生意外的情况，G1的lock被copy到G2中，被意外的提前unlock 了。会导致 G3在 G1 还没有unlock 的时候，获得写数据的权限。
+为了规避上述问题，采用了 noCopy 方案。</description>
+    </item>
+    
+    <item>
+      <title>Go with wasm</title>
+      <link>https://blog.okuer.com/go/go-with-wasm/</link>
+      <pubDate>Tue, 21 Feb 2023 11:52:51 +0800</pubDate>
+      
+      <guid>https://blog.okuer.com/go/go-with-wasm/</guid>
+      <description>Info 以下内容基于chaptGPT,文中的代码示例经过验证和修订 WASM Link to heading WebAssembly（缩写为 wasm）是一种低级的、面向栈的虚拟机，用于在现代 Web 浏览器中执行二进制代码。它被设计成一个可移植、高效和安全的执行环境，可以被用于许多不同的场景，包括：
+在 Web 浏览器中提供比 JavaScript 更高效的编程语言。wasm 可以使得高性能的编程语言如 C/C++、Rust 和 Go 等运行在 Web 平台上，从而为 Web 应用提供更快的执行速度和更好的用户体验。
+在 Web 应用中使用第三方库。由于 wasm 的二进制格式可以被多种语言所编译生成，因此可以在 Web 应用中使用其他语言编写的库，而不需要对库的源代码进行修改。
+跨平台开发。wasm 可以在多个平台上运行，因此可以在不同的硬件和操作系统上共享代码，简化跨平台开发的难度和成本。
+Go In Go Link to heading Go 语言的 WebAssembly（wasm）支持允许开发人员编写 Go 语言代码，并将其编译为 wasm 模块，以便在 Web 平台上运行。Go 语言的 wasm 支持是 Go 1.11 版本中引入的，并在后续版本中得到了进一步的改进和优化。
+使用 Go 语言的 wasm 支持，可以将现有的 Go 语言代码直接编译为 wasm 模块，然后在 Web 平台上运行。这为开发人员提供了许多好处，包括：
+更高的性能。由于 wasm 是一种比 JavaScript 更低级别的虚拟机，因此可以提供更高的性能和更低的内存消耗。</description>
+    </item>
+    
+    <item>
+      <title>Go 模块化</title>
+      <link>https://blog.okuer.com/go/go-module/</link>
+      <pubDate>Wed, 15 Feb 2023 14:23:09 +0800</pubDate>
+      
+      <guid>https://blog.okuer.com/go/go-module/</guid>
+      <description>Topic Link to heading 模块化 版本管理 打包与版本 private repository 多人协作开发 模块化 Link to heading Go 语言在 v1.11 之前，采用的是 $GOPATH 的方式来引用第三方包的 src 文件. 这样做带来的灾难是没有办法处理多版本的问题。
+于是在 v1.11之后引入了mod ，在新版本的go环境下，执行下面的命令将能看到3个文件
+ls $GOPATH # bin pkg src 所有的依赖的包都在pkg下存在 比如在pkg/mod/golang.org/x 下存在的如下的包
+net@v0.3.0 net@v0.5.0 oauth2@v0.0.0-20220411215720-9780585627b5 sync@v0.0.0-20220819030929-7fc1605a5dde sync@v0.1.0 sys@v0.0.0-20200302150141-5c8b2ff67527 sys@v0.1.0 sys@v0.2.0 Go语言提供了很好的模块化支持，可以让开发者将程序分割成更小的、独立的代码模块，这样有助于降低复杂性、提高可维护性、可重用性和测试性。以下是Go语言的模块化相关的一些特性和最佳实践：
+包：Go程序的基本单位是包，每个Go源代码文件都必须属于一个包，且包名必须与其所在的目录名一致。包可以是库包，也可以是可执行包。库包用于封装通用的功能，而可执行包用于实现独立的应用程序。
+导入：Go语言使用import关键字来导入其他包，导入的包名就是包的名称。可以使用相对路径或绝对路径指定要导入的包。
+可见性：Go语言的可见性规则非常简单：以大写字母开头的标识符对其他包可见，其他标识符只对本包可见。这种规则可以让包提供一些公共的接口，同时隐藏其内部实现细节。
+版本控制：Go语言使用模块来管理依赖关系和版本控制。每个模块都有一个唯一的模块路径和版本号。Go模块支持语义化版本控制，可以避免依赖冲突和版本升级的问题。
+依赖管理：使用go mod命令可以管理Go模块的依赖关系。可以使用go.mod文件指定依赖关系和版本信息，使用go.sum文件记录依赖的哈希值，确保依赖的代码不会被篡改或变化。
+构建和发布：使用go build命令可以构建可执行文件或库文件，使用go install命令可以将库文件安装到$GOPATH/pkg目录下，以便其他Go程序可以引用。可以使用go get命令从远程仓库获取依赖的代码，使用go mod tidy命令清理不需要的依赖。
+Info 注意,go语言的版本必须大于 1.11 模块化可以让程序依赖外部的模块，依赖本身会产生一个graph。 许多语言都有类似的辅助工具来进行依赖管理，如 Java中的Maven和Gradle, PHP的composer等
+go 语言是如何进行依赖管理的呢？
+go语言的依赖 Link to heading Go语言使用模块（module）来管理依赖，模块是一组相关的Go包的集合，通常位于一个版本控制仓库中。Go模块支持语义化版本控制，并且可以解决依赖管理和版 本管理的问题。以下是Go语言依赖管理的一些关键点：</description>
+    </item>
+    
     <item>
       <title>GPM调度模型解析</title>
-      <link>https://blog.okuer.com/go/hello-go/</link>
+      <link>https://blog.okuer.com/go/go-gpm/</link>
       <pubDate>Tue, 14 Feb 2023 15:16:24 +0800</pubDate>
       
-      <guid>https://blog.okuer.com/go/hello-go/</guid>
+      <guid>https://blog.okuer.com/go/go-gpm/</guid>
       <description>什么是GPM? Link to heading G-P-M 模型是 go 语言最重要的调度模型。
 简单来说,开发者编写的任务包装成G交给P,M在P的G队列上获取G进行计算。
 KSE内核调度 Link to heading KSE (Kernel Scheduling Entity) 是FreeBSD内核中用于调度线程的实体。KSE内核调度是指FreeBSD内核根据KSE的状态、优先级和其他因素来决定在何时执行某个KSE上的线程。KSE内核调度采用多级反馈队列调度算法，并考虑了线程的优先级、I/O等待、CPU时间片使用情况等因素，以提高系统的性能和响应能力。

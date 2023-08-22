@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>Go 1.20 Pgo优化 - Okuer</title><meta name="Description" content="ghost&#39;s personal website"><meta property="og:title" content="Go 1.20 Pgo优化" />
+<meta property="og:description" content="介绍 Profile Guided Optimization (PGO) 是一种编译器优化技术，通过基于应用程序的运行时间信息优化生成的机器代码。具体来说，PGO 通过使用编译器生成的剖面数据文件（即有关程序在运行时执行情况的信息），来指导机器代码的优化过程。这些信息可以帮助编译器更好地理解应用程序的性能瓶颈，并生成更高效的代码。
+PGO 通常分为三个步骤：
+使用编译器创建一个基准版本的可执行文件； 在训练阶段中运行此基准文件，并收集各种性能统计数据，如函数调用频率、循环迭代次数等； 使用这些统计数据重新编译程序，并应用优化策略，以生成经过改进的代码。 相比于传统的静态编译优化方式，PGO 的优势在于，它可以根据实际运行情况进行优化，因此可以更准确地优化重要的代码路径，而不是仅仅优化一些假定的热点代码。因此，PGO 可以提供更好的性能和更低的代码大小，尤其对于大型项目或者需要处理大量数据的应用程序，效果更加明显。
+In Go Go 1.20版本于2023年2月份正式发布，在这个版本里引入了PGO性能优化机制。
+步骤 引入 pprof // 项目中引入 _ &#34;net/http/pprof&#34; 采集 curl -o cpu.pprof &quot;http://localhost:8080/debug/pprof/profile?seconds=30&quot;
+修改为 default.pgo 执行 mv cpu.pprof default.pgo
+go build -pgo=auto -o pro.withPgo
+auto 模式将自动的使用 default.pgo 来进行优化 默认-pgo 为 off
+压力测试 生成 统计结果 go test load -bench=. -count=20 &gt; a.txt bench基础测试参数解释 BenchmarkMyFunction-8 1000000	1021 ns/op	256 B/op	2 allocs/op
+其中 256 B/op 表示每次操作平均分配了 256 字节的内存，2 allocs/op 表示每次操作平均进行了 2 次内存分配。-8 表示测试使用了 8 个并发线程。 比较统计 benchstat a." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.okuer.com/go/pgo/" /><meta property="article:section" content="go" />
+<meta property="article:published_time" content="2023-03-04T15:32:55+08:00" />
+<meta property="article:modified_time" content="2023-03-04T15:32:55+08:00" /><meta property="og:site_name" content="My cool site" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Go 1.20 Pgo优化"/>
+<meta name="twitter:description" content="介绍 Profile Guided Optimization (PGO) 是一种编译器优化技术，通过基于应用程序的运行时间信息优化生成的机器代码。具体来说，PGO 通过使用编译器生成的剖面数据文件（即有关程序在运行时执行情况的信息），来指导机器代码的优化过程。这些信息可以帮助编译器更好地理解应用程序的性能瓶颈，并生成更高效的代码。
+PGO 通常分为三个步骤：
+使用编译器创建一个基准版本的可执行文件； 在训练阶段中运行此基准文件，并收集各种性能统计数据，如函数调用频率、循环迭代次数等； 使用这些统计数据重新编译程序，并应用优化策略，以生成经过改进的代码。 相比于传统的静态编译优化方式，PGO 的优势在于，它可以根据实际运行情况进行优化，因此可以更准确地优化重要的代码路径，而不是仅仅优化一些假定的热点代码。因此，PGO 可以提供更好的性能和更低的代码大小，尤其对于大型项目或者需要处理大量数据的应用程序，效果更加明显。
+In Go Go 1.20版本于2023年2月份正式发布，在这个版本里引入了PGO性能优化机制。
+步骤 引入 pprof // 项目中引入 _ &#34;net/http/pprof&#34; 采集 curl -o cpu.pprof &quot;http://localhost:8080/debug/pprof/profile?seconds=30&quot;
+修改为 default.pgo 执行 mv cpu.pprof default.pgo
+go build -pgo=auto -o pro.withPgo
+auto 模式将自动的使用 default.pgo 来进行优化 默认-pgo 为 off
+压力测试 生成 统计结果 go test load -bench=. -count=20 &gt; a.txt bench基础测试参数解释 BenchmarkMyFunction-8 1000000	1021 ns/op	256 B/op	2 allocs/op
+其中 256 B/op 表示每次操作平均分配了 256 字节的内存，2 allocs/op 表示每次操作平均进行了 2 次内存分配。-8 表示测试使用了 8 个并发线程。 比较统计 benchstat a."/>
+<meta name="application-name" content="My cool site">
+<meta name="apple-mobile-web-app-title" content="My cool site"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://blog.okuer.com/go/pgo/" /><link rel="prev" href="https://blog.okuer.com/go/go-no-copy/" /><link rel="next" href="https://blog.okuer.com/go/linter/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css"></noscript><link rel="preload" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Go 1.20 Pgo优化",
+        "inLanguage": "en",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/blog.okuer.com\/go\/pgo\/"
+        },"genre": "go","wordcount":  89 ,
+        "url": "https:\/\/blog.okuer.com\/go\/pgo\/","datePublished": "2023-03-04T15:32:55+08:00","dateModified": "2023-03-04T15:32:55+08:00","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "Author"
+            },"description": ""
+    }
+    </script></head>
+    <body data-header-desktop="fixed" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Okuer">My cool site</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts"> Blog </a><a class="menu-item" href="/go"> Go </a><a class="menu-item" href="/project"> Projects </a><a class="menu-item" href="/about/"> About </a><span class="menu-item delimiter"></span><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a></div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Okuer">My cool site</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><a class="menu-item" href="/posts" title="">Blog</a><a class="menu-item" href="/go" title="">Go</a><a class="menu-item" href="/project" title="">Projects</a><a class="menu-item" href="/about/" title="">About</a><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a></div>
+    </div>
+</header><main class="main">
+                <div class="container"><div class="page single special"><h1 class="single-title animate__animated animate__pulse animate__faster">Go 1.20 Pgo优化</h1><div class="content" id="content"><h1 id="介绍">介绍</h1>
+<blockquote>
+<p>Profile Guided Optimization (PGO) 是一种编译器优化技术，通过基于应用程序的运行时间信息优化生成的机器代码。具体来说，PGO 通过使用编译器生成的剖面数据文件（即有关程序在运行时执行情况的信息），来指导机器代码的优化过程。这些信息可以帮助编译器更好地理解应用程序的性能瓶颈，并生成更高效的代码。</p>
+</blockquote>
+<p>PGO 通常分为三个步骤：</p>
+<ul>
+<li>使用编译器创建一个基准版本的可执行文件；</li>
+<li>在训练阶段中运行此基准文件，并收集各种性能统计数据，如函数调用频率、循环迭代次数等；</li>
+<li>使用这些统计数据重新编译程序，并应用优化策略，以生成经过改进的代码。</li>
+</ul>
+<p>相比于传统的静态编译优化方式，PGO 的优势在于，它可以根据实际运行情况进行优化，因此可以更准确地优化重要的代码路径，而不是仅仅优化一些假定的热点代码。因此，PGO 可以提供更好的性能和更低的代码大小，尤其对于大型项目或者需要处理大量数据的应用程序，效果更加明显。</p>
+<h1 id="in-go">In Go</h1>
+<blockquote>
+<p>Go 1.20版本于2023年2月份正式发布，在这个版本里引入了<a href="https://go.dev/doc/pgo" target="_blank" rel="noopener noreffer ">PGO</a>性能优化机制。</p>
+</blockquote>
+<h2 id="步骤">步骤</h2>
+<ol>
+<li>引入 pprof</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span>    <span style="font-style:italic">// 项目中引入
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>    _ <span style="font-style:italic">&#34;net/http/pprof&#34;</span>
+</span></span></code></pre></div><ol start="2">
+<li>
+<p>采集
+<code>curl -o cpu.pprof &quot;http://localhost:8080/debug/pprof/profile?seconds=30&quot;</code></p>
+</li>
+<li>
+<p>修改为 <code>default.pgo</code> 执行 <code>mv cpu.pprof default.pgo</code></p>
+</li>
+<li>
+<p>go build -pgo=auto -o pro.withPgo</p>
+</li>
+</ol>
+<blockquote>
+<p>auto 模式将自动的使用 <code>default.pgo</code> 来进行优化 默认-pgo 为 <code>off</code></p>
+</blockquote>
+<h3 id="压力测试">压力测试</h3>
+<h4 id="生成-统计结果">生成 统计结果</h4>
+<ul>
+<li>go test load -bench=. -count=20  &gt; a.txt</li>
+</ul>
+<h5 id="bench基础测试参数解释">bench基础测试参数解释</h5>
+<blockquote>
+<p>BenchmarkMyFunction-8   	 1000000	      1021 ns/op	     256 B/op	       2 allocs/op</p>
+</blockquote>
+<pre><code>其中 256 B/op 表示每次操作平均分配了 256 字节的内存，2 allocs/op 表示每次操作平均进行了 2 次内存分配。-8 表示测试使用了 8 个并发线程。
+</code></pre>
+<h4 id="比较统计">比较统计</h4>
+<ul>
+<li>benchstat  a.txt  b.txt</li>
+</ul>
+<blockquote>
+<p>安装 <code>go install golang.org/x/perf/cmd/benchstat@latest</code></p>
+</blockquote>
+</div></div></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.110.0">Hugo</a> | Theme - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2022 - 2023</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank"></a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="Back to Top">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="View Comments">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sharer.js@0.5.1/sharer.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"Copy to clipboard","maxShownLines":50},"comment":{}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>

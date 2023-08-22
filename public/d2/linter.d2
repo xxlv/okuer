@@ -1,0 +1,38 @@
+F:"Go File"
+A:"golang.org/x/tools/go/analysis"
+B:"Ast Node"
+
+A->F: parse
+A-->Y
+B-->X 
+
+Y:|go
+    var Analyzer = &analysis.Analyzer{
+        Name:     "your name",
+        Doc:      "desc",
+        Run:      run,
+        //多个分析器（例如go vet或staticcheck），那么go/analysis/passes/inspect是一个很好的选择
+        Requires: []*analysis.Analyzer{inspect.Analyzer},
+    }
+
+|
+X:|go
+    func run(pass *analysis.Pass) (interface{}, error) {
+        for _, file := range pass.Files {
+            ast.Inspect(file, func(n ast.Node) bool {
+                // check whether the call expression matches time.Now().Sub()
+                be, ok := n.(*ast.BinaryExpr)
+                if !ok {
+                    return true
+                }
+                // be.Op 
+                // be.X.(*ast.BasicLit)
+                // be.Y.(*ast.BasicLit)
+                return true
+            })
+        }
+        return nil, nil
+    }
+|
+
+F->B: as 

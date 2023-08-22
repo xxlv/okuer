@@ -6,7 +6,25 @@
     <description>Recent content in Categories on Okuer</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Tue, 14 Feb 2023 10:57:56 +0800</lastBuildDate><atom:link href="https://blog.okuer.com/categories/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 01 Mar 2023 21:40:08 +0800</lastBuildDate><atom:link href="https://blog.okuer.com/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Python</title>
+      <link>https://blog.okuer.com/categories/python/</link>
+      <pubDate>Wed, 01 Mar 2023 21:40:08 +0800</pubDate>
+      
+      <guid>https://blog.okuer.com/categories/python/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Test</title>
+      <link>https://blog.okuer.com/categories/test/</link>
+      <pubDate>Wed, 01 Mar 2023 21:40:08 +0800</pubDate>
+      
+      <guid>https://blog.okuer.com/categories/test/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>技术</title>
       <link>https://blog.okuer.com/categories/%E6%8A%80%E6%9C%AF/</link>
