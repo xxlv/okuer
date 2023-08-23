@@ -1,88 +1,177 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="robots" content="noodp" />
-        <title>Go 1.20 Pgo优化 - Okuer</title><meta name="Description" content="ghost&#39;s personal website"><meta property="og:title" content="Go 1.20 Pgo优化" />
-<meta property="og:description" content="介绍 Profile Guided Optimization (PGO) 是一种编译器优化技术，通过基于应用程序的运行时间信息优化生成的机器代码。具体来说，PGO 通过使用编译器生成的剖面数据文件（即有关程序在运行时执行情况的信息），来指导机器代码的优化过程。这些信息可以帮助编译器更好地理解应用程序的性能瓶颈，并生成更高效的代码。
+  <head>
+    <title>
+  Go 1.20 Pgo优化 · Okuer
+</title>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="author" content="ghost">
+<meta name="description" content="介绍 Link to heading Profile Guided Optimization (PGO) 是一种编译器优化技术，通过基于应用程序的运行时间信息优化生成的机器代码。具体来说，PGO 通过使用编译器生成的剖面数据文件（即有关程序在运行时执行情况的信息），来指导机器代码的优化过程。这些信息可以帮助编译器更好地理解应用程序的性能瓶颈，并生成更高效的代码。
 PGO 通常分为三个步骤：
 使用编译器创建一个基准版本的可执行文件； 在训练阶段中运行此基准文件，并收集各种性能统计数据，如函数调用频率、循环迭代次数等； 使用这些统计数据重新编译程序，并应用优化策略，以生成经过改进的代码。 相比于传统的静态编译优化方式，PGO 的优势在于，它可以根据实际运行情况进行优化，因此可以更准确地优化重要的代码路径，而不是仅仅优化一些假定的热点代码。因此，PGO 可以提供更好的性能和更低的代码大小，尤其对于大型项目或者需要处理大量数据的应用程序，效果更加明显。
-In Go Go 1.20版本于2023年2月份正式发布，在这个版本里引入了PGO性能优化机制。
-步骤 引入 pprof // 项目中引入 _ &#34;net/http/pprof&#34; 采集 curl -o cpu.pprof &quot;http://localhost:8080/debug/pprof/profile?seconds=30&quot;
+In Go Link to heading Go 1.20版本于2023年2月份正式发布，在这个版本里引入了PGO性能优化机制。
+步骤 Link to heading 引入 pprof // 项目中引入 _ &#34;net/http/pprof&#34; 采集 curl -o cpu.pprof &quot;http://localhost:8080/debug/pprof/profile?seconds=30&quot;
 修改为 default.pgo 执行 mv cpu.pprof default.pgo
 go build -pgo=auto -o pro.withPgo
 auto 模式将自动的使用 default.pgo 来进行优化 默认-pgo 为 off
-压力测试 生成 统计结果 go test load -bench=. -count=20 &gt; a.txt bench基础测试参数解释 BenchmarkMyFunction-8 1000000	1021 ns/op	256 B/op	2 allocs/op
-其中 256 B/op 表示每次操作平均分配了 256 字节的内存，2 allocs/op 表示每次操作平均进行了 2 次内存分配。-8 表示测试使用了 8 个并发线程。 比较统计 benchstat a." />
+压力测试 Link to heading 生成 统计结果 Link to heading go test load -bench=.">
+<meta name="keywords" content="blog,developer,personal">
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Go 1.20 Pgo优化"/>
+<meta name="twitter:description" content="介绍 Link to heading Profile Guided Optimization (PGO) 是一种编译器优化技术，通过基于应用程序的运行时间信息优化生成的机器代码。具体来说，PGO 通过使用编译器生成的剖面数据文件（即有关程序在运行时执行情况的信息），来指导机器代码的优化过程。这些信息可以帮助编译器更好地理解应用程序的性能瓶颈，并生成更高效的代码。
+PGO 通常分为三个步骤：
+使用编译器创建一个基准版本的可执行文件； 在训练阶段中运行此基准文件，并收集各种性能统计数据，如函数调用频率、循环迭代次数等； 使用这些统计数据重新编译程序，并应用优化策略，以生成经过改进的代码。 相比于传统的静态编译优化方式，PGO 的优势在于，它可以根据实际运行情况进行优化，因此可以更准确地优化重要的代码路径，而不是仅仅优化一些假定的热点代码。因此，PGO 可以提供更好的性能和更低的代码大小，尤其对于大型项目或者需要处理大量数据的应用程序，效果更加明显。
+In Go Link to heading Go 1.20版本于2023年2月份正式发布，在这个版本里引入了PGO性能优化机制。
+步骤 Link to heading 引入 pprof // 项目中引入 _ &#34;net/http/pprof&#34; 采集 curl -o cpu.pprof &quot;http://localhost:8080/debug/pprof/profile?seconds=30&quot;
+修改为 default.pgo 执行 mv cpu.pprof default.pgo
+go build -pgo=auto -o pro.withPgo
+auto 模式将自动的使用 default.pgo 来进行优化 默认-pgo 为 off
+压力测试 Link to heading 生成 统计结果 Link to heading go test load -bench=."/>
+
+<meta property="og:title" content="Go 1.20 Pgo优化" />
+<meta property="og:description" content="介绍 Link to heading Profile Guided Optimization (PGO) 是一种编译器优化技术，通过基于应用程序的运行时间信息优化生成的机器代码。具体来说，PGO 通过使用编译器生成的剖面数据文件（即有关程序在运行时执行情况的信息），来指导机器代码的优化过程。这些信息可以帮助编译器更好地理解应用程序的性能瓶颈，并生成更高效的代码。
+PGO 通常分为三个步骤：
+使用编译器创建一个基准版本的可执行文件； 在训练阶段中运行此基准文件，并收集各种性能统计数据，如函数调用频率、循环迭代次数等； 使用这些统计数据重新编译程序，并应用优化策略，以生成经过改进的代码。 相比于传统的静态编译优化方式，PGO 的优势在于，它可以根据实际运行情况进行优化，因此可以更准确地优化重要的代码路径，而不是仅仅优化一些假定的热点代码。因此，PGO 可以提供更好的性能和更低的代码大小，尤其对于大型项目或者需要处理大量数据的应用程序，效果更加明显。
+In Go Link to heading Go 1.20版本于2023年2月份正式发布，在这个版本里引入了PGO性能优化机制。
+步骤 Link to heading 引入 pprof // 项目中引入 _ &#34;net/http/pprof&#34; 采集 curl -o cpu.pprof &quot;http://localhost:8080/debug/pprof/profile?seconds=30&quot;
+修改为 default.pgo 执行 mv cpu.pprof default.pgo
+go build -pgo=auto -o pro.withPgo
+auto 模式将自动的使用 default.pgo 来进行优化 默认-pgo 为 off
+压力测试 Link to heading 生成 统计结果 Link to heading go test load -bench=." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://blog.okuer.com/go/pgo/" /><meta property="article:section" content="go" />
 <meta property="article:published_time" content="2023-03-04T15:32:55+08:00" />
-<meta property="article:modified_time" content="2023-03-04T15:32:55+08:00" /><meta property="og:site_name" content="My cool site" />
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Go 1.20 Pgo优化"/>
-<meta name="twitter:description" content="介绍 Profile Guided Optimization (PGO) 是一种编译器优化技术，通过基于应用程序的运行时间信息优化生成的机器代码。具体来说，PGO 通过使用编译器生成的剖面数据文件（即有关程序在运行时执行情况的信息），来指导机器代码的优化过程。这些信息可以帮助编译器更好地理解应用程序的性能瓶颈，并生成更高效的代码。
-PGO 通常分为三个步骤：
-使用编译器创建一个基准版本的可执行文件； 在训练阶段中运行此基准文件，并收集各种性能统计数据，如函数调用频率、循环迭代次数等； 使用这些统计数据重新编译程序，并应用优化策略，以生成经过改进的代码。 相比于传统的静态编译优化方式，PGO 的优势在于，它可以根据实际运行情况进行优化，因此可以更准确地优化重要的代码路径，而不是仅仅优化一些假定的热点代码。因此，PGO 可以提供更好的性能和更低的代码大小，尤其对于大型项目或者需要处理大量数据的应用程序，效果更加明显。
-In Go Go 1.20版本于2023年2月份正式发布，在这个版本里引入了PGO性能优化机制。
-步骤 引入 pprof // 项目中引入 _ &#34;net/http/pprof&#34; 采集 curl -o cpu.pprof &quot;http://localhost:8080/debug/pprof/profile?seconds=30&quot;
-修改为 default.pgo 执行 mv cpu.pprof default.pgo
-go build -pgo=auto -o pro.withPgo
-auto 模式将自动的使用 default.pgo 来进行优化 默认-pgo 为 off
-压力测试 生成 统计结果 go test load -bench=. -count=20 &gt; a.txt bench基础测试参数解释 BenchmarkMyFunction-8 1000000	1021 ns/op	256 B/op	2 allocs/op
-其中 256 B/op 表示每次操作平均分配了 256 字节的内存，2 allocs/op 表示每次操作平均进行了 2 次内存分配。-8 表示测试使用了 8 个并发线程。 比较统计 benchstat a."/>
-<meta name="application-name" content="My cool site">
-<meta name="apple-mobile-web-app-title" content="My cool site"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
-        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://blog.okuer.com/go/pgo/" /><link rel="prev" href="https://blog.okuer.com/go/go-no-copy/" /><link rel="next" href="https://blog.okuer.com/go/linter/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css"></noscript><link rel="preload" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css"></noscript><script type="application/ld+json">
-    {
-        "@context": "http://schema.org",
-        "@type": "BlogPosting",
-        "headline": "Go 1.20 Pgo优化",
-        "inLanguage": "en",
-        "mainEntityOfPage": {
-            "@type": "WebPage",
-            "@id": "https:\/\/blog.okuer.com\/go\/pgo\/"
-        },"genre": "go","wordcount":  89 ,
-        "url": "https:\/\/blog.okuer.com\/go\/pgo\/","datePublished": "2023-03-04T15:32:55+08:00","dateModified": "2023-03-04T15:32:55+08:00","publisher": {
-            "@type": "Organization",
-            "name": ""},"author": {
-                "@type": "Person",
-                "name": "Author"
-            },"description": ""
-    }
-    </script></head>
-    <body data-header-desktop="fixed" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+<meta property="article:modified_time" content="2023-03-04T15:32:55+08:00" />
 
-        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
-    <div class="header-wrapper">
-        <div class="header-title">
-            <a href="/" title="Okuer">My cool site</a>
-        </div>
-        <div class="menu">
-            <div class="menu-inner"><a class="menu-item" href="/posts"> Blog </a><a class="menu-item" href="/go"> Go </a><a class="menu-item" href="/project"> Projects </a><a class="menu-item" href="/about/"> About </a><span class="menu-item delimiter"></span><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
-                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
-                </a></div>
-        </div>
-    </div>
-</header><header class="mobile" id="header-mobile">
-    <div class="header-container">
-        <div class="header-wrapper">
-            <div class="header-title">
-                <a href="/" title="Okuer">My cool site</a>
-            </div>
-            <div class="menu-toggle" id="menu-toggle-mobile">
-                <span></span><span></span><span></span>
-            </div>
-        </div>
-        <div class="menu" id="menu-mobile"><a class="menu-item" href="/posts" title="">Blog</a><a class="menu-item" href="/go" title="">Go</a><a class="menu-item" href="/project" title="">Projects</a><a class="menu-item" href="/about/" title="">About</a><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
-                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
-            </a></div>
-    </div>
-</header><main class="main">
-                <div class="container"><div class="page single special"><h1 class="single-title animate__animated animate__pulse animate__faster">Go 1.20 Pgo优化</h1><div class="content" id="content"><h1 id="介绍">介绍</h1>
+
+
+
+<link rel="canonical" href="https://blog.okuer.com/go/pgo/">
+
+
+<link rel="preload" href="/fonts/forkawesome-webfont.woff2?v=1.2.0" as="font" type="font/woff2" crossorigin>
+
+
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.0fa2dc75ed1b76894ac0e062b10a6c4730daa745096fa120114b290ed8a48788.css" integrity="sha256-D6Lcde0bdolKwOBisQpsRzDap0UJb6EgEUspDtikh4g=" crossorigin="anonymous" media="screen" />
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="/css/coder-dark.min.593028e7f7ac55c003b79c230d1cd411bb4ca53b31556c3abb7f027170e646e9.css" integrity="sha256-WTAo5/esVcADt5wjDRzUEbtMpTsxVWw6u38CcXDmRuk=" crossorigin="anonymous" media="screen" />
+  
+
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+<meta name="generator" content="Hugo 0.110.0">
+
+
+
+
+
+  </head>
+
+
+
+
+
+
+<body class="preload-transitions colorscheme-auto">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="/">
+      Okuer
+    </a>
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/go">Go</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/project">Projects</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/about/">About</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container page">
+  <article>
+    <header>
+      <h1 class="title">
+        <a class="title-link" href="https://blog.okuer.com/go/pgo/">
+          Go 1.20 Pgo优化
+        </a>
+      </h1>
+    </header>
+
+    <h1 id="介绍">
+  介绍
+  <a class="heading-link" href="#%e4%bb%8b%e7%bb%8d">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
 <blockquote>
 <p>Profile Guided Optimization (PGO) 是一种编译器优化技术，通过基于应用程序的运行时间信息优化生成的机器代码。具体来说，PGO 通过使用编译器生成的剖面数据文件（即有关程序在运行时执行情况的信息），来指导机器代码的优化过程。这些信息可以帮助编译器更好地理解应用程序的性能瓶颈，并生成更高效的代码。</p>
 </blockquote>
@@ -93,11 +182,23 @@ auto 模式将自动的使用 default.pgo 来进行优化 默认-pgo 为 off
 <li>使用这些统计数据重新编译程序，并应用优化策略，以生成经过改进的代码。</li>
 </ul>
 <p>相比于传统的静态编译优化方式，PGO 的优势在于，它可以根据实际运行情况进行优化，因此可以更准确地优化重要的代码路径，而不是仅仅优化一些假定的热点代码。因此，PGO 可以提供更好的性能和更低的代码大小，尤其对于大型项目或者需要处理大量数据的应用程序，效果更加明显。</p>
-<h1 id="in-go">In Go</h1>
+<h1 id="in-go">
+  In Go
+  <a class="heading-link" href="#in-go">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h1>
 <blockquote>
-<p>Go 1.20版本于2023年2月份正式发布，在这个版本里引入了<a href="https://go.dev/doc/pgo" target="_blank" rel="noopener noreffer ">PGO</a>性能优化机制。</p>
+<p>Go 1.20版本于2023年2月份正式发布，在这个版本里引入了<a href="https://go.dev/doc/pgo">PGO</a>性能优化机制。</p>
 </blockquote>
-<h2 id="步骤">步骤</h2>
+<h2 id="步骤">
+  步骤
+  <a class="heading-link" href="#%e6%ad%a5%e9%aa%a4">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h2>
 <ol>
 <li>引入 pprof</li>
 </ol>
@@ -118,35 +219,106 @@ auto 模式将自动的使用 default.pgo 来进行优化 默认-pgo 为 off
 <blockquote>
 <p>auto 模式将自动的使用 <code>default.pgo</code> 来进行优化 默认-pgo 为 <code>off</code></p>
 </blockquote>
-<h3 id="压力测试">压力测试</h3>
-<h4 id="生成-统计结果">生成 统计结果</h4>
+<h3 id="压力测试">
+  压力测试
+  <a class="heading-link" href="#%e5%8e%8b%e5%8a%9b%e6%b5%8b%e8%af%95">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<h4 id="生成-统计结果">
+  生成 统计结果
+  <a class="heading-link" href="#%e7%94%9f%e6%88%90-%e7%bb%9f%e8%ae%a1%e7%bb%93%e6%9e%9c">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h4>
 <ul>
 <li>go test load -bench=. -count=20  &gt; a.txt</li>
 </ul>
-<h5 id="bench基础测试参数解释">bench基础测试参数解释</h5>
+<h5 id="bench基础测试参数解释">
+  bench基础测试参数解释
+  <a class="heading-link" href="#bench%e5%9f%ba%e7%a1%80%e6%b5%8b%e8%af%95%e5%8f%82%e6%95%b0%e8%a7%a3%e9%87%8a">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h5>
 <blockquote>
 <p>BenchmarkMyFunction-8   	 1000000	      1021 ns/op	     256 B/op	       2 allocs/op</p>
 </blockquote>
 <pre><code>其中 256 B/op 表示每次操作平均分配了 256 字节的内存，2 allocs/op 表示每次操作平均进行了 2 次内存分配。-8 表示测试使用了 8 个并发线程。
 </code></pre>
-<h4 id="比较统计">比较统计</h4>
+<h4 id="比较统计">
+  比较统计
+  <a class="heading-link" href="#%e6%af%94%e8%be%83%e7%bb%9f%e8%ae%a1">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h4>
 <ul>
 <li>benchstat  a.txt  b.txt</li>
 </ul>
 <blockquote>
 <p>安装 <code>go install golang.org/x/perf/cmd/benchstat@latest</code></p>
 </blockquote>
-</div></div></div>
-            </main><footer class="footer">
-        <div class="footer-container"><div class="footer-line">Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.110.0">Hugo</a> | Theme - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.11"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
-                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2022 - 2023</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank"></a></span></div>
-        </div>
-    </footer></div>
 
-        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="Back to Top">
-                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
-            </a><a href="#" id="view-comments" class="fixed-button" title="View Comments">
-                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
-            </a>
-        </div><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sharer.js@0.5.1/sharer.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"Copy to clipboard","maxShownLines":50},"comment":{}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+  </article>
+</section>
+
+  
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+      2014 -
+    
+    2023
+     ghost 
+    ·
+    
+    Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
+
 </html>

@@ -6,7 +6,16 @@
     <description>Recent content in Goes on Okuer</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Wed, 08 Mar 2023 21:09:14 +0800</lastBuildDate><atom:link href="https://blog.okuer.com/go/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 23 Aug 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://blog.okuer.com/go/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Go语言实现hook管理</title>
+      <link>https://blog.okuer.com/go/hook/</link>
+      <pubDate>Wed, 23 Aug 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://blog.okuer.com/go/hook/</guid>
+      <description> 实现Hook管理 下面介绍一个实现一个简单的Hook管理的思路</description>
+    </item>
+    
     <item>
       <title>Go Linter</title>
       <link>https://blog.okuer.com/go/linter/</link>
@@ -55,13 +64,15 @@ auto 模式将自动的使用 default.pgo 来进行优化 默认-pgo 为 off
       <pubDate>Tue, 21 Feb 2023 11:52:51 +0800</pubDate>
       
       <guid>https://blog.okuer.com/go/go-with-wasm/</guid>
-      <description>Info 以下内容基于chaptGPT,文中的代码示例经过验证和修订 WASM Link to heading WebAssembly（缩写为 wasm）是一种低级的、面向栈的虚拟机，用于在现代 Web 浏览器中执行二进制代码。它被设计成一个可移植、高效和安全的执行环境，可以被用于许多不同的场景，包括：
+      <description>以下内容基于chaptGPT,文中的代码示例经过验证和修订
+WASM Link to heading WebAssembly（缩写为 wasm）是一种低级的、面向栈的虚拟机，用于在现代 Web 浏览器中执行二进制代码。它被设计成一个可移植、高效和安全的执行环境，可以被用于许多不同的场景，包括：
 在 Web 浏览器中提供比 JavaScript 更高效的编程语言。wasm 可以使得高性能的编程语言如 C/C++、Rust 和 Go 等运行在 Web 平台上，从而为 Web 应用提供更快的执行速度和更好的用户体验。
 在 Web 应用中使用第三方库。由于 wasm 的二进制格式可以被多种语言所编译生成，因此可以在 Web 应用中使用其他语言编写的库，而不需要对库的源代码进行修改。
 跨平台开发。wasm 可以在多个平台上运行，因此可以在不同的硬件和操作系统上共享代码，简化跨平台开发的难度和成本。
-Go In Go Link to heading Go 语言的 WebAssembly（wasm）支持允许开发人员编写 Go 语言代码，并将其编译为 wasm 模块，以便在 Web 平台上运行。Go 语言的 wasm 支持是 Go 1.11 版本中引入的，并在后续版本中得到了进一步的改进和优化。
+In Go Link to heading Go 语言的 WebAssembly（wasm）支持允许开发人员编写 Go 语言代码，并将其编译为 wasm 模块，以便在 Web 平台上运行。Go 语言的 wasm 支持是 Go 1.11 版本中引入的，并在后续版本中得到了进一步的改进和优化。
 使用 Go 语言的 wasm 支持，可以将现有的 Go 语言代码直接编译为 wasm 模块，然后在 Web 平台上运行。这为开发人员提供了许多好处，包括：
-更高的性能。由于 wasm 是一种比 JavaScript 更低级别的虚拟机，因此可以提供更高的性能和更低的内存消耗。</description>
+更高的性能。由于 wasm 是一种比 JavaScript 更低级别的虚拟机，因此可以提供更高的性能和更低的内存消耗。
+更好的安全性。由于 wasm 运行在 Web 浏览器的安全沙箱中，因此可以提供更好的安全性，避免 Web 应用被恶意代码攻击。</description>
     </item>
     
     <item>
@@ -80,7 +91,8 @@ net@v0.3.0 net@v0.5.0 oauth2@v0.0.0-20220411215720-9780585627b5 sync@v0.0.0-2022
 版本控制：Go语言使用模块来管理依赖关系和版本控制。每个模块都有一个唯一的模块路径和版本号。Go模块支持语义化版本控制，可以避免依赖冲突和版本升级的问题。
 依赖管理：使用go mod命令可以管理Go模块的依赖关系。可以使用go.mod文件指定依赖关系和版本信息，使用go.sum文件记录依赖的哈希值，确保依赖的代码不会被篡改或变化。
 构建和发布：使用go build命令可以构建可执行文件或库文件，使用go install命令可以将库文件安装到$GOPATH/pkg目录下，以便其他Go程序可以引用。可以使用go get命令从远程仓库获取依赖的代码，使用go mod tidy命令清理不需要的依赖。
-Info 注意,go语言的版本必须大于 1.11 模块化可以让程序依赖外部的模块，依赖本身会产生一个graph。 许多语言都有类似的辅助工具来进行依赖管理，如 Java中的Maven和Gradle, PHP的composer等
+注意,go语言的版本必须大于 1.11
+模块化可以让程序依赖外部的模块，依赖本身会产生一个graph。 许多语言都有类似的辅助工具来进行依赖管理，如 Java中的Maven和Gradle, PHP的composer等
 go 语言是如何进行依赖管理的呢？
 go语言的依赖 Link to heading Go语言使用模块（module）来管理依赖，模块是一组相关的Go包的集合，通常位于一个版本控制仓库中。Go模块支持语义化版本控制，并且可以解决依赖管理和版 本管理的问题。以下是Go语言依赖管理的一些关键点：</description>
     </item>

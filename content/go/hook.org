@@ -1,6 +1,25 @@
 #+title: Go语言实现hook管理
 #+date: <2023-08-23 Wed>
+
+#+begin_export html
+<style>
+    @keyframes blink {
+        0% { opacity: 1; }
+        50% { opacity: 0; }
+        100% { opacity: 1; }
+    }
+    .custom-cursor {
+        cursor: pointer;
+        animation: blink 2s 1;
+    }
+</style>
+#+end_export
+
 * 实现Hook管理
+
+  #+begin_export html
+  <p class="custom-cursor" style="color:gray">下面介绍一个实现一个简单的Hook管理的思路</p
+  #+end_export
 ** 背景
    在go语言的生态下，通过实现hook来让流程扩展性更好。
    比如在一个 ~Action~ 的前后通过hook 来进行增强.这些hook 可以从外部来加载。
@@ -24,7 +43,10 @@
      因此借助于init 方法，可以将自身注册到系统中
 
 ** 实现细节
-   
+
+
+
+
 #+begin_example 
 
 type OrderHook struct{
