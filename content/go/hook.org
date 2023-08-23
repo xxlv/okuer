@@ -1,0 +1,36 @@
+#+title: Go语言实现hook管理
+#+date: <2023-08-23 Wed>
+* 实现Hook管理
+** 背景
+   在go语言的生态下，通过实现hook来让流程扩展性更好。
+   比如在一个 ~Action~ 的前后通过hook 来进行增强.这些hook 可以从外部来加载。
+   甚至在多租户的系统下，不通的租户有自己的hook。
+   1. hook 可以自己注册到系统
+   2. hook 拥有名称
+   3. hook 可以 ~mount-able~
+   4. hook 的执行可观测
+   
+** 原理
+   + go build tags
+      利用 **build tag** 可以让不同租户加载打包不通的Source code
+
+             
+    #+begin_src shell
+      go build -tags tenantA main.go
+    #+end_src
+
+   + go init
+     **go init** 方法会在 package main 被依赖的时候 自动执行 并且可以导入整个package
+     因此借助于init 方法，可以将自身注册到系统中
+
+** 实现细节
+   
+#+begin_example 
+
+type OrderHook struct{
+  Name string
+  Order int64
+  Hook HookFunc
+}
+
+#+end_example
