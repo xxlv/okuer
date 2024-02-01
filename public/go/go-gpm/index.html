@@ -1,218 +1,261 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <title>
-  GPM调度模型解析 · Okuer
-</title>
-    <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="color-scheme" content="light dark">
+<html lang="en" dir="auto">
 
-
-
-
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>GPM调度模型解析 | Okuer</title>
+<meta name="keywords" content="">
+<meta name="description" content="什么是GPM? G-P-M 模型是 go 语言最重要的调度模型。
+简单来说,开发者编写的任务包装成G交给P,M在P的G队列上获取G进行计算。
+KSE内核调度 KSE (Kernel Scheduling Entity) 是FreeBSD内核中用于调度线程的实体。KSE内核调度是指FreeBSD内核根据KSE的状态、优先级和其他因素来决定在何时执行某个KSE上的线程。KSE内核调度采用多级反馈队列调度算法，并考虑了线程的优先级、I/O等待、CPU时间片使用情况等因素，以提高系统的性能和响应能力。
+线程与进程 操作系统的最小调度单元是线程，线程可以共享进程内的资源.
+操作系统的调度模型 一切都是资源，无论计算还是存储，操作系统来负责协调
+计算机结构 SMP 对称多处理器（Symmetric Multiprocessing，SMP）是一种计算机体系结构，其中多个处理器共享同一物理内存和系统总线，可以同时执行多个线程或进程。
+NUMA 非一致性存储（Non-Uniform Memory Access，NUMA）是一种多处理器计算机体系结构，在该体系结构中，每个处理器与本地内存模块相连，但可以通过互连网络访问其他处理器的内存模块。由于访问远程内存可能需要更长的时间，因此 NUMA 系统中的内存访问时间不是均匀的。
+OS线程模型 内核态 操作系统管理,绑定一个KSE，可以看作就是一个KSE，KSE用来分配CPU
+用户态 用户态的线程需要映射到内核态线程，属于用户空间上虚拟的线程，最终还是要通过KSE来分配CPU
+调度的实现 用户级 1:N 内核级 1:1 两级线程模型 N:N 为什么这么设计？ 计算一般分为 CPU密集型 和 IO密集型
+CPU密集的计算往往依赖CPU,因此直接KSE进度调度CPU速度更快。一些需要IO的，往往时间比较久，如果长时间占据CPU会导致空闲等待。 因此不同的线程模型应对不同的场景。
+比如一个在一个4C的计算机上进行CPU密集运算，通过4个KSE进行调度的性能更高，因为不需要切换上下文。 而一个处理数据库链接的，如果还按照这个模型，则最多处理4个链接,因此需要在执行IO的时候快速的让出CPU. 此种条件下，选择1:N或N:N的模型可以获得更高的并发。
+用户级的线程 1:N 注意无法充分利用多核CPU..
+Go的调度模型 GM模型 Go语言引入了 Goroutine 和KSE绑定 实现两级线程模型。用户以非常低的成本创建大量的 G, M 调度 G
+简单的从G-M 模型天然带有缺陷：
+下面的解释 参考 draveness
+调度器和锁是全局资源，所有的调度状态都是中心化存储的，锁竞争问题严重 线程需要经常互相传递可运行的 Goroutine，引入了大量的延迟 每个线程都需要处理内存缓存，导致大量的内存占用并影响数据局部性 系统调用频繁阻塞和解除阻塞正在运行的线程，增加了额外开销 P的引入 P是一个逻辑处理器，它持有一个绑定在其上的 G queue。 它拥有自己的局部队列，因此可以避免锁竞争。 同时它还可以通过工作窃取算法，以充分的利用CPU。一个P会在一个M 上进行计算。">
 <meta name="author" content="ghost">
-<meta name="description" content="什么是GPM? Link to heading G-P-M 模型是 go 语言最重要的调度模型。
-简单来说,开发者编写的任务包装成G交给P,M在P的G队列上获取G进行计算。
-KSE内核调度 Link to heading KSE (Kernel Scheduling Entity) 是FreeBSD内核中用于调度线程的实体。KSE内核调度是指FreeBSD内核根据KSE的状态、优先级和其他因素来决定在何时执行某个KSE上的线程。KSE内核调度采用多级反馈队列调度算法，并考虑了线程的优先级、I/O等待、CPU时间片使用情况等因素，以提高系统的性能和响应能力。
-线程与进程 Link to heading 操作系统的最小调度单元是线程，线程可以共享进程内的资源.
-操作系统的调度模型 Link to heading 一切都是资源，无论计算还是存储，操作系统来负责协调
-计算机结构 Link to heading SMP 对称多处理器（Symmetric Multiprocessing，SMP）是一种计算机体系结构，其中多个处理器共享同一物理内存和系统总线，可以同时执行多个线程或进程。
-NUMA 非一致性存储（Non-Uniform Memory Access，NUMA）是一种多处理器计算机体系结构，在该体系结构中，每个处理器与本地内存模块相连，但可以通过互连网络访问其他处理器的内存模块。由于访问远程内存可能需要更长的时间，因此 NUMA 系统中的内存访问时间不是均匀的。
-OS线程模型 Link to heading 内核态 操作系统管理,绑定一个KSE，可以看作就是一个KSE，KSE用来分配CPU
-用户态 用户态的线程需要映射到内核态线程，属于用户空间上虚拟的线程，最终还是要通过KSE来分配CPU
-调度的实现 Link to heading 用户级 1:N 内核级 1:1 两级线程模型 N:N 为什么这么设计？ Link to heading 计算一般分为 CPU密集型 和 IO密集型
-CPU密集的计算往往依赖CPU,因此直接KSE进度调度CPU速度更快。一些需要IO的，往往时间比较久，如果长时间占据CPU会导致空闲等待。 因此不同的线程模型应对不同的场景。">
-<meta name="keywords" content="blog,developer,personal">
+<link rel="canonical" href="https://blog.okuer.com/go/go-gpm/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.b609c58d5c11bb90b1a54e04005d74ad1ddf22165eb79f5533967e57df9c3b50.css" integrity="sha256-tgnFjVwRu5CxpU4EAF10rR3fIhZet59VM5Z&#43;V9&#43;cO1A=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://blog.okuer.com/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://blog.okuer.com/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://blog.okuer.com/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://blog.okuer.com/apple-touch-icon.png">
+<link rel="mask-icon" href="https://blog.okuer.com/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
 
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="GPM调度模型解析"/>
-<meta name="twitter:description" content="什么是GPM? Link to heading G-P-M 模型是 go 语言最重要的调度模型。
-简单来说,开发者编写的任务包装成G交给P,M在P的G队列上获取G进行计算。
-KSE内核调度 Link to heading KSE (Kernel Scheduling Entity) 是FreeBSD内核中用于调度线程的实体。KSE内核调度是指FreeBSD内核根据KSE的状态、优先级和其他因素来决定在何时执行某个KSE上的线程。KSE内核调度采用多级反馈队列调度算法，并考虑了线程的优先级、I/O等待、CPU时间片使用情况等因素，以提高系统的性能和响应能力。
-线程与进程 Link to heading 操作系统的最小调度单元是线程，线程可以共享进程内的资源.
-操作系统的调度模型 Link to heading 一切都是资源，无论计算还是存储，操作系统来负责协调
-计算机结构 Link to heading SMP 对称多处理器（Symmetric Multiprocessing，SMP）是一种计算机体系结构，其中多个处理器共享同一物理内存和系统总线，可以同时执行多个线程或进程。
-NUMA 非一致性存储（Non-Uniform Memory Access，NUMA）是一种多处理器计算机体系结构，在该体系结构中，每个处理器与本地内存模块相连，但可以通过互连网络访问其他处理器的内存模块。由于访问远程内存可能需要更长的时间，因此 NUMA 系统中的内存访问时间不是均匀的。
-OS线程模型 Link to heading 内核态 操作系统管理,绑定一个KSE，可以看作就是一个KSE，KSE用来分配CPU
-用户态 用户态的线程需要映射到内核态线程，属于用户空间上虚拟的线程，最终还是要通过KSE来分配CPU
-调度的实现 Link to heading 用户级 1:N 内核级 1:1 两级线程模型 N:N 为什么这么设计？ Link to heading 计算一般分为 CPU密集型 和 IO密集型
-CPU密集的计算往往依赖CPU,因此直接KSE进度调度CPU速度更快。一些需要IO的，往往时间比较久，如果长时间占据CPU会导致空闲等待。 因此不同的线程模型应对不同的场景。"/>
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
 
-<meta property="og:title" content="GPM调度模型解析" />
-<meta property="og:description" content="什么是GPM? Link to heading G-P-M 模型是 go 语言最重要的调度模型。
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript><meta property="og:title" content="GPM调度模型解析" />
+<meta property="og:description" content="什么是GPM? G-P-M 模型是 go 语言最重要的调度模型。
 简单来说,开发者编写的任务包装成G交给P,M在P的G队列上获取G进行计算。
-KSE内核调度 Link to heading KSE (Kernel Scheduling Entity) 是FreeBSD内核中用于调度线程的实体。KSE内核调度是指FreeBSD内核根据KSE的状态、优先级和其他因素来决定在何时执行某个KSE上的线程。KSE内核调度采用多级反馈队列调度算法，并考虑了线程的优先级、I/O等待、CPU时间片使用情况等因素，以提高系统的性能和响应能力。
-线程与进程 Link to heading 操作系统的最小调度单元是线程，线程可以共享进程内的资源.
-操作系统的调度模型 Link to heading 一切都是资源，无论计算还是存储，操作系统来负责协调
-计算机结构 Link to heading SMP 对称多处理器（Symmetric Multiprocessing，SMP）是一种计算机体系结构，其中多个处理器共享同一物理内存和系统总线，可以同时执行多个线程或进程。
+KSE内核调度 KSE (Kernel Scheduling Entity) 是FreeBSD内核中用于调度线程的实体。KSE内核调度是指FreeBSD内核根据KSE的状态、优先级和其他因素来决定在何时执行某个KSE上的线程。KSE内核调度采用多级反馈队列调度算法，并考虑了线程的优先级、I/O等待、CPU时间片使用情况等因素，以提高系统的性能和响应能力。
+线程与进程 操作系统的最小调度单元是线程，线程可以共享进程内的资源.
+操作系统的调度模型 一切都是资源，无论计算还是存储，操作系统来负责协调
+计算机结构 SMP 对称多处理器（Symmetric Multiprocessing，SMP）是一种计算机体系结构，其中多个处理器共享同一物理内存和系统总线，可以同时执行多个线程或进程。
 NUMA 非一致性存储（Non-Uniform Memory Access，NUMA）是一种多处理器计算机体系结构，在该体系结构中，每个处理器与本地内存模块相连，但可以通过互连网络访问其他处理器的内存模块。由于访问远程内存可能需要更长的时间，因此 NUMA 系统中的内存访问时间不是均匀的。
-OS线程模型 Link to heading 内核态 操作系统管理,绑定一个KSE，可以看作就是一个KSE，KSE用来分配CPU
+OS线程模型 内核态 操作系统管理,绑定一个KSE，可以看作就是一个KSE，KSE用来分配CPU
 用户态 用户态的线程需要映射到内核态线程，属于用户空间上虚拟的线程，最终还是要通过KSE来分配CPU
-调度的实现 Link to heading 用户级 1:N 内核级 1:1 两级线程模型 N:N 为什么这么设计？ Link to heading 计算一般分为 CPU密集型 和 IO密集型
-CPU密集的计算往往依赖CPU,因此直接KSE进度调度CPU速度更快。一些需要IO的，往往时间比较久，如果长时间占据CPU会导致空闲等待。 因此不同的线程模型应对不同的场景。" />
+调度的实现 用户级 1:N 内核级 1:1 两级线程模型 N:N 为什么这么设计？ 计算一般分为 CPU密集型 和 IO密集型
+CPU密集的计算往往依赖CPU,因此直接KSE进度调度CPU速度更快。一些需要IO的，往往时间比较久，如果长时间占据CPU会导致空闲等待。 因此不同的线程模型应对不同的场景。
+比如一个在一个4C的计算机上进行CPU密集运算，通过4个KSE进行调度的性能更高，因为不需要切换上下文。 而一个处理数据库链接的，如果还按照这个模型，则最多处理4个链接,因此需要在执行IO的时候快速的让出CPU. 此种条件下，选择1:N或N:N的模型可以获得更高的并发。
+用户级的线程 1:N 注意无法充分利用多核CPU..
+Go的调度模型 GM模型 Go语言引入了 Goroutine 和KSE绑定 实现两级线程模型。用户以非常低的成本创建大量的 G, M 调度 G
+简单的从G-M 模型天然带有缺陷：
+下面的解释 参考 draveness
+调度器和锁是全局资源，所有的调度状态都是中心化存储的，锁竞争问题严重 线程需要经常互相传递可运行的 Goroutine，引入了大量的延迟 每个线程都需要处理内存缓存，导致大量的内存占用并影响数据局部性 系统调用频繁阻塞和解除阻塞正在运行的线程，增加了额外开销 P的引入 P是一个逻辑处理器，它持有一个绑定在其上的 G queue。 它拥有自己的局部队列，因此可以避免锁竞争。 同时它还可以通过工作窃取算法，以充分的利用CPU。一个P会在一个M 上进行计算。" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://blog.okuer.com/go/go-gpm/" /><meta property="article:section" content="go" />
 <meta property="article:published_time" content="2023-02-14T15:16:24+08:00" />
 <meta property="article:modified_time" content="2023-02-14T15:16:24+08:00" />
 
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="GPM调度模型解析"/>
+<meta name="twitter:description" content="什么是GPM? G-P-M 模型是 go 语言最重要的调度模型。
+简单来说,开发者编写的任务包装成G交给P,M在P的G队列上获取G进行计算。
+KSE内核调度 KSE (Kernel Scheduling Entity) 是FreeBSD内核中用于调度线程的实体。KSE内核调度是指FreeBSD内核根据KSE的状态、优先级和其他因素来决定在何时执行某个KSE上的线程。KSE内核调度采用多级反馈队列调度算法，并考虑了线程的优先级、I/O等待、CPU时间片使用情况等因素，以提高系统的性能和响应能力。
+线程与进程 操作系统的最小调度单元是线程，线程可以共享进程内的资源.
+操作系统的调度模型 一切都是资源，无论计算还是存储，操作系统来负责协调
+计算机结构 SMP 对称多处理器（Symmetric Multiprocessing，SMP）是一种计算机体系结构，其中多个处理器共享同一物理内存和系统总线，可以同时执行多个线程或进程。
+NUMA 非一致性存储（Non-Uniform Memory Access，NUMA）是一种多处理器计算机体系结构，在该体系结构中，每个处理器与本地内存模块相连，但可以通过互连网络访问其他处理器的内存模块。由于访问远程内存可能需要更长的时间，因此 NUMA 系统中的内存访问时间不是均匀的。
+OS线程模型 内核态 操作系统管理,绑定一个KSE，可以看作就是一个KSE，KSE用来分配CPU
+用户态 用户态的线程需要映射到内核态线程，属于用户空间上虚拟的线程，最终还是要通过KSE来分配CPU
+调度的实现 用户级 1:N 内核级 1:1 两级线程模型 N:N 为什么这么设计？ 计算一般分为 CPU密集型 和 IO密集型
+CPU密集的计算往往依赖CPU,因此直接KSE进度调度CPU速度更快。一些需要IO的，往往时间比较久，如果长时间占据CPU会导致空闲等待。 因此不同的线程模型应对不同的场景。
+比如一个在一个4C的计算机上进行CPU密集运算，通过4个KSE进行调度的性能更高，因为不需要切换上下文。 而一个处理数据库链接的，如果还按照这个模型，则最多处理4个链接,因此需要在执行IO的时候快速的让出CPU. 此种条件下，选择1:N或N:N的模型可以获得更高的并发。
+用户级的线程 1:N 注意无法充分利用多核CPU..
+Go的调度模型 GM模型 Go语言引入了 Goroutine 和KSE绑定 实现两级线程模型。用户以非常低的成本创建大量的 G, M 调度 G
+简单的从G-M 模型天然带有缺陷：
+下面的解释 参考 draveness
+调度器和锁是全局资源，所有的调度状态都是中心化存储的，锁竞争问题严重 线程需要经常互相传递可运行的 Goroutine，引入了大量的延迟 每个线程都需要处理内存缓存，导致大量的内存占用并影响数据局部性 系统调用频繁阻塞和解除阻塞正在运行的线程，增加了额外开销 P的引入 P是一个逻辑处理器，它持有一个绑定在其上的 G queue。 它拥有自己的局部队列，因此可以避免锁竞争。 同时它还可以通过工作窃取算法，以充分的利用CPU。一个P会在一个M 上进行计算。"/>
 
 
-
-<link rel="canonical" href="https://blog.okuer.com/go/go-gpm/">
-
-
-<link rel="preload" href="/fonts/forkawesome-webfont.woff2?v=1.2.0" as="font" type="font/woff2" crossorigin>
-
-
-  
-  
-  <link rel="stylesheet" href="/css/coder.min.0fa2dc75ed1b76894ac0e062b10a6c4730daa745096fa120114b290ed8a48788.css" integrity="sha256-D6Lcde0bdolKwOBisQpsRzDap0UJb6EgEUspDtikh4g=" crossorigin="anonymous" media="screen" />
-
-
-
-
-
-
-  
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Goes",
+      "item": "https://blog.okuer.com/go/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "GPM调度模型解析",
+      "item": "https://blog.okuer.com/go/go-gpm/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "GPM调度模型解析",
+  "name": "GPM调度模型解析",
+  "description": "什么是GPM? G-P-M 模型是 go 语言最重要的调度模型。\n简单来说,开发者编写的任务包装成G交给P,M在P的G队列上获取G进行计算。\nKSE内核调度 KSE (Kernel Scheduling Entity) 是FreeBSD内核中用于调度线程的实体。KSE内核调度是指FreeBSD内核根据KSE的状态、优先级和其他因素来决定在何时执行某个KSE上的线程。KSE内核调度采用多级反馈队列调度算法，并考虑了线程的优先级、I/O等待、CPU时间片使用情况等因素，以提高系统的性能和响应能力。\n线程与进程 操作系统的最小调度单元是线程，线程可以共享进程内的资源.\n操作系统的调度模型 一切都是资源，无论计算还是存储，操作系统来负责协调\n计算机结构 SMP 对称多处理器（Symmetric Multiprocessing，SMP）是一种计算机体系结构，其中多个处理器共享同一物理内存和系统总线，可以同时执行多个线程或进程。\nNUMA 非一致性存储（Non-Uniform Memory Access，NUMA）是一种多处理器计算机体系结构，在该体系结构中，每个处理器与本地内存模块相连，但可以通过互连网络访问其他处理器的内存模块。由于访问远程内存可能需要更长的时间，因此 NUMA 系统中的内存访问时间不是均匀的。\nOS线程模型 内核态 操作系统管理,绑定一个KSE，可以看作就是一个KSE，KSE用来分配CPU\n用户态 用户态的线程需要映射到内核态线程，属于用户空间上虚拟的线程，最终还是要通过KSE来分配CPU\n调度的实现 用户级 1:N 内核级 1:1 两级线程模型 N:N 为什么这么设计？ 计算一般分为 CPU密集型 和 IO密集型\nCPU密集的计算往往依赖CPU,因此直接KSE进度调度CPU速度更快。一些需要IO的，往往时间比较久，如果长时间占据CPU会导致空闲等待。 因此不同的线程模型应对不同的场景。\n比如一个在一个4C的计算机上进行CPU密集运算，通过4个KSE进行调度的性能更高，因为不需要切换上下文。 而一个处理数据库链接的，如果还按照这个模型，则最多处理4个链接,因此需要在执行IO的时候快速的让出CPU. 此种条件下，选择1:N或N:N的模型可以获得更高的并发。\n用户级的线程 1:N 注意无法充分利用多核CPU..\nGo的调度模型 GM模型 Go语言引入了 Goroutine 和KSE绑定 实现两级线程模型。用户以非常低的成本创建大量的 G, M 调度 G\n简单的从G-M 模型天然带有缺陷：\n下面的解释 参考 draveness\n调度器和锁是全局资源，所有的调度状态都是中心化存储的，锁竞争问题严重 线程需要经常互相传递可运行的 Goroutine，引入了大量的延迟 每个线程都需要处理内存缓存，导致大量的内存占用并影响数据局部性 系统调用频繁阻塞和解除阻塞正在运行的线程，增加了额外开销 P的引入 P是一个逻辑处理器，它持有一个绑定在其上的 G queue。 它拥有自己的局部队列，因此可以避免锁竞争。 同时它还可以通过工作窃取算法，以充分的利用CPU。一个P会在一个M 上进行计算。",
+  "keywords": [
     
+  ],
+  "articleBody": "什么是GPM? G-P-M 模型是 go 语言最重要的调度模型。\n简单来说,开发者编写的任务包装成G交给P,M在P的G队列上获取G进行计算。\nKSE内核调度 KSE (Kernel Scheduling Entity) 是FreeBSD内核中用于调度线程的实体。KSE内核调度是指FreeBSD内核根据KSE的状态、优先级和其他因素来决定在何时执行某个KSE上的线程。KSE内核调度采用多级反馈队列调度算法，并考虑了线程的优先级、I/O等待、CPU时间片使用情况等因素，以提高系统的性能和响应能力。\n线程与进程 操作系统的最小调度单元是线程，线程可以共享进程内的资源.\n操作系统的调度模型 一切都是资源，无论计算还是存储，操作系统来负责协调\n计算机结构 SMP 对称多处理器（Symmetric Multiprocessing，SMP）是一种计算机体系结构，其中多个处理器共享同一物理内存和系统总线，可以同时执行多个线程或进程。\nNUMA 非一致性存储（Non-Uniform Memory Access，NUMA）是一种多处理器计算机体系结构，在该体系结构中，每个处理器与本地内存模块相连，但可以通过互连网络访问其他处理器的内存模块。由于访问远程内存可能需要更长的时间，因此 NUMA 系统中的内存访问时间不是均匀的。\nOS线程模型 内核态 操作系统管理,绑定一个KSE，可以看作就是一个KSE，KSE用来分配CPU\n用户态 用户态的线程需要映射到内核态线程，属于用户空间上虚拟的线程，最终还是要通过KSE来分配CPU\n调度的实现 用户级 1:N 内核级 1:1 两级线程模型 N:N 为什么这么设计？ 计算一般分为 CPU密集型 和 IO密集型\nCPU密集的计算往往依赖CPU,因此直接KSE进度调度CPU速度更快。一些需要IO的，往往时间比较久，如果长时间占据CPU会导致空闲等待。 因此不同的线程模型应对不同的场景。\n比如一个在一个4C的计算机上进行CPU密集运算，通过4个KSE进行调度的性能更高，因为不需要切换上下文。 而一个处理数据库链接的，如果还按照这个模型，则最多处理4个链接,因此需要在执行IO的时候快速的让出CPU. 此种条件下，选择1:N或N:N的模型可以获得更高的并发。\n用户级的线程 1:N 注意无法充分利用多核CPU..\nGo的调度模型 GM模型 Go语言引入了 Goroutine 和KSE绑定 实现两级线程模型。用户以非常低的成本创建大量的 G, M 调度 G\n简单的从G-M 模型天然带有缺陷：\n下面的解释 参考 draveness\n调度器和锁是全局资源，所有的调度状态都是中心化存储的，锁竞争问题严重 线程需要经常互相传递可运行的 Goroutine，引入了大量的延迟 每个线程都需要处理内存缓存，导致大量的内存占用并影响数据局部性 系统调用频繁阻塞和解除阻塞正在运行的线程，增加了额外开销 P的引入 P是一个逻辑处理器，它持有一个绑定在其上的 G queue。 它拥有自己的局部队列，因此可以避免锁竞争。 同时它还可以通过工作窃取算法，以充分的利用CPU。一个P会在一个M 上进行计算。\nP是一个中间层, 拥有M 调度所需要的上下文,一个P必须通过M调度，M不直接调度G。这种设计使得可以创建的G成本非常廉价。目前go语言创建一个G仅仅需要2k。 而如Java 创建的传统的线程成本可能在2M。\nJava19 提供了虚拟线程,以更廉价的方式创建线程\n参考 https://docs.oracle.com/en/java/javase/19/core/virtual-threads.html#GUID-DC4306FC-D6C1-4BCC-AECE-48C32C1A8DAA https://mp.weixin.qq.com/s?__biz=MzAxMTA4Njc0OQ==\u0026mid=2651453238\u0026idx=1\u0026sn=e5751f48ff880a5545819f800c799370\u0026chksm=80bb29c4b7cca0d2d5d9cab4f4dd7e28ba8f85c5977ef20cce5aeade00e5ec1fe228f8b950e9\u0026scene=27 https://draveness.me/golang/docs/part3-runtime/ch06-concurrency/golang-goroutine/ ",
+  "wordCount" : "89",
+  "inLanguage": "en",
+  "datePublished": "2023-02-14T15:16:24+08:00",
+  "dateModified": "2023-02-14T15:16:24+08:00",
+  "author":{
+    "@type": "Person",
+    "name": "ghost"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://blog.okuer.com/go/go-gpm/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Okuer",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://blog.okuer.com/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://blog.okuer.com" accesskey="h" title="Okuer (Alt + H)">Okuer</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://blog.okuer.com/posts" title="Blog">
+                    <span>Blog</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://blog.okuer.com/go" title="Go">
+                    <span>Go</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://blog.okuer.com/project" title="Projects">
+                    <span>Projects</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://blog.okuer.com/about/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
     
-    <link rel="stylesheet" href="/css/coder-dark.min.593028e7f7ac55c003b79c230d1cd411bb4ca53b31556c3abb7f027170e646e9.css" integrity="sha256-WTAo5/esVcADt5wjDRzUEbtMpTsxVWw6u38CcXDmRuk=" crossorigin="anonymous" media="screen" />
-  
+    <h1 class="post-title entry-hint-parent">
+      GPM调度模型解析
+    </h1>
+    <div class="post-meta"><span title='2023-02-14 15:16:24 +0800 CST'>February 14, 2023</span>&nbsp;·&nbsp;ghost
 
-
-
- 
-
-
-
-
-<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
-<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
-
-<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
-<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
-
-<link rel="manifest" href="/site.webmanifest">
-<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
-
-
-
-
-<meta name="generator" content="Hugo 0.110.0">
-
-
-
-
-
-  </head>
-
-
-
-
-
-
-<body class="preload-transitions colorscheme-auto">
-  
-<div class="float-container">
-    <a id="dark-mode-toggle" class="colorscheme-toggle">
-        <i class="fa fa-adjust fa-fw" aria-hidden="true"></i>
-    </a>
 </div>
-
-
-  <main class="wrapper">
-    <nav class="navigation">
-  <section class="container">
-    <a class="navigation-title" href="/">
-      Okuer
-    </a>
-    
-      <input type="checkbox" id="menu-toggle" />
-      <label class="menu-button float-right" for="menu-toggle">
-        <i class="fa fa-bars fa-fw" aria-hidden="true"></i>
-      </label>
-      <ul class="navigation-list">
-        
-          
-            <li class="navigation-item">
-              <a class="navigation-link" href="/posts">Blog</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link" href="/go">Go</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link" href="/project">Projects</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link" href="/about/">About</a>
-            </li>
-          
-        
-        
-      </ul>
-    
-  </section>
-</nav>
-
-
-    <div class="content">
-      
-  <section class="container page">
-  <article>
-    <header>
-      <h1 class="title">
-        <a class="title-link" href="https://blog.okuer.com/go/go-gpm/">
-          GPM调度模型解析
-        </a>
-      </h1>
-    </header>
-
-    <h2 id="什么是gpm">
-  什么是GPM?
-  <a class="heading-link" href="#%e4%bb%80%e4%b9%88%e6%98%afgpm">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h2>
+  </header> 
+  <div class="post-content"><h2 id="什么是gpm">什么是GPM?<a hidden class="anchor" aria-hidden="true" href="#什么是gpm">#</a></h2>
 <p>G-P-M 模型是 go 语言最重要的调度模型。</p>
 <p>简单来说,开发者编写的任务包装成G交给P,M在P的G队列上获取G进行计算。</p>
-<h3 id="kse内核调度">
-  KSE内核调度
-  <a class="heading-link" href="#kse%e5%86%85%e6%a0%b8%e8%b0%83%e5%ba%a6">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h3>
+<h3 id="kse内核调度">KSE内核调度<a hidden class="anchor" aria-hidden="true" href="#kse内核调度">#</a></h3>
 <blockquote>
 <p>KSE (Kernel Scheduling Entity) 是FreeBSD内核中用于调度线程的实体。KSE内核调度是指FreeBSD内核根据KSE的状态、优先级和其他因素来决定在何时执行某个KSE上的线程。KSE内核调度采用多级反馈队列调度算法，并考虑了线程的优先级、I/O等待、CPU时间片使用情况等因素，以提高系统的性能和响应能力。</p>
 </blockquote>
-<h3 id="线程与进程">
-  线程与进程
-  <a class="heading-link" href="#%e7%ba%bf%e7%a8%8b%e4%b8%8e%e8%bf%9b%e7%a8%8b">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h3>
+<h3 id="线程与进程">线程与进程<a hidden class="anchor" aria-hidden="true" href="#线程与进程">#</a></h3>
 <p>操作系统的最小调度单元是线程，线程可以共享进程内的资源.</p>
-<h4 id="操作系统的调度模型">
-  操作系统的调度模型
-  <a class="heading-link" href="#%e6%93%8d%e4%bd%9c%e7%b3%bb%e7%bb%9f%e7%9a%84%e8%b0%83%e5%ba%a6%e6%a8%a1%e5%9e%8b">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h4>
+<h4 id="操作系统的调度模型">操作系统的调度模型<a hidden class="anchor" aria-hidden="true" href="#操作系统的调度模型">#</a></h4>
 <p>一切都是资源，无论计算还是存储，操作系统来负责协调</p>
-<h5 id="计算机结构">
-  计算机结构
-  <a class="heading-link" href="#%e8%ae%a1%e7%ae%97%e6%9c%ba%e7%bb%93%e6%9e%84">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h5>
+<h5 id="计算机结构">计算机结构<a hidden class="anchor" aria-hidden="true" href="#计算机结构">#</a></h5>
 <ul>
 <li>SMP</li>
 </ul>
@@ -225,13 +268,7 @@ CPU密集的计算往往依赖CPU,因此直接KSE进度调度CPU速度更快。�
 <blockquote>
 <p>非一致性存储（Non-Uniform Memory Access，NUMA）是一种多处理器计算机体系结构，在该体系结构中，每个处理器与本地内存模块相连，但可以通过互连网络访问其他处理器的内存模块。由于访问远程内存可能需要更长的时间，因此 NUMA 系统中的内存访问时间不是均匀的。</p>
 </blockquote>
-<h4 id="os线程模型">
-  OS线程模型
-  <a class="heading-link" href="#os%e7%ba%bf%e7%a8%8b%e6%a8%a1%e5%9e%8b">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h4>
+<h4 id="os线程模型">OS线程模型<a hidden class="anchor" aria-hidden="true" href="#os线程模型">#</a></h4>
 <ul>
 <li>内核态</li>
 </ul>
@@ -244,52 +281,31 @@ CPU密集的计算往往依赖CPU,因此直接KSE进度调度CPU速度更快。�
 <blockquote>
 <p>用户态的线程需要映射到内核态线程，属于用户空间上虚拟的线程，最终还是要通过KSE来分配CPU</p>
 </blockquote>
-<h4 id="调度的实现">
-  调度的实现
-  <a class="heading-link" href="#%e8%b0%83%e5%ba%a6%e7%9a%84%e5%ae%9e%e7%8e%b0">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h4>
+<h4 id="调度的实现">调度的实现<a hidden class="anchor" aria-hidden="true" href="#调度的实现">#</a></h4>
 <ul>
 <li>用户级 1:N</li>
 </ul>
-<p><img src="/atts/2.png" alt="label"></p>
+<p><img loading="lazy" src="/atts/2.png" alt="label"  />
+</p>
 <ul>
 <li>内核级 1:1</li>
 </ul>
-<p><img src="/atts/3.png" alt="label"></p>
+<p><img loading="lazy" src="/atts/3.png" alt="label"  />
+</p>
 <ul>
 <li>两级线程模型 N:N</li>
 </ul>
-<p><img src="/atts/4.png" alt="label"></p>
-<h5 id="为什么这么设计">
-  为什么这么设计？
-  <a class="heading-link" href="#%e4%b8%ba%e4%bb%80%e4%b9%88%e8%bf%99%e4%b9%88%e8%ae%be%e8%ae%a1">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h5>
+<p><img loading="lazy" src="/atts/4.png" alt="label"  />
+</p>
+<h5 id="为什么这么设计">为什么这么设计？<a hidden class="anchor" aria-hidden="true" href="#为什么这么设计">#</a></h5>
 <p>计算一般分为 <strong>CPU密集型</strong> 和 <strong>IO密集型</strong></p>
 <p>CPU密集的计算往往依赖CPU,因此直接KSE进度调度CPU速度更快。一些需要IO的，往往时间比较久，如果长时间占据CPU会导致空闲等待。
 因此不同的线程模型应对不同的场景。</p>
 <p>比如一个在一个4C的计算机上进行CPU密集运算，通过4个KSE进行调度的性能更高，因为不需要切换上下文。
 而一个处理数据库链接的，如果还按照这个模型，则最多处理4个链接,因此需要在执行IO的时候快速的让出CPU. 此种条件下，选择1:N或N:N的模型可以获得更高的并发。</p>
 <p>用户级的线程 1:N 注意无法充分利用多核CPU..</p>
-<h2 id="go的调度模型">
-  Go的调度模型
-  <a class="heading-link" href="#go%e7%9a%84%e8%b0%83%e5%ba%a6%e6%a8%a1%e5%9e%8b">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h2>
-<h3 id="gm模型">
-  GM模型
-  <a class="heading-link" href="#gm%e6%a8%a1%e5%9e%8b">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h3>
+<h2 id="go的调度模型">Go的调度模型<a hidden class="anchor" aria-hidden="true" href="#go的调度模型">#</a></h2>
+<h3 id="gm模型">GM模型<a hidden class="anchor" aria-hidden="true" href="#gm模型">#</a></h3>
 <p>Go语言引入了 <code>Goroutine</code> 和KSE绑定 实现两级线程模型。用户以非常低的成本创建大量的 <code>G</code>, <code>M</code> 调度 <code>G</code></p>
 <p>简单的从G-M 模型天然带有缺陷：</p>
 <blockquote>
@@ -301,89 +317,99 @@ CPU密集的计算往往依赖CPU,因此直接KSE进度调度CPU速度更快。�
 <li>每个线程都需要处理内存缓存，导致大量的内存占用并影响数据局部性</li>
 <li>系统调用频繁阻塞和解除阻塞正在运行的线程，增加了额外开销</li>
 </ul>
-<h3 id="p的引入">
-  P的引入
-  <a class="heading-link" href="#p%e7%9a%84%e5%bc%95%e5%85%a5">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h3>
+<h3 id="p的引入">P的引入<a hidden class="anchor" aria-hidden="true" href="#p的引入">#</a></h3>
 <p>P是一个逻辑处理器，它持有一个绑定在其上的 <code>G</code> queue。 它拥有自己的局部队列，因此可以避免锁竞争。
 同时它还可以通过工作窃取算法，以充分的利用CPU。一个<code>P</code>会在一个<code>M</code> 上进行计算。</p>
 <p>P是一个中间层, 拥有M 调度所需要的上下文,一个P必须通过M调度，M不直接调度G。这种设计使得可以创建的G成本非常廉价。目前go语言创建一个G仅仅需要2k。
 而如Java 创建的传统的线程成本可能在2M。</p>
 <p>Java19 提供了<a href="https://docs.oracle.com/en/java/javase/19/core/virtual-threads.html#GUID-7F5DA570-4B24-4CF6-899C-0424464B6032">虚拟线程</a>,以更廉价的方式创建线程</p>
-<p><img src="/atts/1.png" alt="label"></p>
-<h2 id="参考">
-  参考
-  <a class="heading-link" href="#%e5%8f%82%e8%80%83">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h2>
+<p><img loading="lazy" src="/atts/1.png" alt="label"  />
+</p>
+<h2 id="参考">参考<a hidden class="anchor" aria-hidden="true" href="#参考">#</a></h2>
 <ul>
 <li><a href="https://docs.oracle.com/en/java/javase/19/core/virtual-threads.html#GUID-DC4306FC-D6C1-4BCC-AECE-48C32C1A8DAA">https://docs.oracle.com/en/java/javase/19/core/virtual-threads.html#GUID-DC4306FC-D6C1-4BCC-AECE-48C32C1A8DAA</a></li>
 <li><a href="https://mp.weixin.qq.com/s?__biz=MzAxMTA4Njc0OQ==&amp;mid=2651453238&amp;idx=1&amp;sn=e5751f48ff880a5545819f800c799370&amp;chksm=80bb29c4b7cca0d2d5d9cab4f4dd7e28ba8f85c5977ef20cce5aeade00e5ec1fe228f8b950e9&amp;scene=27">https://mp.weixin.qq.com/s?__biz=MzAxMTA4Njc0OQ==&amp;mid=2651453238&amp;idx=1&amp;sn=e5751f48ff880a5545819f800c799370&amp;chksm=80bb29c4b7cca0d2d5d9cab4f4dd7e28ba8f85c5977ef20cce5aeade00e5ec1fe228f8b950e9&amp;scene=27</a></li>
 <li><a href="https://draveness.me/golang/docs/part3-runtime/ch06-concurrency/golang-goroutine/">https://draveness.me/golang/docs/part3-runtime/ch06-concurrency/golang-goroutine/</a></li>
 </ul>
 
-  </article>
-</section>
 
-  
+  </div>
 
-    </div>
-
-    <footer class="footer">
-  <section class="container">
-    ©
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+  </footer>
+</article>
+    </main>
     
-      2014 -
-    
-    2023
-     ghost 
-    ·
-    
-    Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.
-    
-  </section>
+<footer class="footer">
+    <span>&copy; 2024 <a href="https://blog.okuer.com">Okuer</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
 </footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
 
-  </main>
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
 
-  
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
 
-  
-  
-  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
-  
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
 
-  
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
 
-  
-
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
+</script>
 </body>
 
 </html>

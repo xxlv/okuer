@@ -4,3 +4,6 @@
 [submodule "themes/smigle"]
 	path = themes/smigle
 	url = https://gitlab.com/ian-s-mcb/smigle-hugo-theme.git
+[submodule "themes/PaperMod"]
+	path = themes/PaperMod
+	url = https://github.com/adityatelange/hugo-PaperMod.git

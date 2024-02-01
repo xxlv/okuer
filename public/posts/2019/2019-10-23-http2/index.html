@@ -1,189 +1,241 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <title>
-  http2.0 · Okuer
-</title>
-    <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="color-scheme" content="light dark">
+<html lang="en" dir="auto">
 
-
-
-
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>http2.0 | Okuer</title>
+<meta name="keywords" content="">
+<meta name="description" content="Http/2 HTTP2 协议起源于SPDY，目的是解决http1.x 如下的问题：
+plantext 文本协议的size开销 不支持复用tcp通道 请求通道上限 队首阻塞 http1.1 Keep alive 来保证复用一个tcp连接，但严格要求响应的顺序，响应是一个队列，如果遇到队首阻塞，则整个tcp通道就无法处理别的请求了。 http/2如果解决这些问题的？
+通道复用 二进制帧层 服务端push 设置请求优先级 压缩（HPACK） 帧布局 &#43;-----------------------------------------------&#43; | Length (24) | &#43;---------------&#43;---------------&#43;---------------&#43; | Type (8) | Flags (8) | &#43;-&#43;-------------&#43;---------------&#43;-------------------------------&#43; |R| Stream Identifier (31) | &#43;=&#43;=============================================================&#43; | Frame Payload (0...) ... &#43;---------------------------------------------------------------&#43; 帧头为固定的9个字节（(24&#43;8&#43;8&#43;1&#43;31)/8=9）呈现，变化的为帧的负载(payload)，负载内容是由帧类型（Type）定义。
+帧长度Length：无符号的自然数，24个比特表示，仅表示帧负载所占用字节数，不包括帧头所占用的9个字节。默认大小区间为为0~16,384(2^14)，一旦超过默认最大值2^14(16384)，发送方将不再允许发送，除非接收到接收方定义的SETTINGS_MAX_FRAME_SIZE（一般此值区间为2^14 ~ 2^24）值的通知。 帧类型Type：8个比特表示，定义了帧负载的具体格式和帧的语义，HTTP/2规范定义了10个帧类型，这里不包括实验类型帧和扩展类型帧 帧的标志位Flags：8个比特表示，服务于具体帧类型，默认值为0x0。有一个小技巧需要注意，一般来讲，8个比特可以容纳8个不同的标志，比如，PADDED值为0x8，二进制表示为00001000；END_HEADERS值为0x4，二进制表示为00000100；END_STREAM值为0X1，二进制为00000001。可以同时在一个字节中传达三种标志位，二进制表示为00001101，即0x13。因此，后面的帧结构中，标志位一般会使用8个比特表示，若某位不确定，使用问号?替代，表示此处可能会被设置标志位 帧保留比特为R：在HTTP/2语境下为保留的比特位，固定值为0X0 流标识符Stream Identifier：无符号的31比特表示无符号自然数。0x0值表示为帧仅作用于连接，不隶属于单独的流。 （参考：http://www.blogjava.net/yongboy/archive/2015/03/20/423655.html）
+帧类型： HEADERS：帧仅包含 HTTP 标头信息。
+DATA：帧包含消息的所有或部分有效负载。 (flag:END_STREAM|PADDED)
+PRIORITY：指定分配给流的重要性。
+RST_STREAM：错误通知：一个推送承诺遭到拒绝。终止流。
+SETTINGS：指定连接配置。
+PUSH_PROMISE：通知一个将资源推送到客户端的意图。
+PING：检测信号和往返时间。
+GOAWAY：停止为当前连接生成流的停止通知。
+WINDOW_UPDATE：用于管理流的流控制。
+CONTINUATION：用于延续某个标头碎片序列。">
 <meta name="author" content="ghost">
-<meta name="description" content="Http/2 Link to heading HTTP2 协议起源于SPDY，目的是解决http1.x 如下的问题：
-plantext 文本协议的size开销 不支持复用tcp通道 请求通道上限 队首阻塞 http1.1 Keep alive 来保证复用一个tcp连接，但严格要求响应的顺序，响应是一个队列，如果遇到队首阻塞，则整个tcp通道就无法处理别的请求了。 http/2如果解决这些问题的？
-通道复用 二进制帧层 服务端push 设置请求优先级 压缩（HPACK） 帧布局 Link to heading &#43;-----------------------------------------------&#43; | Length (24) | &#43;---------------&#43;---------------&#43;---------------&#43; | Type (8) | Flags (8) | &#43;-&#43;-------------&#43;---------------&#43;-------------------------------&#43; |R| Stream Identifier (31) | &#43;=&#43;=============================================================&#43; | Frame Payload (0...) ... &#43;---------------------------------------------------------------&#43; 帧头为固定的9个字节（(24&#43;8&#43;8&#43;1&#43;31)/8=9）呈现，变化的为帧的负载(payload)，负载内容是由帧类型（Type）定义。
-帧长度Length：无符号的自然数，24个比特表示，仅表示帧负载所占用字节数，不包括帧头所占用的9个字节。默认大小区间为为0~16,384(2^14)，一旦超过默认最大值2^14(16384)，发送方将不再允许发送，除非接收到接收方定义的SETTINGS_MAX_FRAME_SIZE（一般此值区间为2^14 ~ 2^24）值的通知。 帧类型Type：8个比特表示，定义了帧负载的具体格式和帧的语义，HTTP/2规范定义了10个帧类型，这里不包括实验类型帧和扩展类型帧 帧的标志位Flags：8个比特表示，服务于具体帧类型，默认值为0x0。有一个小技巧需要注意，一般来讲，8个比特可以容纳8个不同的标志，比如，PADDED值为0x8，二进制表示为00001000；END_HEADERS值为0x4，二进制表示为00000100；END_STREAM值为0X1，二进制为00000001。可以同时在一个字节中传达三种标志位，二进制表示为00001101，即0x13。因此，后面的帧结构中，标志位一般会使用8个比特表示，若某位不确定，使用问号?替代，表示此处可能会被设置标志位 帧保留比特为R：在HTTP/2语境下为保留的比特位，固定值为0X0 流标识符Stream Identifier：无符号的31比特表示无符号自然数。0x0值表示为帧仅作用于连接，不隶属于单独的流。 （参考：http://www.blogjava.net/yongboy/archive/2015/03/20/423655.html）
-帧类型： Link to heading HEADERS：帧仅包含 HTTP 标头信息。">
-<meta name="keywords" content="blog,developer,personal">
+<link rel="canonical" href="https://blog.okuer.com/posts/2019/2019-10-23-http2/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.b609c58d5c11bb90b1a54e04005d74ad1ddf22165eb79f5533967e57df9c3b50.css" integrity="sha256-tgnFjVwRu5CxpU4EAF10rR3fIhZet59VM5Z&#43;V9&#43;cO1A=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://blog.okuer.com/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://blog.okuer.com/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://blog.okuer.com/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://blog.okuer.com/apple-touch-icon.png">
+<link rel="mask-icon" href="https://blog.okuer.com/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
 
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="http2.0"/>
-<meta name="twitter:description" content="Http/2 Link to heading HTTP2 协议起源于SPDY，目的是解决http1.x 如下的问题：
-plantext 文本协议的size开销 不支持复用tcp通道 请求通道上限 队首阻塞 http1.1 Keep alive 来保证复用一个tcp连接，但严格要求响应的顺序，响应是一个队列，如果遇到队首阻塞，则整个tcp通道就无法处理别的请求了。 http/2如果解决这些问题的？
-通道复用 二进制帧层 服务端push 设置请求优先级 压缩（HPACK） 帧布局 Link to heading &#43;-----------------------------------------------&#43; | Length (24) | &#43;---------------&#43;---------------&#43;---------------&#43; | Type (8) | Flags (8) | &#43;-&#43;-------------&#43;---------------&#43;-------------------------------&#43; |R| Stream Identifier (31) | &#43;=&#43;=============================================================&#43; | Frame Payload (0...) ... &#43;---------------------------------------------------------------&#43; 帧头为固定的9个字节（(24&#43;8&#43;8&#43;1&#43;31)/8=9）呈现，变化的为帧的负载(payload)，负载内容是由帧类型（Type）定义。
-帧长度Length：无符号的自然数，24个比特表示，仅表示帧负载所占用字节数，不包括帧头所占用的9个字节。默认大小区间为为0~16,384(2^14)，一旦超过默认最大值2^14(16384)，发送方将不再允许发送，除非接收到接收方定义的SETTINGS_MAX_FRAME_SIZE（一般此值区间为2^14 ~ 2^24）值的通知。 帧类型Type：8个比特表示，定义了帧负载的具体格式和帧的语义，HTTP/2规范定义了10个帧类型，这里不包括实验类型帧和扩展类型帧 帧的标志位Flags：8个比特表示，服务于具体帧类型，默认值为0x0。有一个小技巧需要注意，一般来讲，8个比特可以容纳8个不同的标志，比如，PADDED值为0x8，二进制表示为00001000；END_HEADERS值为0x4，二进制表示为00000100；END_STREAM值为0X1，二进制为00000001。可以同时在一个字节中传达三种标志位，二进制表示为00001101，即0x13。因此，后面的帧结构中，标志位一般会使用8个比特表示，若某位不确定，使用问号?替代，表示此处可能会被设置标志位 帧保留比特为R：在HTTP/2语境下为保留的比特位，固定值为0X0 流标识符Stream Identifier：无符号的31比特表示无符号自然数。0x0值表示为帧仅作用于连接，不隶属于单独的流。 （参考：http://www.blogjava.net/yongboy/archive/2015/03/20/423655.html）
-帧类型： Link to heading HEADERS：帧仅包含 HTTP 标头信息。"/>
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
 
-<meta property="og:title" content="http2.0" />
-<meta property="og:description" content="Http/2 Link to heading HTTP2 协议起源于SPDY，目的是解决http1.x 如下的问题：
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript><meta property="og:title" content="http2.0" />
+<meta property="og:description" content="Http/2 HTTP2 协议起源于SPDY，目的是解决http1.x 如下的问题：
 plantext 文本协议的size开销 不支持复用tcp通道 请求通道上限 队首阻塞 http1.1 Keep alive 来保证复用一个tcp连接，但严格要求响应的顺序，响应是一个队列，如果遇到队首阻塞，则整个tcp通道就无法处理别的请求了。 http/2如果解决这些问题的？
-通道复用 二进制帧层 服务端push 设置请求优先级 压缩（HPACK） 帧布局 Link to heading &#43;-----------------------------------------------&#43; | Length (24) | &#43;---------------&#43;---------------&#43;---------------&#43; | Type (8) | Flags (8) | &#43;-&#43;-------------&#43;---------------&#43;-------------------------------&#43; |R| Stream Identifier (31) | &#43;=&#43;=============================================================&#43; | Frame Payload (0...) ... &#43;---------------------------------------------------------------&#43; 帧头为固定的9个字节（(24&#43;8&#43;8&#43;1&#43;31)/8=9）呈现，变化的为帧的负载(payload)，负载内容是由帧类型（Type）定义。
+通道复用 二进制帧层 服务端push 设置请求优先级 压缩（HPACK） 帧布局 &#43;-----------------------------------------------&#43; | Length (24) | &#43;---------------&#43;---------------&#43;---------------&#43; | Type (8) | Flags (8) | &#43;-&#43;-------------&#43;---------------&#43;-------------------------------&#43; |R| Stream Identifier (31) | &#43;=&#43;=============================================================&#43; | Frame Payload (0...) ... &#43;---------------------------------------------------------------&#43; 帧头为固定的9个字节（(24&#43;8&#43;8&#43;1&#43;31)/8=9）呈现，变化的为帧的负载(payload)，负载内容是由帧类型（Type）定义。
 帧长度Length：无符号的自然数，24个比特表示，仅表示帧负载所占用字节数，不包括帧头所占用的9个字节。默认大小区间为为0~16,384(2^14)，一旦超过默认最大值2^14(16384)，发送方将不再允许发送，除非接收到接收方定义的SETTINGS_MAX_FRAME_SIZE（一般此值区间为2^14 ~ 2^24）值的通知。 帧类型Type：8个比特表示，定义了帧负载的具体格式和帧的语义，HTTP/2规范定义了10个帧类型，这里不包括实验类型帧和扩展类型帧 帧的标志位Flags：8个比特表示，服务于具体帧类型，默认值为0x0。有一个小技巧需要注意，一般来讲，8个比特可以容纳8个不同的标志，比如，PADDED值为0x8，二进制表示为00001000；END_HEADERS值为0x4，二进制表示为00000100；END_STREAM值为0X1，二进制为00000001。可以同时在一个字节中传达三种标志位，二进制表示为00001101，即0x13。因此，后面的帧结构中，标志位一般会使用8个比特表示，若某位不确定，使用问号?替代，表示此处可能会被设置标志位 帧保留比特为R：在HTTP/2语境下为保留的比特位，固定值为0X0 流标识符Stream Identifier：无符号的31比特表示无符号自然数。0x0值表示为帧仅作用于连接，不隶属于单独的流。 （参考：http://www.blogjava.net/yongboy/archive/2015/03/20/423655.html）
-帧类型： Link to heading HEADERS：帧仅包含 HTTP 标头信息。" />
+帧类型： HEADERS：帧仅包含 HTTP 标头信息。
+DATA：帧包含消息的所有或部分有效负载。 (flag:END_STREAM|PADDED)
+PRIORITY：指定分配给流的重要性。
+RST_STREAM：错误通知：一个推送承诺遭到拒绝。终止流。
+SETTINGS：指定连接配置。
+PUSH_PROMISE：通知一个将资源推送到客户端的意图。
+PING：检测信号和往返时间。
+GOAWAY：停止为当前连接生成流的停止通知。
+WINDOW_UPDATE：用于管理流的流控制。
+CONTINUATION：用于延续某个标头碎片序列。" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://blog.okuer.com/posts/2019/2019-10-23-http2/" /><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2019-12-23T21:05:39+00:00" />
 <meta property="article:modified_time" content="2019-12-23T21:05:39+00:00" />
 
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="http2.0"/>
+<meta name="twitter:description" content="Http/2 HTTP2 协议起源于SPDY，目的是解决http1.x 如下的问题：
+plantext 文本协议的size开销 不支持复用tcp通道 请求通道上限 队首阻塞 http1.1 Keep alive 来保证复用一个tcp连接，但严格要求响应的顺序，响应是一个队列，如果遇到队首阻塞，则整个tcp通道就无法处理别的请求了。 http/2如果解决这些问题的？
+通道复用 二进制帧层 服务端push 设置请求优先级 压缩（HPACK） 帧布局 &#43;-----------------------------------------------&#43; | Length (24) | &#43;---------------&#43;---------------&#43;---------------&#43; | Type (8) | Flags (8) | &#43;-&#43;-------------&#43;---------------&#43;-------------------------------&#43; |R| Stream Identifier (31) | &#43;=&#43;=============================================================&#43; | Frame Payload (0...) ... &#43;---------------------------------------------------------------&#43; 帧头为固定的9个字节（(24&#43;8&#43;8&#43;1&#43;31)/8=9）呈现，变化的为帧的负载(payload)，负载内容是由帧类型（Type）定义。
+帧长度Length：无符号的自然数，24个比特表示，仅表示帧负载所占用字节数，不包括帧头所占用的9个字节。默认大小区间为为0~16,384(2^14)，一旦超过默认最大值2^14(16384)，发送方将不再允许发送，除非接收到接收方定义的SETTINGS_MAX_FRAME_SIZE（一般此值区间为2^14 ~ 2^24）值的通知。 帧类型Type：8个比特表示，定义了帧负载的具体格式和帧的语义，HTTP/2规范定义了10个帧类型，这里不包括实验类型帧和扩展类型帧 帧的标志位Flags：8个比特表示，服务于具体帧类型，默认值为0x0。有一个小技巧需要注意，一般来讲，8个比特可以容纳8个不同的标志，比如，PADDED值为0x8，二进制表示为00001000；END_HEADERS值为0x4，二进制表示为00000100；END_STREAM值为0X1，二进制为00000001。可以同时在一个字节中传达三种标志位，二进制表示为00001101，即0x13。因此，后面的帧结构中，标志位一般会使用8个比特表示，若某位不确定，使用问号?替代，表示此处可能会被设置标志位 帧保留比特为R：在HTTP/2语境下为保留的比特位，固定值为0X0 流标识符Stream Identifier：无符号的31比特表示无符号自然数。0x0值表示为帧仅作用于连接，不隶属于单独的流。 （参考：http://www.blogjava.net/yongboy/archive/2015/03/20/423655.html）
+帧类型： HEADERS：帧仅包含 HTTP 标头信息。
+DATA：帧包含消息的所有或部分有效负载。 (flag:END_STREAM|PADDED)
+PRIORITY：指定分配给流的重要性。
+RST_STREAM：错误通知：一个推送承诺遭到拒绝。终止流。
+SETTINGS：指定连接配置。
+PUSH_PROMISE：通知一个将资源推送到客户端的意图。
+PING：检测信号和往返时间。
+GOAWAY：停止为当前连接生成流的停止通知。
+WINDOW_UPDATE：用于管理流的流控制。
+CONTINUATION：用于延续某个标头碎片序列。"/>
 
 
-
-<link rel="canonical" href="https://blog.okuer.com/posts/2019/2019-10-23-http2/">
-
-
-<link rel="preload" href="/fonts/forkawesome-webfont.woff2?v=1.2.0" as="font" type="font/woff2" crossorigin>
-
-
-  
-  
-  <link rel="stylesheet" href="/css/coder.min.0fa2dc75ed1b76894ac0e062b10a6c4730daa745096fa120114b290ed8a48788.css" integrity="sha256-D6Lcde0bdolKwOBisQpsRzDap0UJb6EgEUspDtikh4g=" crossorigin="anonymous" media="screen" />
-
-
-
-
-
-
-  
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://blog.okuer.com/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "http2.0",
+      "item": "https://blog.okuer.com/posts/2019/2019-10-23-http2/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "http2.0",
+  "name": "http2.0",
+  "description": "Http/2 HTTP2 协议起源于SPDY，目的是解决http1.x 如下的问题：\nplantext 文本协议的size开销 不支持复用tcp通道 请求通道上限 队首阻塞 http1.1 Keep alive 来保证复用一个tcp连接，但严格要求响应的顺序，响应是一个队列，如果遇到队首阻塞，则整个tcp通道就无法处理别的请求了。 http/2如果解决这些问题的？\n通道复用 二进制帧层 服务端push 设置请求优先级 压缩（HPACK） 帧布局 +-----------------------------------------------+ | Length (24) | +---------------+---------------+---------------+ | Type (8) | Flags (8) | +-+-------------+---------------+-------------------------------+ |R| Stream Identifier (31) | +=+=============================================================+ | Frame Payload (0...) ... +---------------------------------------------------------------+ 帧头为固定的9个字节（(24+8+8+1+31)/8=9）呈现，变化的为帧的负载(payload)，负载内容是由帧类型（Type）定义。\n帧长度Length：无符号的自然数，24个比特表示，仅表示帧负载所占用字节数，不包括帧头所占用的9个字节。默认大小区间为为0~16,384(2^14)，一旦超过默认最大值2^14(16384)，发送方将不再允许发送，除非接收到接收方定义的SETTINGS_MAX_FRAME_SIZE（一般此值区间为2^14 ~ 2^24）值的通知。 帧类型Type：8个比特表示，定义了帧负载的具体格式和帧的语义，HTTP/2规范定义了10个帧类型，这里不包括实验类型帧和扩展类型帧 帧的标志位Flags：8个比特表示，服务于具体帧类型，默认值为0x0。有一个小技巧需要注意，一般来讲，8个比特可以容纳8个不同的标志，比如，PADDED值为0x8，二进制表示为00001000；END_HEADERS值为0x4，二进制表示为00000100；END_STREAM值为0X1，二进制为00000001。可以同时在一个字节中传达三种标志位，二进制表示为00001101，即0x13。因此，后面的帧结构中，标志位一般会使用8个比特表示，若某位不确定，使用问号?替代，表示此处可能会被设置标志位 帧保留比特为R：在HTTP/2语境下为保留的比特位，固定值为0X0 流标识符Stream Identifier：无符号的31比特表示无符号自然数。0x0值表示为帧仅作用于连接，不隶属于单独的流。 （参考：http://www.blogjava.net/yongboy/archive/2015/03/20/423655.html）\n帧类型： HEADERS：帧仅包含 HTTP 标头信息。\nDATA：帧包含消息的所有或部分有效负载。 (flag:END_STREAM|PADDED)\nPRIORITY：指定分配给流的重要性。\nRST_STREAM：错误通知：一个推送承诺遭到拒绝。终止流。\nSETTINGS：指定连接配置。\nPUSH_PROMISE：通知一个将资源推送到客户端的意图。\nPING：检测信号和往返时间。\nGOAWAY：停止为当前连接生成流的停止通知。\nWINDOW_UPDATE：用于管理流的流控制。\nCONTINUATION：用于延续某个标头碎片序列。",
+  "keywords": [
     
+  ],
+  "articleBody": "Http/2 HTTP2 协议起源于SPDY，目的是解决http1.x 如下的问题：\nplantext 文本协议的size开销 不支持复用tcp通道 请求通道上限 队首阻塞 http1.1 Keep alive 来保证复用一个tcp连接，但严格要求响应的顺序，响应是一个队列，如果遇到队首阻塞，则整个tcp通道就无法处理别的请求了。 http/2如果解决这些问题的？\n通道复用 二进制帧层 服务端push 设置请求优先级 压缩（HPACK） 帧布局 +-----------------------------------------------+ | Length (24) | +---------------+---------------+---------------+ | Type (8) | Flags (8) | +-+-------------+---------------+-------------------------------+ |R| Stream Identifier (31) | +=+=============================================================+ | Frame Payload (0...) ... +---------------------------------------------------------------+ 帧头为固定的9个字节（(24+8+8+1+31)/8=9）呈现，变化的为帧的负载(payload)，负载内容是由帧类型（Type）定义。\n帧长度Length：无符号的自然数，24个比特表示，仅表示帧负载所占用字节数，不包括帧头所占用的9个字节。默认大小区间为为0~16,384(2^14)，一旦超过默认最大值2^14(16384)，发送方将不再允许发送，除非接收到接收方定义的SETTINGS_MAX_FRAME_SIZE（一般此值区间为2^14 ~ 2^24）值的通知。 帧类型Type：8个比特表示，定义了帧负载的具体格式和帧的语义，HTTP/2规范定义了10个帧类型，这里不包括实验类型帧和扩展类型帧 帧的标志位Flags：8个比特表示，服务于具体帧类型，默认值为0x0。有一个小技巧需要注意，一般来讲，8个比特可以容纳8个不同的标志，比如，PADDED值为0x8，二进制表示为00001000；END_HEADERS值为0x4，二进制表示为00000100；END_STREAM值为0X1，二进制为00000001。可以同时在一个字节中传达三种标志位，二进制表示为00001101，即0x13。因此，后面的帧结构中，标志位一般会使用8个比特表示，若某位不确定，使用问号?替代，表示此处可能会被设置标志位 帧保留比特为R：在HTTP/2语境下为保留的比特位，固定值为0X0 流标识符Stream Identifier：无符号的31比特表示无符号自然数。0x0值表示为帧仅作用于连接，不隶属于单独的流。 （参考：http://www.blogjava.net/yongboy/archive/2015/03/20/423655.html）\n帧类型： HEADERS：帧仅包含 HTTP 标头信息。\nDATA：帧包含消息的所有或部分有效负载。 (flag:END_STREAM|PADDED)\nPRIORITY：指定分配给流的重要性。\nRST_STREAM：错误通知：一个推送承诺遭到拒绝。终止流。\nSETTINGS：指定连接配置。\nPUSH_PROMISE：通知一个将资源推送到客户端的意图。\nPING：检测信号和往返时间。\nGOAWAY：停止为当前连接生成流的停止通知。\nWINDOW_UPDATE：用于管理流的流控制。\nCONTINUATION：用于延续某个标头碎片序列。\n浏览器在一个通道上跟服务器交换通过二进制协议交换数据，浏览器获取到的无序的帧数据集合，根据流标识，进行合并。\n流 数据流具有如下的状态：\nidle reserved(Local) reserved(remote) open half_closed(local) half_closed(remote) closed “新流的标识符的第一次使用隐式地关闭了所有由该对端以低值流标识符发起的处于“idle”状态的流。例如，如果客户端在流7上发送 HEADERS 帧而没有在流5上发送帧，则当流7的第一帧被发送或接收时，流5转换到“closed”状态。”\nHPACK 算法 http1.x 最请求body进行gzip压缩，但是对请求头并不会压缩，现代的web请求繁多而复杂，意味着会浪费很多的流量用来传递请求头。\n为此，为http/2而专门研究了一种新型压缩技术HPACK，HPACK的可以压缩头，HPACK维护了一张动态表和静态表，静态表保存固定不变的header映射，而动态表保存在一个client和server的tcp上下文中（一个client对一个server 在http/2中，一般只会创建一个tcp链接，除非客户端显示的声明）。\nHPACK将static table 和 dynamic table映射到同一张index address space里面。前面0~(STATIC_LEN-1)为静态表空间，后面 STATIC_LEN~DYNAMIC_LEN为动态表空间。\n如何压缩的？\n首先，客户端会从索引表里面获取到已存在具体header的索引，并对不存在的header使用huffman编码，动态更新到索引，请求的时候，只需要一个二进制标记位即可。 比如（下面是静态索引表）， 静态索引表\n+-------+-----------------------------+---------------+ | Index | Header Name | Header Value | +-------+-----------------------------+---------------+ | 1 | :authority | | | 2 | :method | GET | | 3 | :method | POST | | 4 | :path | / | | 5 | :path | /index.html | | 6 | :scheme | http | | 7 | :scheme | https | | 8 | :status | 200 | | 9 | :status | 204 | | 10 | :status | 206 | | 11 | :status | 304 | | 12 | :status | 400 | | 13 | :status | 404 | | 14 | :status | 500 | | 15 | accept-charset | | | 16 | accept-encoding | gzip, deflate | | 17 | accept-language | | | 18 | accept-ranges | | | 19 | accept | | | 20 | access-control-allow-origin | | | 21 | age | | | 22 | allow | | | 23 | authorization | | | 24 | cache-control | | | 25 | content-disposition | | | 26 | content-encoding | | | 27 | content-language | | | 28 | content-length | | | 29 | content-location | | | 30 | content-range | | （表1,https://tools.ietf.org/html/rfc7541#appendix-B ）\n无符号整数编码 用途：\nname索引/header索引/字符串的位长度都需要一个整数来表达，整数一定在一个字节的结尾结束。一个字节的二进制布局如下：\n0 1 2 3 4 5 6 7 +---+---+---+---+---+---+---+---+ | ? | ? | ? | Value | +---+---+---+-------------------+ 注意 0 1 2 可以被用作特殊的用途，所以value保存了具体的无符号整数的值。在上面的情况下，有5个位用来保存整数。意味着最大能保存2^ 5-1(31)，超过这个值，就没有办法保存了。\n那怎么办呢？ 此时就需要扩展，用第二个字节的7位来保存剩余的数字。（首字节特殊用途）\n比如要保存数字32，则\n0 1 2 3 4 5 6 7 +---+---+---+---+---+---+---+---+ | ? | ? | ? | 1 1 1 1 1 | +---+---+---+-------------------+ | 0 | 0 0 0 0 0 0 1 +---+---------------------------+ 注意第二个字节的0，代表是结束的字节。解码器碰到这个标志，就不能在继续搜索了。\n如果第二个字节仍旧无法表达这个数，则需要调整为：\n0 1 2 3 4 5 6 7 +---+---+---+---+---+---+---+---+ | ? | ? | ? | 1 1 1 1 1 | +---+---+---+-------------------+ | 1 | Value-(2^N-1) LSB | +---+---------------------------+ ... +---+---------------------------+ | 0 | Value-(2^N-1) MSB | +---+---------------------------+ 伪代码如下：\n编码：\nif I \u003c 2^N - 1, encode I on N bits else encode (2^N - 1) on N bits I = I - (2^N - 1) while I \u003e= 128 encode (I % 128 + 128) on 8 bits I = I / 128 encode I on 8 bits 解码：\ndecode I from the next N bits if I \u003c 2^N - 1, return I else M = 0 repeat B = next octet I = I + (B \u0026 127) * 2^M M = M + 7 while B \u0026 128 == 128 return I 字符串编码 0 1 2 3 4 5 6 7 +---+---+---+---+---+---+---+---+ | H | String Length (7+) | +---+---------------------------+ | String Data (Length octets) | +-------------------------------+ 从一个二进制序列中解码一个字符串，有几个非常重要的点：\n从那一位开始 到那一位结束 因此，为了表达这个信息，在二进制的布局中，需要讲长度编码进去，注意，长度是个无符号整数，按照上面的编码规则进行编码，意味着长度一定是在一个字节的结束。\n所以，字符串的编码会在新的字节开始，如上布局。在HPACK中，为了将常见的字符串进行压缩，经常会使用hufuman编码，因此表达字符串编码本身的字节序列的第一个位，不参与表达字符串本身。而仅仅表达后面的字符串编码是原始字符串还是hufuman编码后的字符串。\nH:表示是否是 huffman 编码，1:是 0:不是。\nlength代表的是二进制位的长度，并不是字符串的长度。如果是hufuman编码的字符串。那么，String data的二进制布局是基于hufuman编码的。比如”h” 这个字符串的ascii码是104，二进制位布局为：1101000，而hufuman的布局为 100111。对于常见的web传递的header相关字符，使用hufuman编码压缩效果更好。 仅仅 详细的定义参见这里 https://httpwg.org/specs/rfc7541.html#huffman.code\n二进制格式的表达 在HPACK中，解码器通过搜索二进制位，执行不同解析逻辑。\n已被索引的header[1] 0 1 2 3 4 5 6 7 +---+---+---+---+---+---+---+---+ | 1 | Index (7+) | +---+---------------------------+ name在索引，value不再索引且允许索引 [0 1] 0 1 2 3 4 5 6 7 +---+---+---+---+---+---+---+---+ | 0 | 1 | Index (6+) | +---+---+-----------------------+ | H | Value Length (7+) | +---+---------------------------+ | Value String (Length octets) | +-------------------------------+ name,value都没被索引且允许索引[0100 0000] 0 1 2 3 4 5 6 7 +---+---+---+---+---+---+---+---+ | 0 | 1 | 0 | +---+---+-----------------------+ | H | Name Length (7+) | +---+---------------------------+ | Name String (Length octets) | +---+---------------------------+ | H | Value Length (7+) | +---+---------------------------+ | Value String (Length octets) | +-------------------------------+ name被索引，value未索引且不保存[0000] 0 1 2 3 4 5 6 7 +---+---+---+---+---+---+---+---+ | 0 | 0 | 0 | 0 | Index (4+) | +---+---+-----------------------+ | H | Value Length (7+) | +---+---------------------------+ | Value String (Length octets) | +-------------------------------+ name,value都未被索引且不保存[0000 0000] 0 1 2 3 4 5 6 7 +---+---+---+---+---+---+---+---+ | 0 | 0 | 0 | 0 | 0 | +---+---+-----------------------+ | H | Name Length (7+) | +---+---------------------------+ | Name String (Length octets) | +---+---------------------------+ | H | Value Length (7+) | +---+---------------------------+ | Value String (Length octets) | +-------------------------------+ name在索引,value不再且绝对不能被保存索引[0001] 0 1 2 3 4 5 6 7 +---+---+---+---+---+---+---+---+ | 0 | 0 | 0 | 1 | Index (4+) | +---+---+-----------------------+ | H | Value Length (7+) | +---+---------------------------+ | Value String (Length octets) | +-------------------------------+ name,value都不在且不允许被保存索引[0001 0000] 0 1 2 3 4 5 6 7 +---+---+---+---+---+---+---+---+ | 0 | 0 | 0 | 1 | 0 | +---+---+-----------------------+ | H | Name Length (7+) | +---+---------------------------+ | Name String (Length octets) | +---+---------------------------+ | H | Value Length (7+) | +---+---------------------------+ | Value String (Length octets) | +-------------------------------+ 修改动态表的大小[001 ] 意味着动态表的上限是（2^5-1） 0 1 2 3 4 5 6 7 +---+---+---+---+---+---+---+---+ | 0 | 0 | 1 | Max size (5+) | +---+---------------------------+ 客户端进行二进制编码header的时候，第一个 字节 (注意不是位)是用来特殊用途的，用以表示客户端对于服务端对于索引的指示信息，服务端通过解析第一个字节获取到必要配置信息。\n比如是否服务端需要更新该header到动态表。 二进制编码在不同的前缀标记下有不同的含义。比如 一个请求的header二进制编码以001，那么该请求仅仅是用来修改服务端接受的最大动态表的值。\n如果是01前缀，则代表剩余的6位了name的索引，如01 10 0001 ，剩余的6位就是10 0001 其中，第一位是1，代表是hufuman编码，代表0 0001 是一个hufuman编码，需要从索引表查询。在这个例子中，代表 :authority。（见表1）。\nLSB \u0026 MSB The Huffman code for the symbol represented as a base-2 integer, aligned on the most significant bit (MSB)\nThe Huffman code for the symbol, represented as a hexadecimal integer, aligned on the least significant bit (LSB).\nDemo\n:method: GET :scheme: http :path: / :authority: www.example.com Hex dump of encoded data: 8286 8441 0f77 7777 2e65 7861 6d70 6c65 | ...A.www.example 2e63 6f6d | .com Decoding process: 82 | == Indexed - Add == | idx = 2 | -\u003e :method: GET 86 | == Indexed - Add == | idx = 6 | -\u003e :scheme: http 84 | == Indexed - Add == | idx = 4 | -\u003e :path: / 41 | == Literal indexed == | Indexed name (idx = 1) | :authority 0f | Literal value (len = 15) 7777 772e 6578 616d 706c 652e 636f 6d | www.example.com | -\u003e :authority: | www.example.com 注意这里的41，是这样布局的0100 0001\n代表,name被索引，但value未被索引，且允许索引。（参见上表）。因此是0 1,:authority为0001，因此补全为 0100 0001 根据0100 0001 的规则，接下来就需要跟着一个value的长度，这里是0f,接着是字符串的十六进制编码 7777 772e 6578 616d 706c 652e 636f 6d 。\n对一个字符串进行编码的步骤 如 :my_header hello，\n步骤1：\n这个字符串并非是静态表里面的,所以前缀应该是 0100 0000（代表都没被索引且允许索引）。\n0 1 2 3 4 5 6 7 +---+---+---+---+---+---+---+---+ | 0 | 1 | 0 | +---+---+-----------------------+ | H | Name Length (7+) | +---+---------------------------+ | Name String (Length octets) | +---+---------------------------+ | H | Value Length (7+) | +---+---------------------------+ | Value String (Length octets) | +-------------------------------+ 二进制布局如下：\n0 1 2 3 4 5 6 7 +---+---+-----------------------+ | 0｜ 1 ｜ 0 0 0 0 0 0 +---+---------------------------+ 需要将:my_header编码，此处不使用hufuman编码，因此name的二进制布局如下：\n0 1 2 3 4 5 6 7 +---+---+-----------------------+ | 0｜ Value-(2^N-1) MSB +---+---------------------------+ 在我们的例子中，:my_header的N值为：\n3a 6d 79 5f 68 65 61 64 65 72 综上，\n第一个字节为，0100 0000 ,代表name和value都未被索引，但可以保存索引\n第二个字节为，0 000 1010 代表name :my_header字符串的长度为10\n接下来是 3a6d 795f 6865 6164 6572 是 :my_header 这个字符串本身的编码\n然后是 0 000 0101 代表接下来的做value(hello)的长度为5\n最后是 68 65 6c 6c 6f，是hello 这个字符串本身的编码\nhttps://httpwg.org/specs/rfc7541.html 点击这里可以了解到详细的技术细节。\n升级 http1.x-\u003ehttp2 平滑升级\n目前大多数app都支持http1.x，要完成http1.x到http/2,需要进行客户端发起升级协议，来询问和确认服务端对http/2的支持。\n具体而言，是客户端发起一个OPTIONS请求，携带代码如下：\nGET /default.htm HTTP/1.1 Host: server.example.com Connection: Upgrade, HTTP2-Settings Upgrade: h2c HTTP2-Settings: 注意有个 upgrade:h2c 的header. 服务器在接收到这个header之后，响应101(TLS_ALPN)来接受升级。（不支持http/2的，可以返回一个不包含upgrade的响应）\n服务端首次发送的帧和客户端首次发送的帧，必须包含设置帧。意味着，客户端在接收到101的响应后，要发送一个包含 设置帧 的请求。\nh2c协议标识符一定不能被客户端发送或被服务器选择，服务器必须忽略。\n客户端和服务端必须发送Connection Preface作为最终确认，具体表现为，客户端需要在接收到101之后，立即发送一个客户端 以”PRI * HTTP/2.0\\r\\n\\r\\nSM\\r\\n\\r\\n” 开始，并且紧跟着配置帧。\n工具（js） 在浏览器快速获取ascii码\nstr=\":my_header\"; len=str.length; arr=[]; for(var i=0;i",
+  "wordCount" : "1236",
+  "inLanguage": "en",
+  "datePublished": "2019-12-23T21:05:39Z",
+  "dateModified": "2019-12-23T21:05:39Z",
+  "author":{
+    "@type": "Person",
+    "name": "ghost"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://blog.okuer.com/posts/2019/2019-10-23-http2/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Okuer",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://blog.okuer.com/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://blog.okuer.com" accesskey="h" title="Okuer (Alt + H)">Okuer</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://blog.okuer.com/posts" title="Blog">
+                    <span>Blog</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://blog.okuer.com/go" title="Go">
+                    <span>Go</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://blog.okuer.com/project" title="Projects">
+                    <span>Projects</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://blog.okuer.com/about/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
     
-    <link rel="stylesheet" href="/css/coder-dark.min.593028e7f7ac55c003b79c230d1cd411bb4ca53b31556c3abb7f027170e646e9.css" integrity="sha256-WTAo5/esVcADt5wjDRzUEbtMpTsxVWw6u38CcXDmRuk=" crossorigin="anonymous" media="screen" />
-  
+    <h1 class="post-title entry-hint-parent">
+      http2.0
+    </h1>
+    <div class="post-meta"><span title='2019-12-23 21:05:39 +0000 +0000'>December 23, 2019</span>&nbsp;·&nbsp;ghost
 
-
-
- 
-
-
-
-
-<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
-<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
-
-<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
-<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
-
-<link rel="manifest" href="/site.webmanifest">
-<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
-
-
-
-
-<meta name="generator" content="Hugo 0.110.0">
-
-
-
-
-
-  </head>
-
-
-
-
-
-
-<body class="preload-transitions colorscheme-auto">
-  
-<div class="float-container">
-    <a id="dark-mode-toggle" class="colorscheme-toggle">
-        <i class="fa fa-adjust fa-fw" aria-hidden="true"></i>
-    </a>
 </div>
-
-
-  <main class="wrapper">
-    <nav class="navigation">
-  <section class="container">
-    <a class="navigation-title" href="/">
-      Okuer
-    </a>
-    
-      <input type="checkbox" id="menu-toggle" />
-      <label class="menu-button float-right" for="menu-toggle">
-        <i class="fa fa-bars fa-fw" aria-hidden="true"></i>
-      </label>
-      <ul class="navigation-list">
-        
-          
-            <li class="navigation-item">
-              <a class="navigation-link" href="/posts">Blog</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link" href="/go">Go</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link" href="/project">Projects</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link" href="/about/">About</a>
-            </li>
-          
-        
-        
-      </ul>
-    
-  </section>
-</nav>
-
-
-    <div class="content">
-      
-  <section class="container post">
-    <article>
-      <header>
-        <div class="post-title">
-          <h1 class="title">
-            <a class="title-link" href="https://blog.okuer.com/posts/2019/2019-10-23-http2/">
-              http2.0
-            </a>
-          </h1>
-        </div>
-        <div class="post-meta">
-          <div class="date">
-            <span class="posted-on">
-              <i class="fa fa-calendar" aria-hidden="true"></i>
-              <time datetime="2019-12-23T21:05:39Z">
-                December 23, 2019
-              </time>
-            </span>
-            <span class="reading-time">
-              <i class="fa fa-clock-o" aria-hidden="true"></i>
-              6-minute read
-            </span>
-          </div>
-          
-          <div class="categories">
-  <i class="fa fa-folder" aria-hidden="true"></i>
-    <a href="/categories/btc/">btc</a></div>
-
-          
-        </div>
-      </header>
-
-      <div class="post-content">
-        
-        <h1 id="http2">
-  Http/2
-  <a class="heading-link" href="#http2">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h1>
+  </header> 
+  <div class="post-content"><h1 id="http2">Http/2<a hidden class="anchor" aria-hidden="true" href="#http2">#</a></h1>
 <p>HTTP2 协议起源于<strong>SPDY</strong>，目的是解决http1.x 如下的问题：</p>
 <ul>
 <li>plantext 文本协议的size开销</li>
@@ -200,13 +252,7 @@ http1.1 Keep alive 来保证复用一个tcp连接，但严格要求响应的顺�
 <li>设置请求优先级</li>
 <li>压缩（HPACK）</li>
 </ul>
-<h4 id="帧布局">
-  帧布局
-  <a class="heading-link" href="#%e5%b8%a7%e5%b8%83%e5%b1%80">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h4>
+<h4 id="帧布局">帧布局<a hidden class="anchor" aria-hidden="true" href="#帧布局">#</a></h4>
 <div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>+-----------------------------------------------+  
 </span></span><span style="display:flex;"><span>|                Length (24)                    |  
 </span></span><span style="display:flex;"><span>+---------------+---------------+---------------+  
@@ -229,13 +275,7 @@ http1.1 Keep alive 来保证复用一个tcp连接，但严格要求响应的顺�
 <blockquote>
 <p>（参考：http://www.blogjava.net/yongboy/archive/2015/03/20/423655.html）</p>
 </blockquote>
-<h4 id="帧类型">
-  帧类型：
-  <a class="heading-link" href="#%e5%b8%a7%e7%b1%bb%e5%9e%8b">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h4>
+<h4 id="帧类型">帧类型：<a hidden class="anchor" aria-hidden="true" href="#帧类型">#</a></h4>
 <p><strong>HEADERS</strong>：帧仅包含 HTTP 标头信息。<br>
 <strong>DATA</strong>：帧包含消息的所有或部分有效负载。 (flag:END_STREAM|PADDED)<br>
 <strong>PRIORITY</strong>：指定分配给流的重要性。<br>
@@ -249,13 +289,7 @@ http1.1 Keep alive 来保证复用一个tcp连接，但严格要求响应的顺�
 <blockquote>
 <p>浏览器在一个通道上跟服务器交换通过二进制协议交换数据，浏览器获取到的无序的帧数据集合，根据流标识，进行合并。</p>
 </blockquote>
-<h4 id="流">
-  流
-  <a class="heading-link" href="#%e6%b5%81">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h4>
+<h4 id="流">流<a hidden class="anchor" aria-hidden="true" href="#流">#</a></h4>
 <p>数据流具有如下的状态：</p>
 <ul>
 <li>idle</li>
@@ -269,13 +303,7 @@ http1.1 Keep alive 来保证复用一个tcp连接，但严格要求响应的顺�
 <blockquote>
 <p>“新流的标识符的第一次使用隐式地关闭了所有由该对端以低值流标识符发起的处于“idle”状态的流。例如，如果客户端在流7上发送 HEADERS 帧而没有在流5上发送帧，则当流7的第一帧被发送或接收时，流5转换到“closed”状态。”</p>
 </blockquote>
-<h4 id="hpack-算法">
-  HPACK 算法
-  <a class="heading-link" href="#hpack-%e7%ae%97%e6%b3%95">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h4>
+<h4 id="hpack-算法">HPACK 算法<a hidden class="anchor" aria-hidden="true" href="#hpack-算法">#</a></h4>
 <p>http1.x 最请求body进行gzip压缩，但是对请求头并不会压缩，现代的web请求繁多而复杂，意味着会浪费很多的流量用来传递请求头。<br>
 为此，为http/2而专门研究了一种新型压缩技术HPACK，HPACK的可以压缩头，HPACK维护了一张动态表和静态表，静态表保存固定不变的header映射，而动态表保存在一个client和server的tcp上下文中（一个client对一个server 在http/2中，一般只会创建一个tcp链接，除非客户端显示的声明）。</p>
 <p>HPACK将static table 和 dynamic table映射到同一张index address space里面。前面0~(STATIC_LEN-1)为静态表空间，后面 STATIC_LEN~DYNAMIC_LEN为动态表空间。</p>
@@ -318,13 +346,7 @@ http1.1 Keep alive 来保证复用一个tcp连接，但严格要求响应的顺�
       | 30    | content-range               |               |
 </code></pre>
 <p>（表1,https://tools.ietf.org/html/rfc7541#appendix-B ）</p>
-<h4 id="无符号整数编码">
-  无符号整数编码
-  <a class="heading-link" href="#%e6%97%a0%e7%ac%a6%e5%8f%b7%e6%95%b4%e6%95%b0%e7%bc%96%e7%a0%81">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h4>
+<h4 id="无符号整数编码">无符号整数编码<a hidden class="anchor" aria-hidden="true" href="#无符号整数编码">#</a></h4>
 <p><strong>用途</strong>：</p>
 <p>name索引/header索引/字符串的位长度都需要一个整数来表达，整数一定在一个字节的结尾结束。一个字节的二进制布局如下：</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>     0   1   2   3   4   5   6   7
@@ -373,13 +395,7 @@ http1.1 Keep alive 来保证复用一个tcp连接，但严格要求响应的顺�
 </span></span><span style="display:flex;"><span>           M = M + 7
 </span></span><span style="display:flex;"><span>       while B &amp; 128 == 128
 </span></span><span style="display:flex;"><span>       return I
-</span></span></code></pre></div><h4 id="字符串编码">
-  字符串编码
-  <a class="heading-link" href="#%e5%ad%97%e7%ac%a6%e4%b8%b2%e7%bc%96%e7%a0%81">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h4>
+</span></span></code></pre></div><h4 id="字符串编码">字符串编码<a hidden class="anchor" aria-hidden="true" href="#字符串编码">#</a></h4>
 <div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>  0   1   2   3   4   5   6   7
 </span></span><span style="display:flex;"><span>+---+---+---+---+---+---+---+---+
 </span></span><span style="display:flex;"><span>| H |    String Length (7+)     |
@@ -400,13 +416,7 @@ http1.1 Keep alive 来保证复用一个tcp连接，但严格要求响应的顺�
 仅仅
 详细的定义参见这里
 <a href="https://httpwg.org/specs/rfc7541.html#huffman.code">https://httpwg.org/specs/rfc7541.html#huffman.code</a></p>
-<h4 id="二进制格式的表达">
-  二进制格式的表达
-  <a class="heading-link" href="#%e4%ba%8c%e8%bf%9b%e5%88%b6%e6%a0%bc%e5%bc%8f%e7%9a%84%e8%a1%a8%e8%be%be">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h4>
+<h4 id="二进制格式的表达">二进制格式的表达<a hidden class="anchor" aria-hidden="true" href="#二进制格式的表达">#</a></h4>
 <p>在HPACK中，解码器通过搜索二进制位，执行不同解析逻辑。</p>
 <ul>
 <li>已被索引的header[1]</li>
@@ -503,13 +513,7 @@ http1.1 Keep alive 来保证复用一个tcp连接，但严格要求响应的顺�
 </span></span></code></pre></div><p>客户端进行二进制编码header的时候，第一个 <strong>字节</strong> (注意不是位)是用来特殊用途的，用以表示客户端对于服务端对于索引的指示信息，服务端通过解析第一个字节获取到必要配置信息。</p>
 <p>比如是否服务端需要更新该header到动态表。 二进制编码在不同的前缀标记下有不同的含义。比如 一个请求的header二进制编码以001，那么该请求仅仅是用来修改服务端接受的最大动态表的值。</p>
 <p>如果是01前缀，则代表剩余的6位了name的索引，如<code>01 10 0001</code> ，剩余的6位就是<code>10 0001</code> 其中，第一位是1，代表是hufuman编码，代表<code>0 0001</code> 是一个hufuman编码，需要从索引表查询。在这个例子中，代表 <code>:authority</code>。（见表1）。</p>
-<h4 id="lsb--msb">
-  LSB &amp; MSB
-  <a class="heading-link" href="#lsb--msb">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h4>
+<h4 id="lsb--msb">LSB &amp; MSB<a hidden class="anchor" aria-hidden="true" href="#lsb--msb">#</a></h4>
 <p>The Huffman code for the symbol represented as a base-2 integer, aligned on the most significant bit (MSB)</p>
 <p>The Huffman code for the symbol, represented as a hexadecimal integer, aligned on the least significant bit (LSB).</p>
 <p><strong>Demo</strong></p>
@@ -578,13 +582,7 @@ http1.1 Keep alive 来保证复用一个tcp连接，但严格要求响应的顺�
 <blockquote>
 <p><a href="https://httpwg.org/specs/rfc7541.html">https://httpwg.org/specs/rfc7541.html</a> 点击这里可以了解到详细的技术细节。</p>
 </blockquote>
-<h4 id="升级">
-  升级
-  <a class="heading-link" href="#%e5%8d%87%e7%ba%a7">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h4>
+<h4 id="升级">升级<a hidden class="anchor" aria-hidden="true" href="#升级">#</a></h4>
 <blockquote>
 <p>http1.x-&gt;http2 平滑升级</p>
 </blockquote>
@@ -599,13 +597,7 @@ http1.1 Keep alive 来保证复用一个tcp连接，但严格要求响应的顺�
 <p>服务端首次发送的帧和客户端首次发送的帧，必须包含设置帧。意味着，客户端在接收到101的响应后，要发送一个包含 <strong>设置帧</strong> 的请求。</p>
 <p>h2c协议标识符一定不能被客户端发送或被服务器选择，服务器必须忽略。</p>
 <p>客户端和服务端必须发送Connection Preface作为最终确认，具体表现为，客户端需要在接收到101之后，立即发送一个客户端 以”<code>PRI * HTTP/2.0\r\n\r\nSM\r\n\r\n</code>” 开始，并且紧跟着配置帧。</p>
-<h4 id="工具js">
-  工具（js）
-  <a class="heading-link" href="#%e5%b7%a5%e5%85%b7js">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h4>
+<h4 id="工具js">工具（js）<a hidden class="anchor" aria-hidden="true" href="#工具js">#</a></h4>
 <blockquote>
 <p>在浏览器快速获取ascii码</p>
 </blockquote>
@@ -616,13 +608,7 @@ http1.1 Keep alive 来保证复用一个tcp连接，但严格要求响应的顺�
 </span></span><span style="display:flex;"><span>arr.push(str.charCodeAt(i).toString(16));
 </span></span><span style="display:flex;"><span>}
 </span></span><span style="display:flex;"><span>console.log(arr.join(&#34; &#34;));
-</span></span></code></pre></div><h4 id="参考">
-  参考
-  <a class="heading-link" href="#%e5%8f%82%e8%80%83">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h4>
+</span></span></code></pre></div><h4 id="参考">参考<a hidden class="anchor" aria-hidden="true" href="#参考">#</a></h4>
 <p><a href="https://tools.ietf.org/html/rfc7541#appendix-B">https://tools.ietf.org/html/rfc7541#appendix-B</a></p>
 <p><a href="https://developers.google.com/web/fundamentals/performance/http2/?hl=zh-cn">https://developers.google.com/web/fundamentals/performance/http2/?hl=zh-cn</a></p>
 <p><a href="https://github.com/ye11ow/http2-explained-chinese/blob/master/part6.md">https://github.com/ye11ow/http2-explained-chinese/blob/master/part6.md</a></p>
@@ -631,98 +617,84 @@ http1.1 Keep alive 来保证复用一个tcp连接，但严格要求响应的顺�
 <p><a href="https://skyao.io/learning-http2/stream/identifier.html">https://skyao.io/learning-http2/stream/identifier.html</a></p>
 <p><a href="http://joescott.coding.me/blog/2017/03/10/http2-frame-stream/">http://joescott.coding.me/blog/2017/03/10/http2-frame-stream/</a></p>
 
-      </div>
 
+  </div>
 
-      <footer>
-        
-
-
-        <div id="disqus_thread"></div>
-<script>
-  window.disqus_config = function () {
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+  </footer>
+</article>
+    </main>
     
-    
-    
-    };
-    (function() {
-        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
-            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
-            return;
-        }
-        var d = document, s = d.createElement('script'); s.async = true;
-        s.src = '//' + "okuer" + '.disqus.com/embed.js';
-        s.setAttribute('data-timestamp', +new Date());
-        (d.head || d.body).appendChild(s);
-    })();
-    
-    document.addEventListener('themeChanged', function (e) { 
-        if (document.readyState == 'complete') {
-          DISQUS.reset({ reload: true, config: disqus_config });
-        }
-    });
-</script>
-        
-        
-        
-      </footer>
-    </article>
-
-    
-  </section>
-
-    </div>
-
-    <footer class="footer">
-  <section class="container">
-    ©
-    
-      2014 -
-    
-    2023
-     ghost 
-    ·
-    
-    Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.
-    
-  </section>
+<footer class="footer">
+    <span>&copy; 2024 <a href="https://blog.okuer.com">Okuer</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
 </footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
 
-  </main>
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
 
-  
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
 
-  
-  
-  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
-  
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
 
-  
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
 
-  
-
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
+</script>
 </body>
 
 </html>

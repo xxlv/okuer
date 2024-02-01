@@ -1,32 +1,64 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <title>
-  BloomFilter · Okuer
-</title>
-    <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="color-scheme" content="light dark">
+<html lang="en" dir="auto">
 
-
-
-
-<meta name="author" content="ghost">
-<meta name="description" content="摘要 Link to heading BloomFilter提供了一种判断一个值是否存在于指定集合的方法。在一个数据量较低的场景下，将数据保存到Hashset，然后利用hash检索某个值是否存在，但是在一个非常大的数据集中，传统的方法会消耗大量的内存，这导致OOM问题。BloomFilter的思路是，将一个value经过多次不同的hash映射到一个有限长度的bit数组中。当检测某个值是否存在的时候，只需要使用相同的hash检测,在bit数组中同时存在，则证明value大概率出现在集合中。如果有任何一次hash的index在bit map中被标记为0（代表无效），则证明value 一定不出现在该集合中。
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>BloomFilter | Okuer</title>
+<meta name="keywords" content="">
+<meta name="description" content="摘要 BloomFilter提供了一种判断一个值是否存在于指定集合的方法。在一个数据量较低的场景下，将数据保存到Hashset，然后利用hash检索某个值是否存在，但是在一个非常大的数据集中，传统的方法会消耗大量的内存，这导致OOM问题。BloomFilter的思路是，将一个value经过多次不同的hash映射到一个有限长度的bit数组中。当检测某个值是否存在的时候，只需要使用相同的hash检测,在bit数组中同时存在，则证明value大概率出现在集合中。如果有任何一次hash的index在bit map中被标记为0（代表无效），则证明value 一定不出现在该集合中。
 之所以出现这个原因（大概率出现），是因为A和B两个value经过多次hash后，可能同时将bit map中相同的index标记为1。 使用bloomFilter可以节省大量的内存，在很多对结果要求并不很严格的场景下，bloomFilter是高效的。
 核心实现的代码如下
 public class BloomFilter { private static final int MAX_HASH_COUNT=3; private byte[] map; private int size; public BloomFilter(int size){ this.size=size; this.map=new byte[size]; for (int i=0;i&lt;map.length;i&#43;&#43;){ map[i]=0; } } public void add(String e){ for (int i=1;i&lt;=MAX_HASH_COUNT;i&#43;&#43;) { int index=hashCodeGroup(e,i); map[index]=(byte)1; } } public boolean isExists(String e){ int checkPoint=0; for (int i=1;i&lt;=MAX_HASH_COUNT;i&#43;&#43;) { if(map[hashCodeGroup(e,i)]==1){ checkPoint&#43;&#43;; } } return checkPoint==MAX_HASH_COUNT; } private int hashCodeGroup(String e,int loopIndex) { switch (loopIndex){ case 1: return hashCode1(e)% this.">
-<meta name="keywords" content="blog,developer,personal">
+<meta name="author" content="ghost">
+<link rel="canonical" href="https://blog.okuer.com/posts/2018/2018-12-18-bloomfilter/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.b609c58d5c11bb90b1a54e04005d74ad1ddf22165eb79f5533967e57df9c3b50.css" integrity="sha256-tgnFjVwRu5CxpU4EAF10rR3fIhZet59VM5Z&#43;V9&#43;cO1A=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://blog.okuer.com/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://blog.okuer.com/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://blog.okuer.com/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://blog.okuer.com/apple-touch-icon.png">
+<link rel="mask-icon" href="https://blog.okuer.com/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
 
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="BloomFilter"/>
-<meta name="twitter:description" content="摘要 Link to heading BloomFilter提供了一种判断一个值是否存在于指定集合的方法。在一个数据量较低的场景下，将数据保存到Hashset，然后利用hash检索某个值是否存在，但是在一个非常大的数据集中，传统的方法会消耗大量的内存，这导致OOM问题。BloomFilter的思路是，将一个value经过多次不同的hash映射到一个有限长度的bit数组中。当检测某个值是否存在的时候，只需要使用相同的hash检测,在bit数组中同时存在，则证明value大概率出现在集合中。如果有任何一次hash的index在bit map中被标记为0（代表无效），则证明value 一定不出现在该集合中。
-之所以出现这个原因（大概率出现），是因为A和B两个value经过多次hash后，可能同时将bit map中相同的index标记为1。 使用bloomFilter可以节省大量的内存，在很多对结果要求并不很严格的场景下，bloomFilter是高效的。
-核心实现的代码如下
-public class BloomFilter { private static final int MAX_HASH_COUNT=3; private byte[] map; private int size; public BloomFilter(int size){ this.size=size; this.map=new byte[size]; for (int i=0;i&lt;map.length;i&#43;&#43;){ map[i]=0; } } public void add(String e){ for (int i=1;i&lt;=MAX_HASH_COUNT;i&#43;&#43;) { int index=hashCodeGroup(e,i); map[index]=(byte)1; } } public boolean isExists(String e){ int checkPoint=0; for (int i=1;i&lt;=MAX_HASH_COUNT;i&#43;&#43;) { if(map[hashCodeGroup(e,i)]==1){ checkPoint&#43;&#43;; } } return checkPoint==MAX_HASH_COUNT; } private int hashCodeGroup(String e,int loopIndex) { switch (loopIndex){ case 1: return hashCode1(e)% this."/>
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
 
-<meta property="og:title" content="BloomFilter" />
-<meta property="og:description" content="摘要 Link to heading BloomFilter提供了一种判断一个值是否存在于指定集合的方法。在一个数据量较低的场景下，将数据保存到Hashset，然后利用hash检索某个值是否存在，但是在一个非常大的数据集中，传统的方法会消耗大量的内存，这导致OOM问题。BloomFilter的思路是，将一个value经过多次不同的hash映射到一个有限长度的bit数组中。当检测某个值是否存在的时候，只需要使用相同的hash检测,在bit数组中同时存在，则证明value大概率出现在集合中。如果有任何一次hash的index在bit map中被标记为0（代表无效），则证明value 一定不出现在该集合中。
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript><meta property="og:title" content="BloomFilter" />
+<meta property="og:description" content="摘要 BloomFilter提供了一种判断一个值是否存在于指定集合的方法。在一个数据量较低的场景下，将数据保存到Hashset，然后利用hash检索某个值是否存在，但是在一个非常大的数据集中，传统的方法会消耗大量的内存，这导致OOM问题。BloomFilter的思路是，将一个value经过多次不同的hash映射到一个有限长度的bit数组中。当检测某个值是否存在的时候，只需要使用相同的hash检测,在bit数组中同时存在，则证明value大概率出现在集合中。如果有任何一次hash的index在bit map中被标记为0（代表无效），则证明value 一定不出现在该集合中。
 之所以出现这个原因（大概率出现），是因为A和B两个value经过多次hash后，可能同时将bit map中相同的index标记为1。 使用bloomFilter可以节省大量的内存，在很多对结果要求并不很严格的场景下，bloomFilter是高效的。
 核心实现的代码如下
 public class BloomFilter { private static final int MAX_HASH_COUNT=3; private byte[] map; private int size; public BloomFilter(int size){ this.size=size; this.map=new byte[size]; for (int i=0;i&lt;map.length;i&#43;&#43;){ map[i]=0; } } public void add(String e){ for (int i=1;i&lt;=MAX_HASH_COUNT;i&#43;&#43;) { int index=hashCodeGroup(e,i); map[index]=(byte)1; } } public boolean isExists(String e){ int checkPoint=0; for (int i=1;i&lt;=MAX_HASH_COUNT;i&#43;&#43;) { if(map[hashCodeGroup(e,i)]==1){ checkPoint&#43;&#43;; } } return checkPoint==MAX_HASH_COUNT; } private int hashCodeGroup(String e,int loopIndex) { switch (loopIndex){ case 1: return hashCode1(e)% this." />
@@ -35,153 +67,146 @@ public class BloomFilter { private static final int MAX_HASH_COUNT=3; private by
 <meta property="article:published_time" content="2018-11-27T08:05:39+00:00" />
 <meta property="article:modified_time" content="2018-11-27T08:05:39+00:00" />
 
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="BloomFilter"/>
+<meta name="twitter:description" content="摘要 BloomFilter提供了一种判断一个值是否存在于指定集合的方法。在一个数据量较低的场景下，将数据保存到Hashset，然后利用hash检索某个值是否存在，但是在一个非常大的数据集中，传统的方法会消耗大量的内存，这导致OOM问题。BloomFilter的思路是，将一个value经过多次不同的hash映射到一个有限长度的bit数组中。当检测某个值是否存在的时候，只需要使用相同的hash检测,在bit数组中同时存在，则证明value大概率出现在集合中。如果有任何一次hash的index在bit map中被标记为0（代表无效），则证明value 一定不出现在该集合中。
+之所以出现这个原因（大概率出现），是因为A和B两个value经过多次hash后，可能同时将bit map中相同的index标记为1。 使用bloomFilter可以节省大量的内存，在很多对结果要求并不很严格的场景下，bloomFilter是高效的。
+核心实现的代码如下
+public class BloomFilter { private static final int MAX_HASH_COUNT=3; private byte[] map; private int size; public BloomFilter(int size){ this.size=size; this.map=new byte[size]; for (int i=0;i&lt;map.length;i&#43;&#43;){ map[i]=0; } } public void add(String e){ for (int i=1;i&lt;=MAX_HASH_COUNT;i&#43;&#43;) { int index=hashCodeGroup(e,i); map[index]=(byte)1; } } public boolean isExists(String e){ int checkPoint=0; for (int i=1;i&lt;=MAX_HASH_COUNT;i&#43;&#43;) { if(map[hashCodeGroup(e,i)]==1){ checkPoint&#43;&#43;; } } return checkPoint==MAX_HASH_COUNT; } private int hashCodeGroup(String e,int loopIndex) { switch (loopIndex){ case 1: return hashCode1(e)% this."/>
 
 
-
-<link rel="canonical" href="https://blog.okuer.com/posts/2018/2018-12-18-bloomfilter/">
-
-
-<link rel="preload" href="/fonts/forkawesome-webfont.woff2?v=1.2.0" as="font" type="font/woff2" crossorigin>
-
-
-  
-  
-  <link rel="stylesheet" href="/css/coder.min.0fa2dc75ed1b76894ac0e062b10a6c4730daa745096fa120114b290ed8a48788.css" integrity="sha256-D6Lcde0bdolKwOBisQpsRzDap0UJb6EgEUspDtikh4g=" crossorigin="anonymous" media="screen" />
-
-
-
-
-
-
-  
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://blog.okuer.com/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "BloomFilter",
+      "item": "https://blog.okuer.com/posts/2018/2018-12-18-bloomfilter/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "BloomFilter",
+  "name": "BloomFilter",
+  "description": "摘要 BloomFilter提供了一种判断一个值是否存在于指定集合的方法。在一个数据量较低的场景下，将数据保存到Hashset，然后利用hash检索某个值是否存在，但是在一个非常大的数据集中，传统的方法会消耗大量的内存，这导致OOM问题。BloomFilter的思路是，将一个value经过多次不同的hash映射到一个有限长度的bit数组中。当检测某个值是否存在的时候，只需要使用相同的hash检测,在bit数组中同时存在，则证明value大概率出现在集合中。如果有任何一次hash的index在bit map中被标记为0（代表无效），则证明value 一定不出现在该集合中。\n之所以出现这个原因（大概率出现），是因为A和B两个value经过多次hash后，可能同时将bit map中相同的index标记为1。 使用bloomFilter可以节省大量的内存，在很多对结果要求并不很严格的场景下，bloomFilter是高效的。\n核心实现的代码如下\npublic class BloomFilter { private static final int MAX_HASH_COUNT=3; private byte[] map; private int size; public BloomFilter(int size){ this.size=size; this.map=new byte[size]; for (int i=0;i\u0026lt;map.length;i++){ map[i]=0; } } public void add(String e){ for (int i=1;i\u0026lt;=MAX_HASH_COUNT;i++) { int index=hashCodeGroup(e,i); map[index]=(byte)1; } } public boolean isExists(String e){ int checkPoint=0; for (int i=1;i\u0026lt;=MAX_HASH_COUNT;i++) { if(map[hashCodeGroup(e,i)]==1){ checkPoint++; } } return checkPoint==MAX_HASH_COUNT; } private int hashCodeGroup(String e,int loopIndex) { switch (loopIndex){ case 1: return hashCode1(e)% this.",
+  "keywords": [
     
+  ],
+  "articleBody": " 摘要 BloomFilter提供了一种判断一个值是否存在于指定集合的方法。在一个数据量较低的场景下，将数据保存到Hashset，然后利用hash检索某个值是否存在，但是在一个非常大的数据集中，传统的方法会消耗大量的内存，这导致OOM问题。BloomFilter的思路是，将一个value经过多次不同的hash映射到一个有限长度的bit数组中。当检测某个值是否存在的时候，只需要使用相同的hash检测,在bit数组中同时存在，则证明value大概率出现在集合中。如果有任何一次hash的index在bit map中被标记为0（代表无效），则证明value 一定不出现在该集合中。\n之所以出现这个原因（大概率出现），是因为A和B两个value经过多次hash后，可能同时将bit map中相同的index标记为1。 使用bloomFilter可以节省大量的内存，在很多对结果要求并不很严格的场景下，bloomFilter是高效的。\n核心实现的代码如下\npublic class BloomFilter { private static final int MAX_HASH_COUNT=3; private byte[] map; private int size; public BloomFilter(int size){ this.size=size; this.map=new byte[size]; for (int i=0;i",
+  "wordCount" : "239",
+  "inLanguage": "en",
+  "datePublished": "2018-11-27T08:05:39Z",
+  "dateModified": "2018-11-27T08:05:39Z",
+  "author":{
+    "@type": "Person",
+    "name": "ghost"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://blog.okuer.com/posts/2018/2018-12-18-bloomfilter/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Okuer",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://blog.okuer.com/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://blog.okuer.com" accesskey="h" title="Okuer (Alt + H)">Okuer</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://blog.okuer.com/posts" title="Blog">
+                    <span>Blog</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://blog.okuer.com/go" title="Go">
+                    <span>Go</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://blog.okuer.com/project" title="Projects">
+                    <span>Projects</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://blog.okuer.com/about/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
     
-    <link rel="stylesheet" href="/css/coder-dark.min.593028e7f7ac55c003b79c230d1cd411bb4ca53b31556c3abb7f027170e646e9.css" integrity="sha256-WTAo5/esVcADt5wjDRzUEbtMpTsxVWw6u38CcXDmRuk=" crossorigin="anonymous" media="screen" />
-  
+    <h1 class="post-title entry-hint-parent">
+      BloomFilter
+    </h1>
+    <div class="post-meta"><span title='2018-11-27 08:05:39 +0000 +0000'>November 27, 2018</span>&nbsp;·&nbsp;ghost
 
-
-
- 
-
-
-
-
-<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
-<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
-
-<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
-<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
-
-<link rel="manifest" href="/site.webmanifest">
-<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
-
-
-
-
-<meta name="generator" content="Hugo 0.110.0">
-
-
-
-
-
-  </head>
-
-
-
-
-
-
-<body class="preload-transitions colorscheme-auto">
-  
-<div class="float-container">
-    <a id="dark-mode-toggle" class="colorscheme-toggle">
-        <i class="fa fa-adjust fa-fw" aria-hidden="true"></i>
-    </a>
 </div>
-
-
-  <main class="wrapper">
-    <nav class="navigation">
-  <section class="container">
-    <a class="navigation-title" href="/">
-      Okuer
-    </a>
-    
-      <input type="checkbox" id="menu-toggle" />
-      <label class="menu-button float-right" for="menu-toggle">
-        <i class="fa fa-bars fa-fw" aria-hidden="true"></i>
-      </label>
-      <ul class="navigation-list">
-        
-          
-            <li class="navigation-item">
-              <a class="navigation-link" href="/posts">Blog</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link" href="/go">Go</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link" href="/project">Projects</a>
-            </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link" href="/about/">About</a>
-            </li>
-          
-        
-        
-      </ul>
-    
-  </section>
-</nav>
-
-
-    <div class="content">
-      
-  <section class="container post">
-    <article>
-      <header>
-        <div class="post-title">
-          <h1 class="title">
-            <a class="title-link" href="https://blog.okuer.com/posts/2018/2018-12-18-bloomfilter/">
-              BloomFilter
-            </a>
-          </h1>
-        </div>
-        <div class="post-meta">
-          <div class="date">
-            <span class="posted-on">
-              <i class="fa fa-calendar" aria-hidden="true"></i>
-              <time datetime="2018-11-27T08:05:39Z">
-                November 27, 2018
-              </time>
-            </span>
-            <span class="reading-time">
-              <i class="fa fa-clock-o" aria-hidden="true"></i>
-              2-minute read
-            </span>
-          </div>
-          
-          <div class="categories">
-  <i class="fa fa-folder" aria-hidden="true"></i>
-    <a href="/categories/tech/">Tech</a></div>
-
-          
-        </div>
-      </header>
-
-      <div class="post-content">
-        
-        <hr>
-<h4 id="摘要">
-  摘要
-  <a class="heading-link" href="#%e6%91%98%e8%a6%81">
-    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
-    <span class="sr-only">Link to heading</span>
-  </a>
-</h4>
+  </header> 
+  <div class="post-content"><hr>
+<h4 id="摘要">摘要<a hidden class="anchor" aria-hidden="true" href="#摘要">#</a></h4>
 <p>BloomFilter提供了一种判断一个值是否存在于指定集合的方法。在一个数据量较低的场景下，将数据保存到Hashset，然后利用hash检索某个值是否存在，但是在一个非常大的数据集中，传统的方法会消耗大量的内存，这导致OOM问题。BloomFilter的思路是，将一个value经过多次不同的hash映射到一个有限长度的bit数组中。当检测某个值是否存在的时候，只需要使用相同的hash检测,在bit数组中同时存在，则证明value大概率出现在集合中。如果有任何一次hash的index在bit map中被标记为0（代表无效），则证明value 一定不出现在该集合中。</p>
 <p>之所以出现这个原因（大概率出现），是因为A和B两个value经过多次hash后，可能同时将bit map中相同的index标记为1。
 使用bloomFilter可以节省大量的内存，在很多对结果要求并不很严格的场景下，bloomFilter是高效的。</p>
@@ -275,98 +300,84 @@ public class BloomFilter { private static final int MAX_HASH_COUNT=3; private by
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>BloomFilter 的准确率取决于size和hash次数，以及好的Hash函数选择。  在防止缓存击穿这类问题上，可以使用Bloomfilter。</p>
 
-      </div>
 
+  </div>
 
-      <footer>
-        
-
-
-        <div id="disqus_thread"></div>
-<script>
-  window.disqus_config = function () {
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+  </footer>
+</article>
+    </main>
     
-    
-    
-    };
-    (function() {
-        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
-            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
-            return;
-        }
-        var d = document, s = d.createElement('script'); s.async = true;
-        s.src = '//' + "okuer" + '.disqus.com/embed.js';
-        s.setAttribute('data-timestamp', +new Date());
-        (d.head || d.body).appendChild(s);
-    })();
-    
-    document.addEventListener('themeChanged', function (e) { 
-        if (document.readyState == 'complete') {
-          DISQUS.reset({ reload: true, config: disqus_config });
-        }
-    });
-</script>
-        
-        
-        
-      </footer>
-    </article>
-
-    
-  </section>
-
-    </div>
-
-    <footer class="footer">
-  <section class="container">
-    ©
-    
-      2014 -
-    
-    2023
-     ghost 
-    ·
-    
-    Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.
-    
-  </section>
+<footer class="footer">
+    <span>&copy; 2024 <a href="https://blog.okuer.com">Okuer</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
 </footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
 
-  </main>
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
 
-  
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
 
-  
-  
-  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
-  
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
 
-  
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
 
-  
-
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
+</script>
 </body>
 
 </html>

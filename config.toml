@@ -1,6 +1,6 @@
 baseurl = "https://blog.okuer.com"
 title = "Okuer"
-theme = "hugo-coder"
+theme = "PaperMod"
 languagecode = "en"
 defaultcontentlanguage = "en"
 paginate = 100
@@ -10,57 +10,58 @@ pygmentscodefencesguesssyntax = true
 disqusShortname = "okuer"
 
 [params]
-  author = "ghost"
-  info = "Developer & Game lover"
-  description = "ghost's personal website"
-  keywords = "blog,developer,personal"
-  avatarURL = "images/avatar.jpg"
-  avatar = "lvxiang119@gmail.com"
-  # favicon_32 = "/img/favicon-32x32.png"
-  # favicon_16 = "/img/favicon-16x16.png"
-  since = 2014
-  enableTwemoji = true
-  colorScheme = "auto"
-  hidecolorschemetoggle = false
-  # customCSS = ["css/custom.css"]
-  # customSCSS = ["scss/custom.scss"]
-  # customJS = ["js/custom.js"]
+tags = ["blog", "developer", "personal"]
+author = "ghost"
+info = "Developer & Game lover"
+description = "ghost's personal website"
+keywords = ["blog", "developer", "personal"]
+avatarURL = "images/avatar.jpg"
+avatar = "lvxiang119@gmail.com"
+# favicon_32 = "/img/favicon-32x32.png"
+# favicon_16 = "/img/favicon-16x16.png"
+since = 2014
+enableTwemoji = true
+colorScheme = "auto"
+hidecolorschemetoggle = false
+# customCSS = ["css/custom.css"]
+# customSCSS = ["scss/custom.scss"]
+# customJS = ["js/custom.js"]
 
 [taxonomies]
-  category = "categories"
-  series = "series"
-  tag = "tags"
-  author = "authors"
+category = "categories"
+series = "series"
+tag = "tags"
+author = "authors"
 
 # Social links
 [[params.social]]
-  name = "Github"
-  icon = "fa fa-github fa-2x"
-  weight = 1
-  url = "https://github.com/xxlv/"
+name = "Github"
+icon = "fa fa-github fa-2x"
+weight = 1
+url = "https://github.com/xxlv/"
 
 [[params.social]]
-  name = "Twitter"
-  icon = "fa fa-twitter fa-2x"
-  weight = 3
-  url = "https://twitter.com/lvxiang_ghost/"
+name = "Twitter"
+icon = "fa fa-twitter fa-2x"
+weight = 3
+url = "https://twitter.com/lvxiang_ghost/"
 
 # Menu links
 [[menu.main]]
-  name = "Blog"
-  weight = 1
-  url  = "/posts"
+name = "Blog"
+weight = 1
+url = "/posts"
 [[menu.main]]
-  name = "Go"
-  weight = 2
-  url  = "/go"
+name = "Go"
+weight = 2
+url = "/go"
 
 [[menu.main]]
-  name = "Projects"
-  weight = 3
-  url  = "project"
+name = "Projects"
+weight = 3
+url = "project"
 
 [[menu.main]]
-  name = "About"
-  weight = 13
-  url = "about/"
+name = "About"
+weight = 13
+url = "about/"

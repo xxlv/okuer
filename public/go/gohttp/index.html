@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Go net/http 分析 | Okuer</title>
+<meta name="keywords" content="">
+<meta name="description" content="背景 RoundTrip Transport TLS ALPN Http2 如何工作的? Client的建立 这是一个非常简单的使用Http Client的例子
+client := &amp;http.Client{ Timeout: 30 * time.Second, } 当上面的Client 初始化完成后, 将经过下面几个阶段:
+Do 入口 Parse And Get Req Send send with transport (DefaultTransport with h2 ,impl RoundTripper interface) graph LR A[Do 入口] --&gt; B[Parse And Get Req] B --&gt; C[Send] C --&gt; D[send with transport] D --&gt; E{DefaultTransport with h2} E --&gt; F[impl RoundTripper interface] 这里注意，如果没有配置Transport,go将会选择一个 DefaultTansport,并且开启 ForceAttemptHTTP2
+ForceAttemptHTTP2 这个字段为True将会忽略你的 non-zero Dial, DialTLS, or DialContext func or TLSClientConfig 当你提供自定义的拨号（dial）函数或 TLS 配置时，可能会有一些特别的需求或者约束，这些需求或约束可能与 HTTP/2 的某些特性不兼容。 设置为True则总是尝试使用h2。">
+<meta name="author" content="ghost">
+<link rel="canonical" href="https://blog.okuer.com/go/gohttp/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.b609c58d5c11bb90b1a54e04005d74ad1ddf22165eb79f5533967e57df9c3b50.css" integrity="sha256-tgnFjVwRu5CxpU4EAF10rR3fIhZet59VM5Z&#43;V9&#43;cO1A=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://blog.okuer.com/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://blog.okuer.com/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://blog.okuer.com/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://blog.okuer.com/apple-touch-icon.png">
+<link rel="mask-icon" href="https://blog.okuer.com/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript><meta property="og:title" content="Go net/http 分析" />
+<meta property="og:description" content="背景 RoundTrip Transport TLS ALPN Http2 如何工作的? Client的建立 这是一个非常简单的使用Http Client的例子
+client := &amp;http.Client{ Timeout: 30 * time.Second, } 当上面的Client 初始化完成后, 将经过下面几个阶段:
+Do 入口 Parse And Get Req Send send with transport (DefaultTransport with h2 ,impl RoundTripper interface) graph LR A[Do 入口] --&gt; B[Parse And Get Req] B --&gt; C[Send] C --&gt; D[send with transport] D --&gt; E{DefaultTransport with h2} E --&gt; F[impl RoundTripper interface] 这里注意，如果没有配置Transport,go将会选择一个 DefaultTansport,并且开启 ForceAttemptHTTP2
+ForceAttemptHTTP2 这个字段为True将会忽略你的 non-zero Dial, DialTLS, or DialContext func or TLSClientConfig 当你提供自定义的拨号（dial）函数或 TLS 配置时，可能会有一些特别的需求或者约束，这些需求或约束可能与 HTTP/2 的某些特性不兼容。 设置为True则总是尝试使用h2。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.okuer.com/go/gohttp/" /><meta property="article:section" content="go" />
+<meta property="article:published_time" content="2024-01-01T21:09:14+08:00" />
+<meta property="article:modified_time" content="2024-01-01T21:09:14+08:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Go net/http 分析"/>
+<meta name="twitter:description" content="背景 RoundTrip Transport TLS ALPN Http2 如何工作的? Client的建立 这是一个非常简单的使用Http Client的例子
+client := &amp;http.Client{ Timeout: 30 * time.Second, } 当上面的Client 初始化完成后, 将经过下面几个阶段:
+Do 入口 Parse And Get Req Send send with transport (DefaultTransport with h2 ,impl RoundTripper interface) graph LR A[Do 入口] --&gt; B[Parse And Get Req] B --&gt; C[Send] C --&gt; D[send with transport] D --&gt; E{DefaultTransport with h2} E --&gt; F[impl RoundTripper interface] 这里注意，如果没有配置Transport,go将会选择一个 DefaultTansport,并且开启 ForceAttemptHTTP2
+ForceAttemptHTTP2 这个字段为True将会忽略你的 non-zero Dial, DialTLS, or DialContext func or TLSClientConfig 当你提供自定义的拨号（dial）函数或 TLS 配置时，可能会有一些特别的需求或者约束，这些需求或约束可能与 HTTP/2 的某些特性不兼容。 设置为True则总是尝试使用h2。"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Goes",
+      "item": "https://blog.okuer.com/go/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Go net/http 分析",
+      "item": "https://blog.okuer.com/go/gohttp/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Go net/http 分析",
+  "name": "Go net\/http 分析",
+  "description": "背景 RoundTrip Transport TLS ALPN Http2 如何工作的? Client的建立 这是一个非常简单的使用Http Client的例子\nclient := \u0026amp;http.Client{ Timeout: 30 * time.Second, } 当上面的Client 初始化完成后, 将经过下面几个阶段:\nDo 入口 Parse And Get Req Send send with transport (DefaultTransport with h2 ,impl RoundTripper interface) graph LR A[Do 入口] --\u0026gt; B[Parse And Get Req] B --\u0026gt; C[Send] C --\u0026gt; D[send with transport] D --\u0026gt; E{DefaultTransport with h2} E --\u0026gt; F[impl RoundTripper interface] 这里注意，如果没有配置Transport,go将会选择一个 DefaultTansport,并且开启 ForceAttemptHTTP2\nForceAttemptHTTP2 这个字段为True将会忽略你的 non-zero Dial, DialTLS, or DialContext func or TLSClientConfig 当你提供自定义的拨号（dial）函数或 TLS 配置时，可能会有一些特别的需求或者约束，这些需求或约束可能与 HTTP/2 的某些特性不兼容。 设置为True则总是尝试使用h2。",
+  "keywords": [
+    
+  ],
+  "articleBody": "背景 RoundTrip Transport TLS ALPN Http2 如何工作的? Client的建立 这是一个非常简单的使用Http Client的例子\nclient := \u0026http.Client{ Timeout: 30 * time.Second, } 当上面的Client 初始化完成后, 将经过下面几个阶段:\nDo 入口 Parse And Get Req Send send with transport (DefaultTransport with h2 ,impl RoundTripper interface) graph LR A[Do 入口] --\u003e B[Parse And Get Req] B --\u003e C[Send] C --\u003e D[send with transport] D --\u003e E{DefaultTransport with h2} E --\u003e F[impl RoundTripper interface] 这里注意，如果没有配置Transport,go将会选择一个 DefaultTansport,并且开启 ForceAttemptHTTP2\nForceAttemptHTTP2 这个字段为True将会忽略你的 non-zero Dial, DialTLS, or DialContext func or TLSClientConfig 当你提供自定义的拨号（dial）函数或 TLS 配置时，可能会有一些特别的需求或者约束，这些需求或约束可能与 HTTP/2 的某些特性不兼容。 设置为True则总是尝试使用h2。\nvar DefaultTransport RoundTripper = \u0026Transport{ Proxy: ProxyFromEnvironment, DialContext: defaultTransportDialContext(\u0026net.Dialer{ Timeout: 30 * time.Second, KeepAlive: 30 * time.Second, }), ForceAttemptHTTP2: true, MaxIdleConns: 100, IdleConnTimeout: 90 * time.Second, TLSHandshakeTimeout: 10 * time.Second, ExpectContinueTimeout: 1 * time.Second, } Transport的任务 Transport 是实现了RoundTripper 接口的一个代表Http请求模型的Struct\n下面我摘录一下比较重要的几个字段,\nidleConn 空闲的链接 DialTLS/Dial 拨号 TLSNextProto NextProto TLSNextProto 是一个映射（map），它指定了在 TLS ALPN（Application-Layer Protocol Negotiation，应用层协议协商）之后，Transport 如何切换到另一个协议（如 HTTP/2）。\nALPN 是一个 TLS 扩展，它允许客户端和服务器在握手阶段就协商出一个共同支持的应用层协议，比如 HTTP/1.1、HTTP/2 或者其他的协议。这个协议的名称会在 TLS 握手完成后被返回，比如 “http/1.1” 或者 “h2”（代表 HTTP/2）。\n如果 Transport 通过 TLS 连接拨号并且协议名称非空，同时 TLSNextProto 包含对应的映射条目（例如 “h2”），那么将会调用与该条目关联的函数。这个函数会接收请求的权限（例如 “example.com” 或 “example.com:1234”）和 TLS 连接，然后必须返回一个 RoundTripper，由这个 RoundTripper 来处理请求。\n如果 TLSNextProto 不为 nil，HTTP/2 支持将不会自动启用。这是因为 TLSNextProto 提供了一种方式来自定义协议协商后的处理，所以如果你设置了 TLSNextProto，Transport 将会假定你想要自己控制协议切换的过程，包括是否启用 HTTP/2。\ntype Transport struct { idleConn map[connectMethodKey][]*persistConn // most recently used at end Dial func(network, addr string) (net.Conn, error) DialTLS func(network, addr string) (net.Conn, error) TLSNextProto map[string]func(authority string, c *tls.Conn) RoundTripper h2transport h2Transport // non-nil if http2 wired up ForceAttemptHTTP2 bool } 关于Conn Conn 本质上是一个TCP链接(net.Conn) persistConn/*tls.Conn 是一个包装的net.Conn\nnet.Conn 叫plainConn, 建立在在其之上的连接都通过各种数据协议完成升级.比如TLS的Conn 可以完成数据加密通讯.\nTLS Conn TLS Conn 主要完成\n加密通信：TLS 通过对数据进行加密来保护通信内容的隐私和安全。这意味着，即使数据在传输过程中被拦截，攻击者也无法读取或理解被加密的数据。\n身份验证：TLS 使用证书来验证服务器（有时也用于验证客户端）的身份，保证数据被发送到正确的服务器，而不是被发送到冒充者的服务器。\nRoundTripper的流程(DefaultTransport) DefaultTransport 是支持H2协议的。 但是服务端可能并不支持h2.因此 Client需要明确将自己支持的协议告知Server\n这是如何做的呢？ 答案很简单,商量着来。\n我们首先注册一下 onceSetNextProtoDefaults 设置好 http2Transport 并且注册 UpgradeFn\n此时我们获取一个Conn并且升级成为TLS，在Tls Conn完成后，通过ALPN层获取到服务器支持H2,因此调用UpgradeFn 将TLS Conn 升级成为H2.\n因为TLS(https)已经被广泛接受了，因此ALPN 协议在 TLS上实现减少开销\nALPN 简单说说ALPN(Application-Layer Protocol Negotiation)。 Client 需要跟 Server 进行友好协商，确定究竟这个TCP(TLS连接)之上的数据交换采取什么协议。 因此，Client 需要提供自己的支持的协议列表，Server 从中选择能够支持一个.\n这就是ALPN\n如何做的呢？ 既然是建立在TSL 基础上的，流程就是在建立TLS之后,通过发送 ClientHello message 在 alpnProtocols 字段上设置支持的待协商协议列表.\nServer将返回 ServerHello message. 在这个message 中将返回Server 确定的alpnProtocols.例如 h2\nUpgrade to h2 在TLS 上确定了支持h2 之后，就需要进行UpgradeFn 来使得整个协议升级为http2\nHttp2 http2 的核心是一个二进制分帧层。可以reuse Conn.\n想象在一个通道上传输(Client Send) 和 接受(Client Accept) 货物, Client和Server建立连接之后，就像是存在一个传输的通道。 我们需要一个编号来区分到底是什么货物。当Client 将一个苹果发送给服务端的时候。Server针对这个苹果进行加工处理并返回的时候，同样要告知，处理的苹果正式Client 发送的那个。 因此需要一个叫 StreamID 的标记来区分每一个数据帧。\n在 h2_bundle.go 中的 cc.addStreamLocked(cs) // assigns stream ID 负责产生这个ID 这是h2 协议能reuse Conn并且保证数据准确的基础。\nHttp2 roundTrip 的核心如下(go v1.21)\n可以看到，已经升级为h2的Conn 在处理Request 的流程在一个retry逻辑中实现\n如下，第一次访问的时候，connPool内不存在，因此需要返回 http2noCachedConnError\n这个错误会被转换成一个sentenal error ErrSkipAltProtocol 因此会执行创建Conn 升级TLS并且进行H2升级的全过程.\n// RoundTripOpt is like RoundTrip, but takes options. func (t *http2Transport) RoundTripOpt(req *Request, opt http2RoundTripOpt) (*Response, error) { if !(req.URL.Scheme == \"https\" || (req.URL.Scheme == \"http\" \u0026\u0026 t.AllowHTTP)) { return nil, errors.New(\"http2: unsupported scheme\") } addr := http2authorityAddr(req.URL.Scheme, req.URL.Host) for retry := 0; ; retry++ { cc, err := t.connPool().GetClientConn(req, addr) if err != nil { t.vlogf(\"http2: Transport failed to get client conn for %s: %v\", addr, err) return nil, err } reused := !atomic.CompareAndSwapUint32(\u0026cc.reused, 0, 1) http2traceGotConn(req, cc, reused) res, err := cc.RoundTrip(req) if err != nil \u0026\u0026 retry \u003c= 6 { roundTripErr := err if req, err = http2shouldRetryRequest(req, err); err == nil { // After the first retry, do exponential backoff with 10% jitter. if retry == 0 { t.vlogf(\"RoundTrip retrying after failure: %v\", roundTripErr) continue } backoff := float64(uint(1) \u003c\u003c (uint(retry) - 1)) backoff += backoff * (0.1 * mathrand.Float64()) d := time.Second * time.Duration(backoff) timer := http2backoffNewTimer(d) select { case \u003c-timer.C: t.vlogf(\"RoundTrip retrying after failure: %v\", roundTripErr) continue case \u003c-req.Context().Done(): timer.Stop() err = req.Context().Err() } } } if err != nil { t.vlogf(\"RoundTrip failure: %v\", err) return nil, err } return res, nil } } 再次回到Conn 这里在讨论一些细节，关于Conn\n在上面H2的获得Conn的过程中，因为cache miss 导致回退到TCP连接的创建过程。TCP究竟是如何创建一个Conn的呢？\n(t *Transport) getConn 这个方法负责创建一个PersisConn\n构造 wantConn wantConn 可能创建新的Conn 也可能从idle获取\n新起一个Goroutine 跑 dial\n如有自定义的dial hasCustomTLSDialer 跑自定义 否则跑 t.dial(ctx, \"tcp\", cm.addr()) 在内部会走到DialContext 方法进行Dial\nShadow the nettrace (if any) during resolve so Connect events don’t fire for DNS lookups.\n// Shadow the nettrace (if any) during resolve so Connect events don't fire for DNS lookups. resolveCtx := ctx if trace, _ := ctx.Value(nettrace.TraceKey{}).(*nettrace.Trace); trace != nil { shadow := *trace shadow.ConnectStart = nil shadow.ConnectDone = nil resolveCtx = context.WithValue(resolveCtx, nettrace.TraceKey{}, \u0026shadow) } 注意，我们跟一个domain建立Conn，因此，需要根据domain 找到对应的Ip，这部分在 lookup.go 的lookupIPAddr方法内支持\n当查询到多条地址的时候，通过dialParallel 来竞赛，防止出现长尾效应。\n上面完成了Conn,下面就开始 将一个Pure Conn 变成TLS 通过 addTLS 来实现这一点\naddTLS 具体来讲，就是 clientHandshake 通过 hello message 跟服务端产生握手交换协议数据。 ALPN的数据也是在这里发送给Server的。 到这一步，已经完成了TLS的Conn。接下来，就是回到了H2,借助UpradeFn, TLS之上的Conn传输将通过Http2协议。\nupgradeFn := func(authority string, c *tls.Conn) RoundTripper { addr := http2authorityAddr(\"https\", authority) if used, err := connPool.addConnIfNeeded(addr, t2, c); err != nil { go c.Close() return http2erringRoundTripper{err} } else if !used { // Turns out we don't need this c. // For example, two goroutines made requests to the same host // at the same time, both kicking off TCP dials. (since protocol // was unknown) go c.Close() } return t2 } 底层采用 newClientConn 来将pureConn 升级为H2 Conn\n下面的net.Conn 已经是一个TLS Conn 了\nfunc (t *http2Transport) newClientConn(c net.Conn, singleUse bool) (*http2ClientConn, error) { cc := \u0026http2ClientConn{ t: t, tconn: c, readerDone: make(chan struct{}), nextStreamID: 1, maxFrameSize: 16 \u003c\u003c 10, // spec default initialWindowSize: 65535, // spec default maxConcurrentStreams: http2initialMaxConcurrentStreams, // \"infinite\", per spec. Use a smaller value until we have received server settings. peerMaxHeaderListSize: 0xffffffffffffffff, // \"infinite\", per spec. Use 2^64-1 instead. streams: make(map[uint32]*http2clientStream), singleUse: singleUse, wantSettingsAck: true, pings: make(map[[8]byte]chan struct{}), reqHeaderMu: make(chan struct{}, 1), } // ... } 总结 Ok,目前全部的整体流程基本整理完了。 当然还有很多细节，比如三次握手,加密套件,连接复用，监听数据的循环等等。\n",
+  "wordCount" : "789",
+  "inLanguage": "en",
+  "datePublished": "2024-01-01T21:09:14+08:00",
+  "dateModified": "2024-01-01T21:09:14+08:00",
+  "author":{
+    "@type": "Person",
+    "name": "ghost"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://blog.okuer.com/go/gohttp/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Okuer",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://blog.okuer.com/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://blog.okuer.com" accesskey="h" title="Okuer (Alt + H)">Okuer</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://blog.okuer.com/posts" title="Blog">
+                    <span>Blog</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://blog.okuer.com/go" title="Go">
+                    <span>Go</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://blog.okuer.com/project" title="Projects">
+                    <span>Projects</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://blog.okuer.com/about/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      Go net/http 分析
+    </h1>
+    <div class="post-meta"><span title='2024-01-01 21:09:14 +0800 CST'>January 1, 2024</span>&nbsp;·&nbsp;ghost
+
+</div>
+  </header> 
+  <div class="post-content"><h2 id="背景">背景<a hidden class="anchor" aria-hidden="true" href="#背景">#</a></h2>
+<ul>
+<li>RoundTrip</li>
+<li>Transport</li>
+<li>TLS</li>
+<li>ALPN</li>
+<li>Http2</li>
+</ul>
+<h2 id="如何工作的">如何工作的?<a hidden class="anchor" aria-hidden="true" href="#如何工作的">#</a></h2>
+<h3 id="client的建立">Client的建立<a hidden class="anchor" aria-hidden="true" href="#client的建立">#</a></h3>
+<p>这是一个非常简单的使用Http Client的例子</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span>	client := &amp;http.Client{
+</span></span><span style="display:flex;"><span>		Timeout: 30 * time.Second,
+</span></span><span style="display:flex;"><span>	}
+</span></span></code></pre></div><p>当上面的Client 初始化完成后, 将经过下面几个阶段:</p>
+<ol>
+<li>Do 入口</li>
+<li>Parse And Get Req</li>
+<li>Send</li>
+<li>send with transport (DefaultTransport with h2 ,impl RoundTripper interface)</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>graph LR
+</span></span><span style="display:flex;"><span>    A[Do 入口] --&gt; B[Parse And Get Req]
+</span></span><span style="display:flex;"><span>    B --&gt; C[Send]
+</span></span><span style="display:flex;"><span>    C --&gt; D[send with transport]
+</span></span><span style="display:flex;"><span>    D --&gt; E{DefaultTransport with h2}
+</span></span><span style="display:flex;"><span>    E --&gt; F[impl RoundTripper interface]
+</span></span></code></pre></div><p>这里注意，如果没有配置Transport,go将会选择一个 DefaultTansport,并且开启 ForceAttemptHTTP2</p>
+<p><em>ForceAttemptHTTP2</em> 这个字段为True将会忽略你的 non-zero Dial, DialTLS, or DialContext func or TLSClientConfig
+当你提供自定义的拨号（dial）函数或 TLS 配置时，可能会有一些特别的需求或者约束，这些需求或约束可能与 HTTP/2 的某些特性不兼容。 设置为True则总是尝试使用h2。</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="font-weight:bold">var</span> DefaultTransport RoundTripper = &amp;Transport{
+</span></span><span style="display:flex;"><span>	Proxy: ProxyFromEnvironment,
+</span></span><span style="display:flex;"><span>	DialContext: defaultTransportDialContext(&amp;net.Dialer{
+</span></span><span style="display:flex;"><span>		Timeout:   30 * time.Second,
+</span></span><span style="display:flex;"><span>		KeepAlive: 30 * time.Second,
+</span></span><span style="display:flex;"><span>	}),
+</span></span><span style="display:flex;"><span>	ForceAttemptHTTP2:     <span style="font-weight:bold">true</span>,
+</span></span><span style="display:flex;"><span>	MaxIdleConns:          100,
+</span></span><span style="display:flex;"><span>	IdleConnTimeout:       90 * time.Second,
+</span></span><span style="display:flex;"><span>	TLSHandshakeTimeout:   10 * time.Second,
+</span></span><span style="display:flex;"><span>	ExpectContinueTimeout: 1 * time.Second,
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="transport的任务">Transport的任务<a hidden class="anchor" aria-hidden="true" href="#transport的任务">#</a></h3>
+<p>Transport 是实现了RoundTripper 接口的一个代表Http请求模型的Struct</p>
+<p>下面我摘录一下比较重要的几个字段,</p>
+<ol>
+<li>idleConn 空闲的链接</li>
+<li>DialTLS/Dial 拨号</li>
+<li>TLSNextProto NextProto</li>
+</ol>
+<blockquote>
+<p>TLSNextProto 是一个映射（map），它指定了在 TLS ALPN（Application-Layer Protocol Negotiation，应用层协议协商）之后，Transport 如何切换到另一个协议（如 HTTP/2）。</p>
+</blockquote>
+<blockquote>
+<p>ALPN 是一个 TLS 扩展，它允许客户端和服务器在握手阶段就协商出一个共同支持的应用层协议，比如 HTTP/1.1、HTTP/2 或者其他的协议。这个协议的名称会在 TLS 握手完成后被返回，比如 &ldquo;http/1.1&rdquo; 或者 &ldquo;h2&rdquo;（代表 HTTP/2）。</p>
+</blockquote>
+<blockquote>
+<p>如果 Transport 通过 TLS 连接拨号并且协议名称非空，同时 TLSNextProto 包含对应的映射条目（例如 &ldquo;h2&rdquo;），那么将会调用与该条目关联的函数。这个函数会接收请求的权限（例如 &ldquo;example.com&rdquo; 或 &ldquo;example.com:1234&rdquo;）和 TLS 连接，然后必须返回一个 RoundTripper，由这个 RoundTripper 来处理请求。</p>
+</blockquote>
+<blockquote>
+<p>如果 TLSNextProto 不为 nil，HTTP/2 支持将不会自动启用。这是因为 TLSNextProto 提供了一种方式来自定义协议协商后的处理，所以如果你设置了 TLSNextProto，Transport 将会假定你想要自己控制协议切换的过程，包括是否启用 HTTP/2。</p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="font-weight:bold">type</span> Transport <span style="font-weight:bold">struct</span> {
+</span></span><span style="display:flex;"><span>	idleConn     <span style="font-weight:bold">map</span>[connectMethodKey][]*persistConn <span style="font-style:italic">// most recently used at end
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>	
+</span></span><span style="display:flex;"><span>	Dial <span style="font-weight:bold">func</span>(network, addr <span style="">string</span>) (net.Conn, <span style="">error</span>)
+</span></span><span style="display:flex;"><span>	DialTLS <span style="font-weight:bold">func</span>(network, addr <span style="">string</span>) (net.Conn, <span style="">error</span>)
+</span></span><span style="display:flex;"><span>	TLSNextProto <span style="font-weight:bold">map</span>[<span style="">string</span>]<span style="font-weight:bold">func</span>(authority <span style="">string</span>, c *tls.Conn) RoundTripper
+</span></span><span style="display:flex;"><span>	h2transport        h2Transport <span style="font-style:italic">// non-nil if http2 wired up
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>	ForceAttemptHTTP2 <span style="">bool</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h4 id="关于conn">关于Conn<a hidden class="anchor" aria-hidden="true" href="#关于conn">#</a></h4>
+<p>Conn 本质上是一个TCP链接(net.Conn)
+persistConn/*tls.Conn 是一个包装的net.Conn</p>
+<p>net.Conn 叫plainConn, 建立在在其之上的连接都通过各种数据协议完成升级.比如TLS的Conn 可以完成数据加密通讯.</p>
+<h5 id="tls-conn">TLS Conn<a hidden class="anchor" aria-hidden="true" href="#tls-conn">#</a></h5>
+<p>TLS Conn 主要完成</p>
+<ol>
+<li>
+<p>加密通信：TLS 通过对数据进行加密来保护通信内容的隐私和安全。这意味着，即使数据在传输过程中被拦截，攻击者也无法读取或理解被加密的数据。</p>
+</li>
+<li>
+<p>身份验证：TLS 使用证书来验证服务器（有时也用于验证客户端）的身份，保证数据被发送到正确的服务器，而不是被发送到冒充者的服务器。</p>
+</li>
+</ol>
+<h3 id="roundtripper的流程defaulttransport">RoundTripper的流程(DefaultTransport)<a hidden class="anchor" aria-hidden="true" href="#roundtripper的流程defaulttransport">#</a></h3>
+<p>DefaultTransport 是支持H2协议的。 但是服务端可能并不支持h2.因此 Client需要明确将自己支持的协议告知Server</p>
+<p>这是如何做的呢？
+答案很简单,商量着来。</p>
+<p>我们首先注册一下 onceSetNextProtoDefaults 设置好 http2Transport 并且注册 UpgradeFn</p>
+<p>此时我们获取一个Conn并且升级成为TLS，在Tls Conn完成后，通过ALPN层获取到服务器支持H2,因此调用UpgradeFn
+将TLS Conn 升级成为H2.</p>
+<blockquote>
+<p>因为TLS(https)已经被广泛接受了，因此ALPN 协议在 TLS上实现减少开销</p>
+</blockquote>
+<h3 id="alpn">ALPN<a hidden class="anchor" aria-hidden="true" href="#alpn">#</a></h3>
+<p>简单说说ALPN(Application-Layer Protocol Negotiation)。
+Client 需要跟 Server 进行友好协商，确定究竟这个TCP(TLS连接)之上的数据交换采取什么协议。
+因此，Client 需要提供自己的支持的协议列表，Server 从中选择能够支持一个.</p>
+<p>这就是ALPN</p>
+<h4 id="如何做的呢">如何做的呢？<a hidden class="anchor" aria-hidden="true" href="#如何做的呢">#</a></h4>
+<p>既然是建立在TSL 基础上的，流程就是在建立TLS之后,通过发送 <code>ClientHello</code> message 在
+alpnProtocols 字段上设置支持的待协商协议列表.</p>
+<p>Server将返回 <code>ServerHello</code> message. 在这个message 中将返回Server 确定的alpnProtocols.例如 <code>h2</code></p>
+<h2 id="upgrade-to-h2">Upgrade to h2<a hidden class="anchor" aria-hidden="true" href="#upgrade-to-h2">#</a></h2>
+<p>在TLS 上确定了支持<code>h2</code> 之后，就需要进行UpgradeFn 来使得整个协议升级为<code>http2</code></p>
+<h2 id="http2">Http2<a hidden class="anchor" aria-hidden="true" href="#http2">#</a></h2>
+<p>http2 的核心是一个二进制分帧层。可以reuse Conn.</p>
+<p>想象在一个通道上传输(Client Send) 和 接受(Client Accept) 货物, Client和Server建立连接之后，就像是存在一个传输的通道。
+我们需要一个编号来区分到底是什么货物。当Client 将一个苹果发送给服务端的时候。Server针对这个苹果进行加工处理并返回的时候，同样要告知，处理的苹果正式Client 发送的那个。 因此需要一个叫 <code>StreamID</code> 的标记来区分每一个数据帧。</p>
+<p>在 <code>h2_bundle.go</code> 中的 <code>cc.addStreamLocked(cs) // assigns stream ID</code> 负责产生这个ID
+这是<code>h2</code> 协议能reuse Conn并且保证数据准确的基础。</p>
+<p>Http2 roundTrip 的核心如下(go v1.21)</p>
+<p>可以看到，已经升级为h2的Conn 在处理Request 的流程在一个retry逻辑中实现</p>
+<p>如下，第一次访问的时候，connPool内不存在，因此需要返回 <code>http2noCachedConnError</code></p>
+<p>这个错误会被转换成一个sentenal error <code>ErrSkipAltProtocol</code> 因此会执行创建Conn 升级TLS并且进行H2升级的全过程.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="font-style:italic">// RoundTripOpt is like RoundTrip, but takes options.
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span><span style="font-weight:bold">func</span> (t *http2Transport) RoundTripOpt(req *Request, opt http2RoundTripOpt) (*Response, <span style="">error</span>) {
+</span></span><span style="display:flex;"><span>	<span style="font-weight:bold">if</span> !(req.URL.Scheme == <span style="font-style:italic">&#34;https&#34;</span> || (req.URL.Scheme == <span style="font-style:italic">&#34;http&#34;</span> &amp;&amp; t.AllowHTTP)) {
+</span></span><span style="display:flex;"><span>		<span style="font-weight:bold">return</span> <span style="font-weight:bold">nil</span>, errors.New(<span style="font-style:italic">&#34;http2: unsupported scheme&#34;</span>)
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	addr := http2authorityAddr(req.URL.Scheme, req.URL.Host)
+</span></span><span style="display:flex;"><span>	<span style="font-weight:bold">for</span> retry := 0; ; retry++ {
+</span></span><span style="display:flex;"><span>		cc, err := t.connPool().GetClientConn(req, addr)
+</span></span><span style="display:flex;"><span>		<span style="font-weight:bold">if</span> err != <span style="font-weight:bold">nil</span> {
+</span></span><span style="display:flex;"><span>			t.vlogf(<span style="font-style:italic">&#34;http2: Transport failed to get client conn for %s: %v&#34;</span>, addr, err)
+</span></span><span style="display:flex;"><span>			<span style="font-weight:bold">return</span> <span style="font-weight:bold">nil</span>, err
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>		reused := !atomic.CompareAndSwapUint32(&amp;cc.reused, 0, 1)
+</span></span><span style="display:flex;"><span>		http2traceGotConn(req, cc, reused)
+</span></span><span style="display:flex;"><span>		res, err := cc.RoundTrip(req)
+</span></span><span style="display:flex;"><span>		<span style="font-weight:bold">if</span> err != <span style="font-weight:bold">nil</span> &amp;&amp; retry &lt;= 6 {
+</span></span><span style="display:flex;"><span>			roundTripErr := err
+</span></span><span style="display:flex;"><span>			<span style="font-weight:bold">if</span> req, err = http2shouldRetryRequest(req, err); err == <span style="font-weight:bold">nil</span> {
+</span></span><span style="display:flex;"><span>				<span style="font-style:italic">// After the first retry, do exponential backoff with 10% jitter.
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>				<span style="font-weight:bold">if</span> retry == 0 {
+</span></span><span style="display:flex;"><span>					t.vlogf(<span style="font-style:italic">&#34;RoundTrip retrying after failure: %v&#34;</span>, roundTripErr)
+</span></span><span style="display:flex;"><span>					<span style="font-weight:bold">continue</span>
+</span></span><span style="display:flex;"><span>				}
+</span></span><span style="display:flex;"><span>				backoff := float64(uint(1) &lt;&lt; (uint(retry) - 1))
+</span></span><span style="display:flex;"><span>				backoff += backoff * (0.1 * mathrand.Float64())
+</span></span><span style="display:flex;"><span>				d := time.Second * time.Duration(backoff)
+</span></span><span style="display:flex;"><span>				timer := http2backoffNewTimer(d)
+</span></span><span style="display:flex;"><span>				<span style="font-weight:bold">select</span> {
+</span></span><span style="display:flex;"><span>				<span style="font-weight:bold">case</span> &lt;-timer.C:
+</span></span><span style="display:flex;"><span>					t.vlogf(<span style="font-style:italic">&#34;RoundTrip retrying after failure: %v&#34;</span>, roundTripErr)
+</span></span><span style="display:flex;"><span>					<span style="font-weight:bold">continue</span>
+</span></span><span style="display:flex;"><span>				<span style="font-weight:bold">case</span> &lt;-req.Context().Done():
+</span></span><span style="display:flex;"><span>					timer.Stop()
+</span></span><span style="display:flex;"><span>					err = req.Context().Err()
+</span></span><span style="display:flex;"><span>				}
+</span></span><span style="display:flex;"><span>			}
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>		<span style="font-weight:bold">if</span> err != <span style="font-weight:bold">nil</span> {
+</span></span><span style="display:flex;"><span>			t.vlogf(<span style="font-style:italic">&#34;RoundTrip failure: %v&#34;</span>, err)
+</span></span><span style="display:flex;"><span>			<span style="font-weight:bold">return</span> <span style="font-weight:bold">nil</span>, err
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>		<span style="font-weight:bold">return</span> res, <span style="font-weight:bold">nil</span>
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="再次回到conn">再次回到Conn<a hidden class="anchor" aria-hidden="true" href="#再次回到conn">#</a></h2>
+<p>这里在讨论一些细节，关于Conn</p>
+<p>在上面H2的获得Conn的过程中，因为cache miss 导致回退到TCP连接的创建过程。TCP究竟是如何创建一个Conn的呢？</p>
+<p><code>(t *Transport) getConn</code> 这个方法负责创建一个PersisConn</p>
+<ol>
+<li>
+<p>构造 wantConn
+wantConn 可能创建新的Conn 也可能从idle获取</p>
+</li>
+<li>
+<p>新起一个Goroutine 跑 dial</p>
+<ul>
+<li>如有自定义的dial hasCustomTLSDialer 跑自定义</li>
+<li>否则跑 <code>t.dial(ctx, &quot;tcp&quot;, cm.addr())</code></li>
+</ul>
+<p>在内部会走到<code>DialContext</code> 方法进行Dial</p>
+<p>Shadow the nettrace (if any) during resolve so Connect events don&rsquo;t fire for DNS lookups.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span>    <span style="font-style:italic">// Shadow the nettrace (if any) during resolve so Connect events don&#39;t fire for DNS lookups.
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>    resolveCtx := ctx
+</span></span><span style="display:flex;"><span>    <span style="font-weight:bold">if</span> trace, _ := ctx.Value(nettrace.TraceKey{}).(*nettrace.Trace); trace != <span style="font-weight:bold">nil</span> {
+</span></span><span style="display:flex;"><span>        shadow := *trace
+</span></span><span style="display:flex;"><span>        shadow.ConnectStart = <span style="font-weight:bold">nil</span>
+</span></span><span style="display:flex;"><span>        shadow.ConnectDone = <span style="font-weight:bold">nil</span>
+</span></span><span style="display:flex;"><span>        resolveCtx = context.WithValue(resolveCtx, nettrace.TraceKey{}, &amp;shadow)
+</span></span><span style="display:flex;"><span>    }
+</span></span></code></pre></div><p>注意，我们跟一个domain建立Conn，因此，需要根据domain 找到对应的Ip，这部分在 <code>lookup.go</code> 的<code>lookupIPAddr</code>方法内支持</p>
+<p>当查询到多条地址的时候，通过<code>dialParallel</code> 来竞赛，防止出现长尾效应。</p>
+</li>
+<li>
+<p>上面完成了Conn,下面就开始 将一个Pure Conn 变成TLS 通过 <code>addTLS</code> 来实现这一点</p>
+</li>
+</ol>
+<h4 id="addtls">addTLS<a hidden class="anchor" aria-hidden="true" href="#addtls">#</a></h4>
+<p>具体来讲，就是 <code>clientHandshake</code> 通过 <code>hello</code> message 跟服务端产生握手交换协议数据。 ALPN的数据也是在这里发送给Server的。 到这一步，已经完成了TLS的Conn。接下来，就是回到了H2,借助UpradeFn, TLS之上的Conn传输将通过Http2协议。</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span>	upgradeFn := <span style="font-weight:bold">func</span>(authority <span style="">string</span>, c *tls.Conn) RoundTripper {
+</span></span><span style="display:flex;"><span>		addr := http2authorityAddr(<span style="font-style:italic">&#34;https&#34;</span>, authority)
+</span></span><span style="display:flex;"><span>		<span style="font-weight:bold">if</span> used, err := connPool.addConnIfNeeded(addr, t2, c); err != <span style="font-weight:bold">nil</span> {
+</span></span><span style="display:flex;"><span>			<span style="font-weight:bold">go</span> c.Close()
+</span></span><span style="display:flex;"><span>			<span style="font-weight:bold">return</span> http2erringRoundTripper{err}
+</span></span><span style="display:flex;"><span>		} <span style="font-weight:bold">else</span> <span style="font-weight:bold">if</span> !used {
+</span></span><span style="display:flex;"><span>			<span style="font-style:italic">// Turns out we don&#39;t need this c.
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>			<span style="font-style:italic">// For example, two goroutines made requests to the same host
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>			<span style="font-style:italic">// at the same time, both kicking off TCP dials. (since protocol
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>			<span style="font-style:italic">// was unknown)
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>			<span style="font-weight:bold">go</span> c.Close()
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>		<span style="font-weight:bold">return</span> t2
+</span></span><span style="display:flex;"><span>	}
+</span></span></code></pre></div><p>底层采用 newClientConn 来将pureConn 升级为H2 Conn</p>
+<blockquote>
+<p>下面的net.Conn 已经是一个TLS Conn 了</p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="font-weight:bold">func</span> (t *http2Transport) newClientConn(c net.Conn, singleUse <span style="">bool</span>) (*http2ClientConn, <span style="">error</span>) {
+</span></span><span style="display:flex;"><span>	cc := &amp;http2ClientConn{
+</span></span><span style="display:flex;"><span>		t:                     t,
+</span></span><span style="display:flex;"><span>		tconn:                 c,
+</span></span><span style="display:flex;"><span>		readerDone:            make(<span style="font-weight:bold">chan</span> <span style="font-weight:bold">struct</span>{}),
+</span></span><span style="display:flex;"><span>		nextStreamID:          1,
+</span></span><span style="display:flex;"><span>		maxFrameSize:          16 &lt;&lt; 10,                         <span style="font-style:italic">// spec default
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>		initialWindowSize:     65535,                            <span style="font-style:italic">// spec default
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>		maxConcurrentStreams:  http2initialMaxConcurrentStreams, <span style="font-style:italic">// &#34;infinite&#34;, per spec. Use a smaller value until we have received server settings.
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>		peerMaxHeaderListSize: 0xffffffffffffffff,               <span style="font-style:italic">// &#34;infinite&#34;, per spec. Use 2^64-1 instead.
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>		streams:               make(<span style="font-weight:bold">map</span>[<span style="">uint32</span>]*http2clientStream),
+</span></span><span style="display:flex;"><span>		singleUse:             singleUse,
+</span></span><span style="display:flex;"><span>		wantSettingsAck:       <span style="font-weight:bold">true</span>,
+</span></span><span style="display:flex;"><span>		pings:                 make(<span style="font-weight:bold">map</span>[[8]<span style="">byte</span>]<span style="font-weight:bold">chan</span> <span style="font-weight:bold">struct</span>{}),
+</span></span><span style="display:flex;"><span>		reqHeaderMu:           make(<span style="font-weight:bold">chan</span> <span style="font-weight:bold">struct</span>{}, 1),
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>    <span style="font-style:italic">// ...
+</span></span></span><span style="display:flex;"><span><span style="font-style:italic"></span>}
+</span></span></code></pre></div><h2 id="总结">总结<a hidden class="anchor" aria-hidden="true" href="#总结">#</a></h2>
+<p>Ok,目前全部的整体流程基本整理完了。 当然还有很多细节，比如三次握手,加密套件,连接复用，监听数据的循环等等。</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2024 <a href="https://blog.okuer.com">Okuer</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

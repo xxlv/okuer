@@ -1,238 +1,379 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <title>Goes · Okuer</title>
-    <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="color-scheme" content="light dark">
+<html lang="en" dir="auto">
 
-
-
-
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Goes | Okuer</title>
+<meta name="keywords" content="">
+<meta name="description" content="Goes - Okuer">
 <meta name="author" content="ghost">
-<meta name="description" content="ghost&#39;s personal website">
-<meta name="keywords" content="blog,developer,personal">
+<link rel="canonical" href="https://blog.okuer.com/go/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.b609c58d5c11bb90b1a54e04005d74ad1ddf22165eb79f5533967e57df9c3b50.css" integrity="sha256-tgnFjVwRu5CxpU4EAF10rR3fIhZet59VM5Z&#43;V9&#43;cO1A=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://blog.okuer.com/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://blog.okuer.com/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://blog.okuer.com/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://blog.okuer.com/apple-touch-icon.png">
+<link rel="mask-icon" href="https://blog.okuer.com/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" type="application/rss+xml" href="https://blog.okuer.com/go/index.xml">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript><meta property="og:title" content="Goes" />
+<meta property="og:description" content="ghost&#39;s personal website" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://blog.okuer.com/go/" />
 
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Goes"/>
 <meta name="twitter:description" content="ghost&#39;s personal website"/>
 
-<meta property="og:title" content="Goes" />
-<meta property="og:description" content="ghost&#39;s personal website" />
-<meta property="og:type" content="website" />
-<meta property="og:url" content="https://blog.okuer.com/go/" />
 
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Goes",
+      "item": "https://blog.okuer.com/go/"
+    }
+  ]
+}
+</script>
+</head>
 
+<body class="list" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
 
+</script>
 
-<link rel="canonical" href="https://blog.okuer.com/go/">
-
-
-<link rel="preload" href="/fonts/forkawesome-webfont.woff2?v=1.2.0" as="font" type="font/woff2" crossorigin>
-
-
-  
-  
-  <link rel="stylesheet" href="/css/coder.min.0fa2dc75ed1b76894ac0e062b10a6c4730daa745096fa120114b290ed8a48788.css" integrity="sha256-D6Lcde0bdolKwOBisQpsRzDap0UJb6EgEUspDtikh4g=" crossorigin="anonymous" media="screen" />
-
-
-
-
-
-
-  
-    
-    
-    <link rel="stylesheet" href="/css/coder-dark.min.593028e7f7ac55c003b79c230d1cd411bb4ca53b31556c3abb7f027170e646e9.css" integrity="sha256-WTAo5/esVcADt5wjDRzUEbtMpTsxVWw6u38CcXDmRuk=" crossorigin="anonymous" media="screen" />
-  
-
-
-
- 
-
-
-
-
-<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
-<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
-
-<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
-<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
-
-<link rel="manifest" href="/site.webmanifest">
-<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
-
-
-<link rel="alternate" type="application/rss+xml" href="/go/index.xml" title="Okuer" />
-
-
-<meta name="generator" content="Hugo 0.110.0">
-
-
-
-
-
-  </head>
-
-
-
-
-
-
-<body class="preload-transitions colorscheme-auto">
-  
-<div class="float-container">
-    <a id="dark-mode-toggle" class="colorscheme-toggle">
-        <i class="fa fa-adjust fa-fw" aria-hidden="true"></i>
-    </a>
-</div>
-
-
-  <main class="wrapper">
-    <nav class="navigation">
-  <section class="container">
-    <a class="navigation-title" href="/">
-      Okuer
-    </a>
-    
-      <input type="checkbox" id="menu-toggle" />
-      <label class="menu-button float-right" for="menu-toggle">
-        <i class="fa fa-bars fa-fw" aria-hidden="true"></i>
-      </label>
-      <ul class="navigation-list">
-        
-          
-            <li class="navigation-item">
-              <a class="navigation-link" href="/posts">Blog</a>
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://blog.okuer.com" accesskey="h" title="Okuer (Alt + H)">Okuer</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://blog.okuer.com/posts" title="Blog">
+                    <span>Blog</span>
+                </a>
             </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link" href="/go">Go</a>
+            <li>
+                <a href="https://blog.okuer.com/go" title="Go">
+                    <span class="active">Go</span>
+                </a>
             </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link" href="/project">Projects</a>
+            <li>
+                <a href="https://blog.okuer.com/project" title="Projects">
+                    <span>Projects</span>
+                </a>
             </li>
-          
-            <li class="navigation-item">
-              <a class="navigation-link" href="/about/">About</a>
+            <li>
+                <a href="https://blog.okuer.com/about/" title="About">
+                    <span>About</span>
+                </a>
             </li>
-          
-        
-        
-      </ul>
-    
-  </section>
-</nav>
-
-
-    <div class="content">
-      
-  <section class="container list">
-  <h1 class="title">
-    <a class="title-link" href="https://blog.okuer.com/go/">Goes</a>
+        </ul>
+    </nav>
+</header>
+<main class="main"> 
+<header class="page-header">
+  <h1>
+    Goes
   </h1>
-  
-  <ul>
-    
-    <li>
-      <span class="date">August 23, 2023</span>
-      <a class="title" href="/go/hook/">Go语言实现hook管理</a>
-    </li>
-    
-    <li>
-      <span class="date">March 8, 2023</span>
-      <a class="title" href="/go/linter/">Go Linter</a>
-    </li>
-    
-    <li>
-      <span class="date">March 4, 2023</span>
-      <a class="title" href="/go/pgo/">Go 1.20 Pgo优化</a>
-    </li>
-    
-    <li>
-      <span class="date">February 24, 2023</span>
-      <a class="title" href="/go/go-no-copy/">Go No Copy</a>
-    </li>
-    
-    <li>
-      <span class="date">February 21, 2023</span>
-      <a class="title" href="/go/go-with-wasm/">Go with wasm</a>
-    </li>
-    
-    <li>
-      <span class="date">February 15, 2023</span>
-      <a class="title" href="/go/go-module/">Go 模块化</a>
-    </li>
-    
-    <li>
-      <span class="date">February 14, 2023</span>
-      <a class="title" href="/go/go-gpm/">GPM调度模型解析</a>
-    </li>
-    
-  </ul>
-  
+</header>
 
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Go net/http 分析
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>背景 RoundTrip Transport TLS ALPN Http2 如何工作的? Client的建立 这是一个非常简单的使用Http Client的例子
+client := &amp;http.Client{ Timeout: 30 * time.Second, } 当上面的Client 初始化完成后, 将经过下面几个阶段:
+Do 入口 Parse And Get Req Send send with transport (DefaultTransport with h2 ,impl RoundTripper interface) graph LR A[Do 入口] --&gt; B[Parse And Get Req] B --&gt; C[Send] C --&gt; D[send with transport] D --&gt; E{DefaultTransport with h2} E --&gt; F[impl RoundTripper interface] 这里注意，如果没有配置Transport,go将会选择一个 DefaultTansport,并且开启 ForceAttemptHTTP2
+ForceAttemptHTTP2 这个字段为True将会忽略你的 non-zero Dial, DialTLS, or DialContext func or TLSClientConfig 当你提供自定义的拨号（dial）函数或 TLS 配置时，可能会有一些特别的需求或者约束，这些需求或约束可能与 HTTP/2 的某些特性不兼容。 设置为True则总是尝试使用h2。...</p>
+  </div>
+  <footer class="entry-footer"><span title='2024-01-01 21:09:14 +0800 CST'>January 1, 2024</span>&nbsp;·&nbsp;ghost</footer>
+  <a class="entry-link" aria-label="post link to Go net/http 分析" href="https://blog.okuer.com/go/gohttp/"></a>
+</article>
 
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Go语言实现hook管理
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p> 实现Hook管理 下面介绍一个实现一个简单的Hook管理的思路</p>
+  </div>
+  <footer class="entry-footer"><span title='2023-08-23 00:00:00 +0000 UTC'>August 23, 2023</span>&nbsp;·&nbsp;ghost</footer>
+  <a class="entry-link" aria-label="post link to Go语言实现hook管理" href="https://blog.okuer.com/go/hook/"></a>
+</article>
 
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Go Linter
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Linter 能做什么? Linter是一种工具，用于检查代码中的语法错误、潜在问题和编码约定是否符合规范。Linter可以分析源代码文件，查找并报告与规则不符合的部分，以帮助开发人员减少bug，并确保代码质量。
+如何编写自己的linter? 参考资料 https://toutiao.io/posts/fzt61t/preview </p>
+  </div>
+  <footer class="entry-footer"><span title='2023-03-08 21:09:14 +0800 CST'>March 8, 2023</span>&nbsp;·&nbsp;ghost</footer>
+  <a class="entry-link" aria-label="post link to Go Linter" href="https://blog.okuer.com/go/linter/"></a>
+</article>
 
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Go 1.20 Pgo优化
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>介绍 Profile Guided Optimization (PGO) 是一种编译器优化技术，通过基于应用程序的运行时间信息优化生成的机器代码。具体来说，PGO 通过使用编译器生成的剖面数据文件（即有关程序在运行时执行情况的信息），来指导机器代码的优化过程。这些信息可以帮助编译器更好地理解应用程序的性能瓶颈，并生成更高效的代码。
+PGO 通常分为三个步骤：
+使用编译器创建一个基准版本的可执行文件； 在训练阶段中运行此基准文件，并收集各种性能统计数据，如函数调用频率、循环迭代次数等； 使用这些统计数据重新编译程序，并应用优化策略，以生成经过改进的代码。 相比于传统的静态编译优化方式，PGO 的优势在于，它可以根据实际运行情况进行优化，因此可以更准确地优化重要的代码路径，而不是仅仅优化一些假定的热点代码。因此，PGO 可以提供更好的性能和更低的代码大小，尤其对于大型项目或者需要处理大量数据的应用程序，效果更加明显。
+In Go Go 1.20版本于2023年2月份正式发布，在这个版本里引入了PGO性能优化机制。
+步骤 引入 pprof // 项目中引入 _ &#34;net/http/pprof&#34; 采集 curl -o cpu.pprof &#34;http://localhost:8080/debug/pprof/profile?seconds=30&#34;
+修改为 default.pgo 执行 mv cpu.pprof default.pgo
+go build -pgo=auto -o pro.withPgo
+auto 模式将自动的使用 default.pgo 来进行优化 默认-pgo 为 off
+压力测试 生成 统计结果 go test load -bench=. -count=20 &gt; a.txt bench基础测试参数解释 BenchmarkMyFunction-8 1000000	1021 ns/op	256 B/op	2 allocs/op
+其中 256 B/op 表示每次操作平均分配了 256 字节的内存，2 allocs/op 表示每次操作平均进行了 2 次内存分配。-8 表示测试使用了 8 个并发线程。 比较统计 benchstat a....</p>
+  </div>
+  <footer class="entry-footer"><span title='2023-03-04 15:32:55 +0800 CST'>March 4, 2023</span>&nbsp;·&nbsp;ghost</footer>
+  <a class="entry-link" aria-label="post link to Go 1.20 Pgo优化" href="https://blog.okuer.com/go/pgo/"></a>
+</article>
 
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Go No Copy
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>什么是no copy? Lock &amp; Unlock 代表对一种临界资源的保护。go 提供的 vet 工具可以针对copylocks进行检查。
+但是如waitGroup 等同样需要配对操作的组件并没有更好的办法来阻止开发者。
+因此在 #8005中 采用了 noCopy 的struct.
+需要禁止copy就可以include 这个struct .
+为什么不能？ 设想,如果允许copy lock ，会发生什么?
+如上会产生意外的情况，G1的lock被copy到G2中，被意外的提前unlock 了。会导致 G3在 G1 还没有unlock 的时候，获得写数据的权限。
+为了规避上述问题，采用了 noCopy 方案。</p>
+  </div>
+  <footer class="entry-footer"><span title='2023-02-24 10:09:05 +0800 CST'>February 24, 2023</span>&nbsp;·&nbsp;ghost</footer>
+  <a class="entry-link" aria-label="post link to Go No Copy" href="https://blog.okuer.com/go/go-no-copy/"></a>
+</article>
 
-</section>
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Go with wasm
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>以下内容基于chaptGPT,文中的代码示例经过验证和修订
+WASM WebAssembly（缩写为 wasm）是一种低级的、面向栈的虚拟机，用于在现代 Web 浏览器中执行二进制代码。它被设计成一个可移植、高效和安全的执行环境，可以被用于许多不同的场景，包括：
+在 Web 浏览器中提供比 JavaScript 更高效的编程语言。wasm 可以使得高性能的编程语言如 C/C&#43;&#43;、Rust 和 Go 等运行在 Web 平台上，从而为 Web 应用提供更快的执行速度和更好的用户体验。
+在 Web 应用中使用第三方库。由于 wasm 的二进制格式可以被多种语言所编译生成，因此可以在 Web 应用中使用其他语言编写的库，而不需要对库的源代码进行修改。
+跨平台开发。wasm 可以在多个平台上运行，因此可以在不同的硬件和操作系统上共享代码，简化跨平台开发的难度和成本。
+In Go Go 语言的 WebAssembly（wasm）支持允许开发人员编写 Go 语言代码，并将其编译为 wasm 模块，以便在 Web 平台上运行。Go 语言的 wasm 支持是 Go 1.11 版本中引入的，并在后续版本中得到了进一步的改进和优化。
+使用 Go 语言的 wasm 支持，可以将现有的 Go 语言代码直接编译为 wasm 模块，然后在 Web 平台上运行。这为开发人员提供了许多好处，包括：
+更高的性能。由于 wasm 是一种比 JavaScript 更低级别的虚拟机，因此可以提供更高的性能和更低的内存消耗。
+更好的安全性。由于 wasm 运行在 Web 浏览器的安全沙箱中，因此可以提供更好的安全性，避免 Web 应用被恶意代码攻击。
+更高的可移植性。由于 wasm 的二进制格式可以在多个平台上运行，因此可以使得 Go 语言代码在不同的平台上共享，从而简化了跨平台开发的难度。...</p>
+  </div>
+  <footer class="entry-footer"><span title='2023-02-21 11:52:51 +0800 CST'>February 21, 2023</span>&nbsp;·&nbsp;ghost</footer>
+  <a class="entry-link" aria-label="post link to Go with wasm" href="https://blog.okuer.com/go/go-with-wasm/"></a>
+</article>
 
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Go 模块化
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Topic 模块化 版本管理 打包与版本 private repository 多人协作开发 模块化 Go 语言在 v1.11 之前，采用的是 $GOPATH 的方式来引用第三方包的 src 文件. 这样做带来的灾难是没有办法处理多版本的问题。
+于是在 v1.11之后引入了mod ，在新版本的go环境下，执行下面的命令将能看到3个文件
+ls $GOPATH # bin pkg src 所有的依赖的包都在pkg下存在 比如在pkg/mod/golang.org/x 下存在的如下的包
+net@v0.3.0 net@v0.5.0 oauth2@v0.0.0-20220411215720-9780585627b5 sync@v0.0.0-20220819030929-7fc1605a5dde sync@v0.1.0 sys@v0.0.0-20200302150141-5c8b2ff67527 sys@v0.1.0 sys@v0.2.0 Go语言提供了很好的模块化支持，可以让开发者将程序分割成更小的、独立的代码模块，这样有助于降低复杂性、提高可维护性、可重用性和测试性。以下是Go语言的模块化相关的一些特性和最佳实践：
+包：Go程序的基本单位是包，每个Go源代码文件都必须属于一个包，且包名必须与其所在的目录名一致。包可以是库包，也可以是可执行包。库包用于封装通用的功能，而可执行包用于实现独立的应用程序。
+导入：Go语言使用import关键字来导入其他包，导入的包名就是包的名称。可以使用相对路径或绝对路径指定要导入的包。
+可见性：Go语言的可见性规则非常简单：以大写字母开头的标识符对其他包可见，其他标识符只对本包可见。这种规则可以让包提供一些公共的接口，同时隐藏其内部实现细节。
+版本控制：Go语言使用模块来管理依赖关系和版本控制。每个模块都有一个唯一的模块路径和版本号。Go模块支持语义化版本控制，可以避免依赖冲突和版本升级的问题。
+依赖管理：使用go mod命令可以管理Go模块的依赖关系。可以使用go.mod文件指定依赖关系和版本信息，使用go.sum文件记录依赖的哈希值，确保依赖的代码不会被篡改或变化。
+构建和发布：使用go build命令可以构建可执行文件或库文件，使用go install命令可以将库文件安装到$GOPATH/pkg目录下，以便其他Go程序可以引用。可以使用go get命令从远程仓库获取依赖的代码，使用go mod tidy命令清理不需要的依赖。
+注意,go语言的版本必须大于 1.11
+模块化可以让程序依赖外部的模块，依赖本身会产生一个graph。 许多语言都有类似的辅助工具来进行依赖管理，如 Java中的Maven和Gradle, PHP的composer等
+go 语言是如何进行依赖管理的呢？
+go语言的依赖 Go语言使用模块（module）来管理依赖，模块是一组相关的Go包的集合，通常位于一个版本控制仓库中。Go模块支持语义化版本控制，并且可以解决依赖管理和版 本管理的问题。以下是Go语言依赖管理的一些关键点：
+go.mod文件：每个Go模块都需要一个go.mod文件来指定模块的名称、版本号和依赖关系。在go.mod文件中，可以指定依赖包的名称、版本范围和仓库地址。例如： module example.com/mymodule require ( github.com/some/package v1.2.3 github.com/another/package v0.0.0-20220101010101-abcd12345678 ) go....</p>
+  </div>
+  <footer class="entry-footer"><span title='2023-02-15 14:23:09 +0800 CST'>February 15, 2023</span>&nbsp;·&nbsp;ghost</footer>
+  <a class="entry-link" aria-label="post link to Go 模块化" href="https://blog.okuer.com/go/go-module/"></a>
+</article>
 
-    </div>
-
-    <footer class="footer">
-  <section class="container">
-    ©
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">GPM调度模型解析
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>什么是GPM? G-P-M 模型是 go 语言最重要的调度模型。
+简单来说,开发者编写的任务包装成G交给P,M在P的G队列上获取G进行计算。
+KSE内核调度 KSE (Kernel Scheduling Entity) 是FreeBSD内核中用于调度线程的实体。KSE内核调度是指FreeBSD内核根据KSE的状态、优先级和其他因素来决定在何时执行某个KSE上的线程。KSE内核调度采用多级反馈队列调度算法，并考虑了线程的优先级、I/O等待、CPU时间片使用情况等因素，以提高系统的性能和响应能力。
+线程与进程 操作系统的最小调度单元是线程，线程可以共享进程内的资源.
+操作系统的调度模型 一切都是资源，无论计算还是存储，操作系统来负责协调
+计算机结构 SMP 对称多处理器（Symmetric Multiprocessing，SMP）是一种计算机体系结构，其中多个处理器共享同一物理内存和系统总线，可以同时执行多个线程或进程。
+NUMA 非一致性存储（Non-Uniform Memory Access，NUMA）是一种多处理器计算机体系结构，在该体系结构中，每个处理器与本地内存模块相连，但可以通过互连网络访问其他处理器的内存模块。由于访问远程内存可能需要更长的时间，因此 NUMA 系统中的内存访问时间不是均匀的。
+OS线程模型 内核态 操作系统管理,绑定一个KSE，可以看作就是一个KSE，KSE用来分配CPU
+用户态 用户态的线程需要映射到内核态线程，属于用户空间上虚拟的线程，最终还是要通过KSE来分配CPU
+调度的实现 用户级 1:N 内核级 1:1 两级线程模型 N:N 为什么这么设计？ 计算一般分为 CPU密集型 和 IO密集型
+CPU密集的计算往往依赖CPU,因此直接KSE进度调度CPU速度更快。一些需要IO的，往往时间比较久，如果长时间占据CPU会导致空闲等待。 因此不同的线程模型应对不同的场景。
+比如一个在一个4C的计算机上进行CPU密集运算，通过4个KSE进行调度的性能更高，因为不需要切换上下文。 而一个处理数据库链接的，如果还按照这个模型，则最多处理4个链接,因此需要在执行IO的时候快速的让出CPU. 此种条件下，选择1:N或N:N的模型可以获得更高的并发。
+用户级的线程 1:N 注意无法充分利用多核CPU..
+Go的调度模型 GM模型 Go语言引入了 Goroutine 和KSE绑定 实现两级线程模型。用户以非常低的成本创建大量的 G, M 调度 G
+简单的从G-M 模型天然带有缺陷：
+下面的解释 参考 draveness
+调度器和锁是全局资源，所有的调度状态都是中心化存储的，锁竞争问题严重 线程需要经常互相传递可运行的 Goroutine，引入了大量的延迟 每个线程都需要处理内存缓存，导致大量的内存占用并影响数据局部性 系统调用频繁阻塞和解除阻塞正在运行的线程，增加了额外开销 P的引入 P是一个逻辑处理器，它持有一个绑定在其上的 G queue。 它拥有自己的局部队列，因此可以避免锁竞争。 同时它还可以通过工作窃取算法，以充分的利用CPU。一个P会在一个M 上进行计算。...</p>
+  </div>
+  <footer class="entry-footer"><span title='2023-02-14 15:16:24 +0800 CST'>February 14, 2023</span>&nbsp;·&nbsp;ghost</footer>
+  <a class="entry-link" aria-label="post link to GPM调度模型解析" href="https://blog.okuer.com/go/go-gpm/"></a>
+</article>
+    </main>
     
-      2014 -
-    
-    2023
-     ghost 
-    ·
-    
-    Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.
-    
-  </section>
+<footer class="footer">
+    <span>&copy; 2024 <a href="https://blog.okuer.com">Okuer</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
 </footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
 
-  </main>
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
 
-  
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
 
-  
-  
-  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
-  
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
 
-  
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
 
-  
-
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
+</script>
 </body>
 
 </html>
