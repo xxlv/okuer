@@ -9,7 +9,13 @@ pygmentscodefences = true
 pygmentscodefencesguesssyntax = true
 disqusShortname = "okuer"
 
+[outputs]
+home = ["HTML", "JSON", "RSS"]
+
+
 [params]
+ShowToc = true
+ShowBreadCrumbs = true
 comments = true
 ShowCodeCopyButtons = true
 ShowPostNavLinks = true
@@ -58,6 +64,11 @@ url = "/posts"
 name = "Go"
 weight = 2
 url = "/go"
+
+[[menu.main]]
+name = "Search"
+weight = 3
+url = "search"
 
 [[menu.main]]
 name = "Projects"
